@@ -1,0 +1,109 @@
+@import "../../assets/styles/vars";
+
+.kgm-sidenav {
+    user-select: none;
+}
+
+.ant-layout-sider {
+    height: 100%;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+    margin: 0 0px;
+
+    @media screen and (max-width: @screen-xs) {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    .anticon {
+        font-size: 24px !important;
+    }
+
+    .menu-item-text {
+        margin-left: 5px;
+    }
+
+    .ant-layout-sider-children {
+        width: 100%;
+    }
+
+    @xs-sider-width: 4px;
+    @sm-sider-width: 40px;
+
+    &.ant-layout-sider-collapsed {
+        @media screen and (max-width: @screen-xs) {
+            width: @xs-sider-width  !important;
+            max-width: @xs-sider-width  !important;
+            min-width: @xs-sider-width  !important;
+        }
+
+        @media screen and (max-width: @screen-md) {
+            width: @sm-sider-width  !important;
+            max-width: @sm-sider-width  !important;
+            min-width: @sm-sider-width  !important;
+        }
+
+        .menu-item-text {
+            visibility: hidden;
+        }
+
+        .submenu-folder::after {
+            content: '\2807';
+            font-size: 1em;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            top: -23px;
+            position: relative;
+        }
+
+        .ant-menu-submenu-title {
+            padding: 0 36px;
+        }
+
+    }
+
+    .ant-layout-sider-zero-width-trigger-left {
+        z-index: 1000;
+        margin-top: -60px;
+    }
+
+    .ant-menu-item {
+        margin-top: 0;
+    }
+}
+
+.menuGroupImage,
+.menuItemImage {
+    width: 28px;
+    height: 28px;
+    min-width: 28px !important;
+    min-height: 28px;
+    margin-top: -2px;
+}
+
+.menuItemImage{
+    line-height: 40px;
+    margin-top: 0px;
+}
+
+.ant-menu-inline-collapsed>.ant-menu-item,
+.ant-menu-inline-collapsed>.ant-menu-item-group>.ant-menu-item-group-list>.ant-menu-item,
+.ant-menu-inline-collapsed>.ant-menu-item-group>.ant-menu-item-group-list>.ant-menu-submenu>.ant-menu-submenu-title,
+.ant-menu-inline-collapsed>.ant-menu-submenu>.ant-menu-submenu-title {
+    padding-left: calc(50% - 30px /2) !important;
+}
+
+.ant-menu-vertical .ant-menu-item,
+.ant-menu-vertical-left .ant-menu-item,
+.ant-menu-vertical-right .ant-menu-item,
+.ant-menu-inline .ant-menu-item,
+.ant-menu-vertical .ant-menu-submenu-title,
+.ant-menu-vertical-left .ant-menu-submenu-title,
+.ant-menu-vertical-right .ant-menu-submenu-title,
+.ant-menu-inline .ant-menu-submenu-title {
+    padding: 0 24px !important;
+}

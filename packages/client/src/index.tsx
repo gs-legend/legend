@@ -5,10 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import "assets/styles/global.less";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Root />
-  </React.StrictMode>,
+  <Root />,
   document.getElementById('root')
 );
- 
+
 reportWebVitals();

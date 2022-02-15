@@ -1,0 +1,12 @@
+import React from 'react'
+import './LoadingScreen.less';
+
+export default function LoadingScreen() {
+    return (
+        <div className="loader">
+            <div className="inner one"></div>
+            <div className="inner two"></div>
+            <div className="inner three"></div>
+        </div>
+    )
+}
