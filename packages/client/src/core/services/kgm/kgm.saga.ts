@@ -12,7 +12,7 @@ import { AppAndUserContext } from 'core/types/AppAndUserContext';
 import { getOnLoadActions } from './kgm.service';
 import api from '../api';
 import { logoutAction } from '../auth';
-import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions } from './process/process.service';
+import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, generateGUID } from './process/process.service';
 import { store } from 'core/store';
 import _ from 'lodash';
 
@@ -68,15 +68,15 @@ function* getOnLoadState() {
 function* getStaticProcess({ payload }: any) {
     try {
         const state = store.getState();
-        const processes = yield selectProcessState(state);
+        const processes: Array<any> = yield selectProcessState(state);
         const { processName, callBack } = payload;
         const existing = processes[processName];
         const panes = yield selectSplitPane(state);
         const { FirstPane, SecondPane }: any = Object.assign({}, panes);
 
         if (existing) {
-            const firstIndex = FirstPane.tabs.indexOf(processName);
-            const secondIndex = SecondPane.tabs.indexOf(processName);
+            const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processName });
+            const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processName });
             let newFirstPane = { ...FirstPane };
             let newSecondPane = { ...SecondPane };
             if (secondIndex > -1) {
@@ -88,7 +88,8 @@ function* getStaticProcess({ payload }: any) {
             yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane: newSecondPane }));
         }
         else {
-            const newProcessState = { ...processes, [processName]: {} };
+            const GUID = generateGUID();
+            const newProcessState = [...processes, { GUID: GUID, tabName: processName }];
             yield put(callProcessActions.success(newProcessState));
             let newFirstPane = { ...FirstPane };
             let { tabs } = newFirstPane || [];
@@ -114,8 +115,8 @@ function* getProcess({ payload }: ReturnType<typeof callProcessActions.request>)
         const { FirstPane, SecondPane }: any = Object.assign({}, panes);
 
         if (existing && isUserTriggered) {
-            const firstIndex = FirstPane.tabs.indexOf(processName);
-            const secondIndex = SecondPane.tabs.indexOf(processName);
+            const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processName });
+            const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processName });
             let newFirstPane = { ...FirstPane };
             let newSecondPane = { ...SecondPane };
             if (secondIndex > -1) {
@@ -129,7 +130,8 @@ function* getProcess({ payload }: ReturnType<typeof callProcessActions.request>)
         else {
             const resp = yield call(api.process, request);
             if (isUserTriggered) {
-                const newProcessState = { ...processes, [processName]: resp.data }
+                const GUID = generateGUID();
+                const newProcessState = [...processes, { GUID: GUID, tabName: processName, [processName]: resp.data }];
                 yield put(callProcessActions.success(newProcessState));
                 let newFirstPane = { ...FirstPane };
                 let { tabs } = newFirstPane || [];

@@ -117,27 +117,23 @@ const Header = ({ collapsed, onCollapse, logout, logo }: Props) => {
 
     return (
         <Layout.Header>
-            <Row>
-                <Col span={9}>
-                    {menuIcon()}
-                    <Link to={rootPath} className="logo">
-                        <img alt="logo" className="standard_logo" title="Powered by KagamiERP" src={logo || kagami_logo.default} />
-                    </Link>
-                </Col>
-                <Col span={3} offset={12}>
-                    <Space>
-                        <ThemeProvider />
-                        <div className='fullscreen_icon' onClick={fullScreenCliked}>
-                            <FullscreenOutlined title='Fullscreen' />
-                        </div>
-                        {infoIcon()}
-                        <Dropdown className='user_icon' overlay={UserOptionsMenu(logout)}>
-                            <Button type='primary' shape='circle' icon={<img alt='user' className='user-image' src={user_img} />}></Button>
-                        </Dropdown>
-                    </Space>
-                </Col>
-            </Row>
-
+            <div>
+                {menuIcon()}
+                <Link to={rootPath} className="logo">
+                    <img alt="logo" className="standard_logo" title="Powered by KagamiERP" src={logo || kagami_logo.default} />
+                </Link>
+            </div>
+            <div style={{ display: "flex", flex: "1 1 0%" }}></div>
+            <Space className='header_right'>
+                <ThemeProvider />
+                <div className='fullscreen_icon' onClick={fullScreenCliked}>
+                    <FullscreenOutlined title='Fullscreen' />
+                </div>
+                {infoIcon()}
+                <Dropdown className='' overlay={UserOptionsMenu(logout)}>
+                    <Button type='primary' shape='circle' icon={<img alt='user' className='user-image' src={user_img} />}></Button>
+                </Dropdown>
+            </Space>
         </Layout.Header >
     );
 };

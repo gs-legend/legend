@@ -4,6 +4,7 @@ import { ActionType, createAction, createAsyncAction, createReducer } from 'type
 
 import { RootState } from 'core/store';
 import { User, Token, LoginPayload, AuthResponse, GetDomainResponse, GetLogoResponse } from 'core/services/ApiTypes';
+import { generateGUID } from '../kgm/process/process.service';
 
 /**
  * ACTIONS
@@ -37,6 +38,7 @@ type AuthServiceState = Readonly<{
   isAuthenticating: boolean;
   domain: string;
   logo: string;
+  windowId: string;
 }>;
 
 const initialState: AuthServiceState = {
@@ -44,7 +46,8 @@ const initialState: AuthServiceState = {
   user: null as any,
   token: null as any,
   domain: null as any,
-  logo: null as any
+  logo: null as any,
+  windowId: generateGUID()
 };
 
 const isAuthenticating = createReducer(initialState.isAuthenticating)
@@ -70,13 +73,18 @@ const logo = createReducer(initialState.logo)
 const logout = createReducer(initialState.token)
   .handleAction(logoutAction, () => "");
 
+const windowId = createReducer(initialState.windowId)
+  .handleAction(loginActions.success, () => initialState.windowId)
+  .handleAction(loginActions.failure, () => initialState.windowId);
+
 export const authServiceReducer = combineReducers({
   isAuthenticating,
   user,
   token,
   domain,
   logo,
-  logout
+  logout,
+  windowId
 });
 
 /**
@@ -88,5 +96,6 @@ export const selectUser = (state: RootState) => selectAuthServiceState(state).us
 export const selectToken = (state: RootState) => selectAuthServiceState(state).token;
 export const selectDomain = (state: RootState) => selectAuthServiceState(state).domain;
 export const selectLogo = (state: RootState) => selectAuthServiceState(state).logo;
+export const selectWindowId = (state: RootState) => selectAuthServiceState(state).windowId;
 
 export const selectIsLoggedIn = createSelector(selectToken, (token) => !!token);

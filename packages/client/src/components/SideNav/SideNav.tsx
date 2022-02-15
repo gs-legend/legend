@@ -69,6 +69,7 @@ const menuItems = (navigation: any) => {
 }
 
 const processItem = (item: any) => {
+    console.log(item)
     let icon = <BsArrowRightSquareFill className='menuItemImage' />;
 
     if (item.img) {
@@ -76,10 +77,8 @@ const processItem = (item: any) => {
     }
 
     return (
-        <Menu.Item key={item.process + Math.random().toString(36).slice(2)} icon={icon} title={item.name} className='menu-item'>
-            <span>
-                <span>{item.name}</span>
-            </span>
+        <Menu.Item key={item.event.process} icon={icon} className='menu-item'>
+            {item.name}
         </Menu.Item>
     );
 }
@@ -153,7 +152,7 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, call
     }, [dispatch, FirstPane, callStaticProcess]);
 
     const onMenuItemSelected = (event: any) => {
-        const { item, key } = event;
+        const { key } = event;
         const staticProcesses = ['dashboard', 'masterData', 'reports', 'dataMigration'];
         if (staticProcesses.indexOf(key) > -1) {
             callStaticProcess({ processName: key });

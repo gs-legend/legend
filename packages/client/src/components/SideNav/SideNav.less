@@ -85,9 +85,10 @@
     margin-top: -2px;
 }
 
-.menuItemImage{
-    line-height: 40px;
-    margin-top: 0px;
+.menuItemImage {
+    font-size: 20px;
+    position: relative;
+    top: 6px;
 }
 
 .ant-menu-inline-collapsed>.ant-menu-item,
@@ -95,6 +96,58 @@
 .ant-menu-inline-collapsed>.ant-menu-item-group>.ant-menu-item-group-list>.ant-menu-submenu>.ant-menu-submenu-title,
 .ant-menu-inline-collapsed>.ant-menu-submenu>.ant-menu-submenu-title {
     padding-left: calc(50% - 30px /2) !important;
+}
+
+.ant-menu-sub {
+
+    .ant-menu-vertical .ant-menu-item,
+    .ant-menu-vertical-left .ant-menu-item,
+    .ant-menu-vertical-right .ant-menu-item,
+    .ant-menu-inline .ant-menu-item,
+    .ant-menu-vertical .ant-menu-submenu-title,
+    .ant-menu-vertical-left .ant-menu-submenu-title,
+    .ant-menu-vertical-right .ant-menu-submenu-title,
+    .ant-menu-inline .ant-menu-submenu-title {
+        padding-left: 5px !important;
+    }
+}
+
+.ant-menu-inline-collapsed {
+
+    .ant-menu-vertical .ant-menu-item,
+    .ant-menu-vertical-left .ant-menu-item,
+    .ant-menu-vertical-right .ant-menu-item,
+    .ant-menu-inline .ant-menu-item,
+    .ant-menu-vertical .ant-menu-submenu-title,
+    .ant-menu-vertical-left .ant-menu-submenu-title,
+    .ant-menu-vertical-right .ant-menu-submenu-title,
+    .ant-menu-inline .ant-menu-submenu-title {
+        padding: 0 25px !important;
+    }
+
+    .submenu-folder {
+
+        .ant-menu-vertical .ant-menu-item,
+        .ant-menu-vertical-left .ant-menu-item,
+        .ant-menu-vertical-right .ant-menu-item,
+        .ant-menu-inline .ant-menu-item,
+        .ant-menu-vertical .ant-menu-submenu-title,
+        .ant-menu-vertical-left .ant-menu-submenu-title,
+        .ant-menu-vertical-right .ant-menu-submenu-title,
+        .ant-menu-inline .ant-menu-submenu-title {
+            padding: 0 24px !important;
+        }
+    }
+}
+
+.ant-layout-sider-light {
+    border-right: 1px solid #f0f0f0;
+
+    .ant-menu-inline,
+    .ant-menu-vertical,
+    .ant-menu-vertical-left {
+        border-right: none;
+    }
 }
 
 .ant-menu-vertical .ant-menu-item,
@@ -105,5 +158,5 @@
 .ant-menu-vertical-left .ant-menu-submenu-title,
 .ant-menu-vertical-right .ant-menu-submenu-title,
 .ant-menu-inline .ant-menu-submenu-title {
-    padding: 0 24px !important;
+    margin-bottom: 1px !important;
 }

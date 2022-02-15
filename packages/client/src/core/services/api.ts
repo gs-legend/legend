@@ -60,22 +60,22 @@ const API = {
     trackProgress(apiClient.get(dataService.BASE_URL + 'bpm/cache/getAppAndUserContext', { withCredentials: true })),
 
   process: (data: any) =>
-    trackProgress(apiClient.post(dataService.BASE_URL + 'process/details', data)),
+    trackProgress(apiClient.post(dataService.BASE_URL + 'bpm/bpm/process', data, { withCredentials: true })),
 
   processData: (data: any) =>
-    trackProgress(apiClient.post(dataService.BASE_URL + 'process/data', { processName: data })),
+    trackProgress(apiClient.post(dataService.BASE_URL + 'process/data', { processName: data }, { withCredentials: true })),
 
   processTrigger: (data: any) =>
-    trackProgress(apiClient.post(dataService.BASE_URL + 'process/trigger', data)),
+    trackProgress(apiClient.post(dataService.BASE_URL + 'process/trigger', data, { withCredentials: true })),
 
   processTriggerSubmit: (data: any) =>
-    trackProgress(apiClient.post(dataService.BASE_URL + 'process/submit', data)),
+    trackProgress(apiClient.post(dataService.BASE_URL + 'process/submit', data, { withCredentials: true })),
 
   getDropdownData: (data: any) =>
-    trackProgress(apiClient.post(dataService.BASE_URL + 'process/fetchDropDownData', data)),
+    trackProgress(apiClient.post(dataService.BASE_URL + 'process/fetchDropDownData', data, { withCredentials: true })),
 
   getPrimordial: (data: any) =>
-    trackProgress(apiClient.post(dataService.BASE_URL + 'primordial/primordial', data)),
+    trackProgress(apiClient.post(dataService.BASE_URL + 'primordial/primordial', data, { withCredentials: true })),
 
 };
 

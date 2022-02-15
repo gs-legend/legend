@@ -1,12 +1,15 @@
 import { createAsyncAction, ActionType, createReducer, createAction } from "typesafe-actions";
 import { combineReducers } from "redux";
-import { RootState } from "core/store";
+import { RootState, store } from "core/store";
+import { selectWindowId } from "core/services/auth";
 
 export const createStartRequest = (processName: string) => {
+    const windowId = selectWindowId(store.getState());
+    // const tabId = 
     return {
         event: { processName: processName },
         fromUi: true,
-        windowId: window.sessionStorage.WINDOWID,
+        windowId: windowId,
         guid: window.sessionStorage.GUID,
         uiEvent: {
             uiEventName: 'START',
@@ -21,7 +24,7 @@ export const createStartRequest = (processName: string) => {
             previousProcessName: undefined,
             properties: {
                 fromUI: true,
-                windowId: window.sessionStorage.WINDOWID,
+                windowId: windowId,
                 guid: window.sessionStorage.GUID,
             }
         }
@@ -133,8 +136,13 @@ export type ProcessServiceAction = ActionType<typeof actions>;
 
 
 export type ProcessPane = {
-    tabs: Array<any>,
+    tabs: Array<ProcessTab>,
     currentTab: string
+}
+
+export type ProcessTab = {
+    GUID: string;
+    tabName: string;
 }
 
 export type ProcessPanes = {
