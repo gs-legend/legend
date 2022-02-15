@@ -1,0 +1,33 @@
+.flex {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.gutter.gutter-horizontal {
+  cursor: ew-resize;
+  height: 100%;
+  border-left: 1px solid rgb(204, 204, 204);
+}
+
+.secondPane {
+  margin-left: -9px;
+}
+
+.no-second-pane {
+  .firstPane {
+    width: calc(100% - 5px) !important;
+  }
+
+  .gutter-horizontal {
+    display: none !important;
+  }
+
+  .secondPane {
+    display: none !important;
+  }
+}
+
+.ant-tabs-tabpane {
+  padding: 2px 10px;
+}

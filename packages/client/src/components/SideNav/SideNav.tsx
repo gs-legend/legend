@@ -9,16 +9,16 @@ import reportsIcon from 'assets/images/icons/reports.png';
 import data_migrationIcon from 'assets/images/icons/data_migration.png';
 import { selectUser, logoActions } from 'core/services/auth';
 import { RootState } from 'core/store';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { DashboardResponse } from 'core/types/Dashboard';
 import { FolderOutlined } from '@ant-design/icons';
 import { selectUserContext } from 'core/services/kgm/role.service';
 import api from 'core/services/api';
 import dataService from 'core/data.service';
 import { GetUserResponse } from 'core/services/ApiTypes';
-import { callProcessActions, createLoadRequest, createStartRequest, generateGUID } from 'core/services/kgm/process/process.service';
+import { callProcessActions, callStaticProcessActions, createLoadRequest, createStartRequest, generateGUID, selectSplitPane } from 'core/services/kgm/process/process.service';
 import dmsService from 'core/services/kgm/dmsService';
-import { selectDashboard, selectTheme } from 'core/services/kgm/presentation.service';
+import { selectDashboard, selectTheme, } from 'core/services/kgm/presentation.service';
 import { BsArrowRightSquareFill } from "react-icons/bs";
 
 const { Sider } = Layout;
@@ -33,13 +33,15 @@ const mapStateToProps = (state: RootState) => {
         user: selectUser(state),
         dashboard: selectDashboard(state),
         userContext: selectUserContext(state),
-        theme: selectTheme(state)
+        theme: selectTheme(state),
+        splitPanes: selectSplitPane(state),
     }
 }
 
 const mapDispatchToProps = {
     callProcess: callProcessActions.request,
-    setLogo: logoActions.success
+    setLogo: logoActions.success,
+    callStaticProcess: callStaticProcessActions.request,
 };
 
 type Props = ReturnType<typeof mapStateToProps> & OwnProps & typeof mapDispatchToProps;
@@ -140,12 +142,21 @@ const getOrgLogo = (userContext: GetUserResponse, process: string, setLogo: Func
     });
 }
 
-const SideNav = ({ collapsed, user, dashboard, userContext, callProcess, setLogo, theme }: Props) => {
+const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, callProcess, callStaticProcess, splitPanes }: Props) => {
+    const { FirstPane } = splitPanes;
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!FirstPane || !FirstPane.currentTab) {
+            callStaticProcess({ processName: 'dashboard' });
+        }
+    }, [dispatch, FirstPane, callStaticProcess]);
+
     const onMenuItemSelected = (event: any) => {
-        const { item, key, keyPath, domEvent } = event;
+        const { item, key } = event;
         const staticProcesses = ['dashboard', 'masterData', 'reports', 'dataMigration'];
         if (staticProcesses.indexOf(key) > -1) {
-            console.log(item, key, keyPath, domEvent)
+            callStaticProcess({ processName: key });
         }
         else {
             const request = createStartRequest(key);

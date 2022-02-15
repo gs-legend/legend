@@ -99,10 +99,36 @@ export const setSplitAction = createAsyncAction(
     'processService/SETSPLIT_FAILURE'
 )<any, ProcessPanes, undefined>();
 
+
+export const callProcessDataActions = createAsyncAction(
+    'processService/GETPROCESS_DATA_REQUEST',
+    'processService/GETPROCESS_DATA_SUCCESS',
+    'processService/GETPROCESS_DATA_FAILURE'
+)<string, any, undefined>();
+
+export const callProcessTriggerActions = createAsyncAction(
+    'processService/GETPROCESS_TRIGGER_REQUEST',
+    'processService/GETPROCESS_TRIGGER_SUCCESS',
+    'processService/GETPROCESS_TRIGGER_FAILURE'
+)<any, any, undefined>();
+
+export const callStaticProcessActions = createAsyncAction(
+    'processService/GETSTATICPROCESS_REQUEST',
+    'processService/GETSTATICPROCESS_SUCCESS',
+    'processService/GETSTATICPROCESS_FAILURE'
+)<any, any, any>();
+
+export const callProcessSubmitAction = createAsyncAction(
+    'processService/GETPROCESS_SUBMIT_REQUEST',
+    'processService/GETPROCESS_SUBMIT_SUCCESS',
+    'processService/GETPROCESS_SUBMIT_FAILURE'
+)<any, any, undefined>();
+
 export const setCurrentPaneKeyAction = createAction('processService/SETCURRENTPANEKEY')<any>();
 export const removeProcessAction = createAction('processService/REMOVEPROCESS')<any>();
+export const getDropdownDataAction = createAction('processService/GETDROPDOWNDATA')<any, any>();
 
-const actions = { callProcessActions, setSplitAction, setCurrentPaneKeyAction, removeProcessAction };
+const actions = { callStaticProcessActions, callProcessActions, callProcessDataActions, callProcessSubmitAction, setSplitAction, setCurrentPaneKeyAction, removeProcessAction };
 export type ProcessServiceAction = ActionType<typeof actions>;
 
 
@@ -136,10 +162,20 @@ const initialState: ProcessServiceState = {
 };
 
 const processState = createReducer(initialState.processState)
-    .handleAction(callProcessActions.success, (_, { payload: processState }) => processState);
+    .handleAction(callProcessActions.success, (_, { payload: processState }) => {
+        return processState;
+    })
+    .handleAction(callStaticProcessActions.success, (_, { payload: processState }) => {
+        return processState;
+    })
+    .handleAction(callProcessDataActions.success, (_, { payload: processState }) => {
+        return processState;
+    })
 
 const panes = createReducer(initialState.panes)
-    .handleAction(setSplitAction.success, (_, { payload: panes }) => panes);
+    .handleAction(setSplitAction.success, (_, { payload: panes }) => {
+        return panes;
+    });
 
 export const processServiceReducer = combineReducers({
     processState,

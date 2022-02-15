@@ -12,7 +12,7 @@ import { AppAndUserContext } from 'core/types/AppAndUserContext';
 import { getOnLoadActions } from './kgm.service';
 import api from '../api';
 import { logoutAction } from '../auth';
-import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction } from './process/process.service';
+import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions } from './process/process.service';
 import { store } from 'core/store';
 import _ from 'lodash';
 
@@ -61,6 +61,46 @@ function* getOnLoadState() {
         }
     } catch {
         yield put(getOnLoadActions.failure());
+    }
+}
+
+
+function* getStaticProcess({ payload }: any) {
+    try {
+        const state = store.getState();
+        const processes = yield selectProcessState(state);
+        const { processName, callBack } = payload;
+        const existing = processes[processName];
+        const panes = yield selectSplitPane(state);
+        const { FirstPane, SecondPane }: any = Object.assign({}, panes);
+
+        if (existing) {
+            const firstIndex = FirstPane.tabs.indexOf(processName);
+            const secondIndex = SecondPane.tabs.indexOf(processName);
+            let newFirstPane = { ...FirstPane };
+            let newSecondPane = { ...SecondPane };
+            if (secondIndex > -1) {
+                newSecondPane = { ...newSecondPane, currentTab: processName };
+            }
+            if (firstIndex > -1) {
+                newFirstPane = { ...newFirstPane, currentTab: processName };
+            }
+            yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane: newSecondPane }));
+        }
+        else {
+            const newProcessState = { ...processes, [processName]: {} };
+            yield put(callProcessActions.success(newProcessState));
+            let newFirstPane = { ...FirstPane };
+            let { tabs } = newFirstPane || [];
+            tabs = [...tabs, processName];
+            newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
+            yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
+            if (callBack) {
+                yield put(callBack());
+            }
+        }
+    } catch (ex) {
+        console.log(ex)
     }
 }
 
@@ -213,6 +253,7 @@ export function* kgmSaga() {
     yield takeLatest(getDashboardActions.request, getDashboard);
     yield takeLatest(getThemeActions.request, setTheme);
     yield takeLatest(getAppAndUserContextActions.request, getAppAndUserContext);
+    yield takeLatest(callStaticProcessActions.request, getStaticProcess);
     yield takeLatest(getOnLoadActions.request, getOnLoadState);
     yield takeLatest(callProcessActions.request, getProcess);
     yield takeLatest(setSplitAction.request, setSplitTab);
