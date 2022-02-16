@@ -130,8 +130,7 @@ function* getProcess({ payload }: ReturnType<typeof callProcessActions.request>)
         else {
             const resp = yield call(api.process, request);
             if (isUserTriggered) {
-                const GUID = generateGUID();
-                const newProcessState = [...processes, { GUID: GUID, tabName: processName, [processName]: resp.data }];
+                const newProcessState = [...processes, { GUID: payload.guid, tabName: processName, [processName]: resp.data }];
                 yield put(callProcessActions.success(newProcessState));
                 let newFirstPane = { ...FirstPane };
                 let { tabs } = newFirstPane || [];

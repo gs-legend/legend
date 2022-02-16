@@ -19,7 +19,7 @@ const RootLayout = () => {
         <Layout className="rootlayout"
         // onContextMenu={(e) => e.preventDefault()}
         >
-            <Header collapsed={collapsed} onCollapse={onCollapse} />
+            {/* <Header collapsed={collapsed} onCollapse={onCollapse} /> */}
             <Layout>
                 <SideNav collapsed={collapsed} />
                 <Layout.Content className="main_container">

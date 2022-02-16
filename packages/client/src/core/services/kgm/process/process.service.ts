@@ -3,14 +3,13 @@ import { combineReducers } from "redux";
 import { RootState, store } from "core/store";
 import { selectWindowId } from "core/services/auth";
 
-export const createStartRequest = (processName: string) => {
+export const createStartRequest = (processName: string, tabId: string) => {
     const windowId = selectWindowId(store.getState());
-    // const tabId = 
     return {
         event: { processName: processName },
         fromUi: true,
         windowId: windowId,
-        guid: window.sessionStorage.GUID,
+        guid: tabId,
         uiEvent: {
             uiEventName: 'START',
             uiEventType: null,
@@ -25,7 +24,7 @@ export const createStartRequest = (processName: string) => {
             properties: {
                 fromUI: true,
                 windowId: windowId,
-                guid: window.sessionStorage.GUID,
+                guid: tabId,
             }
         }
     };

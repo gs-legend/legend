@@ -43,11 +43,11 @@ const SplitPane = ({
     const fPaneTabs: any = [];
     const sPaneTabs: any = [];
     FirstPane.tabs.forEach((tab: any) => {
-      const process = processState[tab];
+      const process = _.find(processState, { tabName: tab })
       process && fPaneTabs.push({ processKey: tab, process });
     });
     SecondPane.tabs.forEach((tab: any) => {
-      const process = processState[tab];
+      const process = _.find(processState, { tabName: tab })
       process && sPaneTabs.push({ processKey: tab, process });
     });
 
@@ -72,12 +72,14 @@ const SplitPane = ({
     setSecondPanetabs(sPaneTabs);
   }, [processState, splitPanes]);
 
-  const setFirstCurrentPaneKey = (processKey: string) => {
+  const setFirstCurrentPaneKey = (process: any) => {
+    const processKey = process.tabName;
     setCurrentPaneKey({ processKey, paneNumber: 1 });
     setFirstPaneCurrentTab(processKey);
   };
 
-  const setSecondCurrentPaneKey = (processKey: string) => {
+  const setSecondCurrentPaneKey = (process: any) => {
+    const processKey = process.tabName;
     setCurrentPaneKey({ processKey, paneNumber: 2 });
     setSecondPaneCurrentTab(processKey);
   };
@@ -91,9 +93,7 @@ const SplitPane = ({
   };
 
   const splitSizes = secondPanetabs.length ? [50, 50] : [100, 0];
-  const className =
-    "flex container " +
-    (secondPanetabs.length ? "second-pane" : "no-second-pane");
+  const className = "flex container " + (secondPanetabs.length ? "second-pane" : "no-second-pane");
   return (
     <Split className={className} sizes={splitSizes}>
       <div className="firstPane" style={{}}>

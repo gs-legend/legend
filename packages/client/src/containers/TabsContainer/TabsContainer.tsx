@@ -80,12 +80,16 @@ const TabsContainer = ({ tabs, currentPaneIndex, currentProcess, setSplitTab, se
           processContainer = <DataMigration>Data Migration</DataMigration>;
           break;
         default:
-          const { data, metaData } = process;
-          const { entity, presentation } = metaData;
-          const mainPresentaion = presentation[entity];
+          const response = process[process.tabName];
+          const { constructOutputData } = response;
+          const { detailedObjects, uiResource } = constructOutputData;
+          const { presentations } = uiResource;
+          const { presentationRuleMap, entityLevelMap } = presentations;
+          const mainEntityId = entityLevelMap[0];
+          const mainPresentaion = presentationRuleMap[mainEntityId][0];
           const { formName } = mainPresentaion;
           tabHeader = getTabHeader(processKey, formName, isClosable);
-          processContainer = <ProcessContainer processKey={processKey} data={data} process={metaData}></ProcessContainer>;
+          processContainer = <ProcessContainer processKey={processKey} data={detailedObjects} process={uiResource}></ProcessContainer>;
       }
 
       const pane = (

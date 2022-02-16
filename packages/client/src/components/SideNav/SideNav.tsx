@@ -59,7 +59,6 @@ const adminMenuItems = (user: string) => {
 
 const menuItems = (navigation: any) => {
     const items = Array<ReactNode>();
-    console.log(navigation)
 
     _.forEach(navigation.menuItems, (item: any) => {
         const menuItem = getItem(item);
@@ -69,7 +68,6 @@ const menuItems = (navigation: any) => {
 }
 
 const processItem = (item: any) => {
-    console.log(item)
     let icon = <BsArrowRightSquareFill className='menuItemImage' />;
 
     if (item.img) {
@@ -108,13 +106,11 @@ const getItem = (item: any) => {
 
 const getOrgLogo = (userContext: GetUserResponse, process: string, setLogo: Function) => {
     const localGUID = generateGUID();
-    const request = createStartRequest(process);
+    const request = createStartRequest(process,localGUID);
     request.inputData.detailedObjects['UserInput'] = [{
         'userId': userContext.userId,
         'id': "temp_" + Math.random().toString(36).slice(2)
     }];
-    request.guid = localGUID;
-    request.inputData.properties.guid = localGUID;
     api.process(request).then((response: any) => {
         const { data } = response;
         const requestOnLoad = createLoadRequest(process);
@@ -158,8 +154,9 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, call
             callStaticProcess({ processName: key });
         }
         else {
-            const request = createStartRequest(key);
-            callProcess({ request, isUserTriggered: true });
+            const guid = generateGUID();
+            const request = createStartRequest(key, guid);
+            callProcess({ request, isUserTriggered: true, guid });
         }
 
     }

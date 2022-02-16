@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import './index.less';
 import { RootState } from 'core/store';
 import { callProcessDataActions } from 'core/services/kgm/process/process.service';
+import KgmList from "components/KgmList/KgmList";
 
 type OwnProps = {
   process: any;
@@ -25,12 +26,9 @@ const getProcessDetails = (process: any, data: any) => {
   const { uiTemplate } = process;
   let node: any = null;
   switch (uiTemplate) {
-    // case 'list':
-    //   node = <KgmList process={process} data={data} />;
-    //   break;
-    // case 'masterDetail':
-    //   node = <MasterDetail process={process} data={data} />;
-    //   break;
+    case 'list':
+      node = <KgmList process={process} data={data} />;
+      break;
     default:
       break;
   }
