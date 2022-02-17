@@ -43,12 +43,12 @@ const SplitPane = ({
     const fPaneTabs: any = [];
     const sPaneTabs: any = [];
     FirstPane.tabs.forEach((tab: any) => {
-      const process = _.find(processState, { tabName: tab })
-      process && fPaneTabs.push({ processKey: tab, process });
+      const process = _.find(processState, { tabName: tab.tabName })
+      process && fPaneTabs.push({ processKey: tab.tabName, process });
     });
     SecondPane.tabs.forEach((tab: any) => {
-      const process = _.find(processState, { tabName: tab })
-      process && sPaneTabs.push({ processKey: tab, process });
+      const process = _.find(processState, { tabName: tab.tabName })
+      process && sPaneTabs.push({ processKey: tab.tabName, process });
     });
 
     let firstCurrentTab = FirstPane.currentTab;

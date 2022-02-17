@@ -12,7 +12,7 @@ import { AppAndUserContext } from 'core/types/AppAndUserContext';
 import { getOnLoadActions } from './kgm.service';
 import api from '../api';
 import { logoutAction } from '../auth';
-import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, generateGUID } from './process/process.service';
+import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, generateGUID, callProcessDataActions } from './process/process.service';
 import { store } from 'core/store';
 import _ from 'lodash';
 
@@ -70,7 +70,7 @@ function* getStaticProcess({ payload }: any) {
         const state = store.getState();
         const processes: Array<any> = yield selectProcessState(state);
         const { processName, callBack } = payload;
-        const existing = processes[processName];
+        const existing = _.find(processes, { tabName: processName });
         const panes = yield selectSplitPane(state);
         const { FirstPane, SecondPane }: any = Object.assign({}, panes);
 
@@ -93,7 +93,7 @@ function* getStaticProcess({ payload }: any) {
             yield put(callProcessActions.success(newProcessState));
             let newFirstPane = { ...FirstPane };
             let { tabs } = newFirstPane || [];
-            tabs = [...tabs, processName];
+            tabs = [...tabs, { GUID: GUID, tabName: processName }];
             newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
             yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
             if (callBack) {
@@ -134,7 +134,7 @@ function* getProcess({ payload }: ReturnType<typeof callProcessActions.request>)
                 yield put(callProcessActions.success(newProcessState));
                 let newFirstPane = { ...FirstPane };
                 let { tabs } = newFirstPane || [];
-                tabs = [...tabs, processName];
+                tabs = [...tabs, { GUID: payload.guid, tabName: processName }];
                 newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
                 yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
             }
@@ -152,14 +152,14 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
         const { processKey, action } = payload;
         const panes = selectSplitPane(store.getState());
         const { FirstPane, SecondPane }: any = Object.assign({}, panes);
-        const firstIndex = FirstPane.tabs.indexOf(processKey);
-        const secondIndex = SecondPane.tabs.indexOf(processKey);
+        const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processKey });
+        const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processKey });
         let newFirstPane = { ...FirstPane };
         let newSecondPane = { ...SecondPane };
 
         if (secondIndex === -1 && action === "add") {
-            newSecondPane = { ...SecondPane, tabs: [...SecondPane.tabs, processKey], currentTab: processKey };
             if (firstIndex > -1) {
+                newSecondPane = { ...SecondPane, tabs: [...SecondPane.tabs, FirstPane[firstIndex]], currentTab: processKey };
                 newFirstPane = {
                     ...FirstPane,
                     tabs: [...FirstPane.tabs.slice(0, firstIndex),
@@ -175,7 +175,7 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
                 ...SecondPane.tabs.slice(secondIndex + 1)],
                 currentTab: secondIndex > 0 ? SecondPane.tabs[secondIndex - 1] : SecondPane.tabs[0]
             };
-            newFirstPane = { ...FirstPane, tabs: [...FirstPane.tabs, processKey] };
+            newFirstPane = { ...FirstPane, tabs: [...FirstPane.tabs, ...SecondPane.tabs[secondIndex]] };
 
         }
         yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane: newSecondPane }));
@@ -212,20 +212,23 @@ function* removeProcess({ payload }: ReturnType<typeof removeProcessAction>) {
         const processes = yield selectProcessState(store.getState());
 
         const { FirstPane, SecondPane } = panes;
-        const firstIndex = FirstPane.tabs.indexOf(processKey);
-        const secondIndex = SecondPane.tabs.indexOf(processKey);
+        const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processKey });
+        const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processKey });
         let newFirstPane = { ...FirstPane };
         let newSecondPane = { ...SecondPane };
 
-        const { [processKey]: remove, ...rest } = processes;
-        yield put(callProcessActions.success(rest));
+        const newProcess = _.filter(processes, process => {
+            return process.tabName !== processKey;
+        });
+
+        yield put(callProcessActions.success(newProcess));
 
         if (firstIndex !== -1) {
             newFirstPane = {
                 ...FirstPane,
                 tabs: [...FirstPane.tabs.slice(0, firstIndex),
                 ...FirstPane.tabs.slice(firstIndex + 1)],
-                currentTab: FirstPane.currentTab === processes ? FirstPane.tabs[0] : FirstPane.currentTab
+                currentTab: FirstPane.currentTab === processKey ? FirstPane.tabs[0] : FirstPane.currentTab
             };
         }
 
@@ -234,7 +237,7 @@ function* removeProcess({ payload }: ReturnType<typeof removeProcessAction>) {
                 ...SecondPane,
                 tabs: [...SecondPane.tabs.slice(0, secondIndex),
                 ...SecondPane.tabs.slice(secondIndex + 1)],
-                currentTab: SecondPane.currentTab === processes ? SecondPane.tabs[0] : SecondPane.currentTab
+                currentTab: SecondPane.currentTab === processKey ? SecondPane.tabs[0] : SecondPane.currentTab
             };
         }
 
@@ -249,6 +252,22 @@ function* setTheme({ payload }: ReturnType<typeof getThemeActions.request>) {
     yield put(getThemeActions.success(theme))
 }
 
+
+function* getProcessData({ payload }: ReturnType<typeof callProcessDataActions.request>) {
+    try {
+        const processes = yield selectProcessState(store.getState());
+        const processName = payload;
+        const resp = yield call(api.processData, processName);
+        const newProcess = { ...processes };
+        const process = { ...newProcess[processName], data: resp.data };
+        // process.data = [resp.data];
+        const newProcessState = { ...newProcess, [processName]: process }
+        yield put(callProcessActions.success(newProcessState));
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
 export function* kgmSaga() {
     yield takeLatest(getUserActions.request, getUser);
     yield takeLatest(getDashboardActions.request, getDashboard);
@@ -260,4 +279,5 @@ export function* kgmSaga() {
     yield takeLatest(setSplitAction.request, setSplitTab);
     yield takeLatest(setCurrentPaneKeyAction, setCurrentPaneKey);
     yield takeLatest(removeProcessAction, removeProcess);
+    yield takeLatest(callProcessDataActions.request, getProcessData);
 }

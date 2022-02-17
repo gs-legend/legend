@@ -39,7 +39,7 @@ if (isDev) {
   middlewares.push(createLogger(), ImmutableStateInvariant());
 }
 
-const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(...middlewares)));
+const store = createStore(persistedReducer, {}, composeWithDevTools(applyMiddleware(...middlewares)));
 
 const persistor = persistStore(store);
 

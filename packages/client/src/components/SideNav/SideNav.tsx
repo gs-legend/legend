@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import _ from 'lodash';
 import './SideNav.less';
@@ -13,13 +13,10 @@ import { connect, useDispatch } from 'react-redux';
 import { DashboardResponse } from 'core/types/Dashboard';
 import { FolderOutlined } from '@ant-design/icons';
 import { selectUserContext } from 'core/services/kgm/role.service';
-import api from 'core/services/api';
-import dataService from 'core/data.service';
-import { GetUserResponse } from 'core/services/ApiTypes';
-import { callProcessActions, callStaticProcessActions, createLoadRequest, createStartRequest, generateGUID, selectSplitPane } from 'core/services/kgm/process/process.service';
-import dmsService from 'core/services/kgm/dmsService';
+import { callProcessActions, callStaticProcessActions, createStartRequest, generateGUID, selectSplitPane } from 'core/services/kgm/process/process.service';
 import { selectDashboard, selectTheme, } from 'core/services/kgm/presentation.service';
 import { BsArrowRightSquareFill } from "react-icons/bs";
+import processHelper from 'core/helpers/process.helper';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -104,39 +101,6 @@ const getItem = (item: any) => {
     }
 }
 
-const getOrgLogo = (userContext: GetUserResponse, process: string, setLogo: Function) => {
-    const localGUID = generateGUID();
-    const request = createStartRequest(process,localGUID);
-    request.inputData.detailedObjects['UserInput'] = [{
-        'userId': userContext.userId,
-        'id': "temp_" + Math.random().toString(36).slice(2)
-    }];
-    api.process(request).then((response: any) => {
-        const { data } = response;
-        const requestOnLoad = createLoadRequest(process);
-        requestOnLoad.guid = localGUID;
-        requestOnLoad.inputData.properties.guid = localGUID;
-
-        if (!_.isEmpty(data.constructOutputData)) {
-            const pRuleMap = data.constructOutputData.uiResource.presentations.presentationRuleMap;
-            const entityId = data.constructOutputData.uiResource.presentations.entityLevelMap[0];
-            requestOnLoad.uiEvent.uiEventValue = pRuleMap[entityId][0].presentationId + "_onLoad";
-        }
-        api.process(requestOnLoad).then((processResponse: any) => {
-            const resData = processResponse.data;
-            if (resData.constructOutputData.detailedObjects.Organization && resData.constructOutputData.detailedObjects.Organization.length && resData.constructOutputData.detailedObjects.Organization[0].logo) {
-                const requestObj = {
-                    docId: resData.constructOutputData.detailedObjects.Organization[0].logo.split(":")[0]
-                };
-                dmsService.viewDocument(requestObj).then(function (response: any) {
-                    var imageUrl = dataService.BASE_URL + 'dms/viewDocument?docId=' + processResponse.constructOutputData.detailedObjects.Organization[0].logo.split(":")[0];
-                    setLogo(imageUrl)
-                });
-            }
-        });
-    });
-}
-
 const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, callProcess, callStaticProcess, splitPanes }: Props) => {
     const { FirstPane } = splitPanes;
     const dispatch = useDispatch();
@@ -158,10 +122,10 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, call
             const request = createStartRequest(key, guid);
             callProcess({ request, isUserTriggered: true, guid });
         }
-
     }
 
     const [navigation, setNavigation] = useState({});
+
     useEffect(() => {
         const setDashBoardData = (dashboard: DashboardResponse) => {
             let navigation: any = {};
@@ -181,7 +145,7 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, call
                                     return obj.name === 'organization_logo';
                                 });
                                 if (organizationProcess) {
-                                    getOrgLogo(userContext, organizationProcess.event.process, setLogo);
+                                    processHelper.getOrgLogo(userContext, organizationProcess.event.process, setLogo);
                                 }
                             }
                             break;
@@ -206,7 +170,7 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, call
             className="kgm-sidenav"
         >
             <Menu theme={theme === "light" ? "light" : "dark"} mode="vertical" defaultSelectedKeys={['dashboard']} onClick={(e: any) => onMenuItemSelected(e)}>
-                <Menu.Item key="dashboard" icon={IconNode(dashboardIcon)} className="menu-item">
+                <Menu.Item key="dashboard_icon" icon={IconNode(dashboardIcon)} className="menu-item">
                     <span className="menu-item-text">Dashboard</span>
                 </Menu.Item>
                 {menuItems(navigation)}

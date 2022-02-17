@@ -150,7 +150,7 @@ export type ProcessPanes = {
 }
 
 export type ProcessServiceState = Readonly<{
-    processState: any;
+    processState: Array<any>;
     panes: ProcessPanes;
 }>;
 

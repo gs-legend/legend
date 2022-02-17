@@ -32,12 +32,10 @@ function ThemeProvider({ currentTheme, setTheme }: Props) {
   // }
 
   const setThemeVars = () => {
-    (window as any).less
-      .modifyVars(vars)
+    (window as any).less.modifyVars(vars)
       .then(() => {
-      })
-      .catch(error => {
-        message.error(`Failed to update theme`);
+      }).catch(error => {
+        console.log(`Failed to update theme`);
       });
     localStorage.setItem("app-theme", JSON.stringify(vars));
   }

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Layout, Button, Menu, Dropdown, Row, Col, Space } from 'antd';
-import './Header.less';
+import { useState } from 'react';
+import { Layout, Button, Menu, Dropdown, Space } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined, InfoCircleOutlined, CopyrightTwoTone, FullscreenOutlined } from '@ant-design/icons';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -8,12 +7,13 @@ import { logoutAction, selectLogo } from 'core/services/auth';
 import { connect } from 'react-redux';
 import { rootPath } from 'core/config';
 import { RootState } from 'core/store';
-import user_img from 'assets/images/user.png';
-import * as kagami_logo from 'assets/images/logo.png';
 import { AUTH_ROUTER_PATHS } from 'core/constants';
 import KModal from 'components/KModal/KModal';
 import screenfull from 'screenfull';
 import ThemeProvider from 'components/ThemeProvider';
+import './Header.less';
+import user_img from 'assets/images/user.png';
+import * as kagami_logo from 'assets/images/logo.png';
 
 type OwnProps = {
     collapsed: boolean;
