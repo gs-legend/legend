@@ -5,7 +5,7 @@ import './index.less';
 import { RootState } from 'core/store';
 import { callProcessDataActions } from 'core/services/kgm/process/process.service';
 import KgmList from "components/KgmList/KgmList";
-import processHelper from "core/helpers/process.helper";
+import processHelper from "core/helpers/ProcessHelper";
 
 type OwnProps = {
   process: any;
@@ -37,7 +37,7 @@ const getProcessTemplate = (process: any, data: any) => {
 };
 
 const ProcessContainer = ({ process, processKey, data, callProcessData }: Props) => {
-  const processDetails = processHelper.getProcessDetails(process);
+  const processDetails = processHelper.getProcessDetails(process,data);
   const { presentation } = processDetails;
   useEffect(() => {
     if (presentation.onLoadRequired) {

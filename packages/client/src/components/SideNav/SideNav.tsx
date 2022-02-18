@@ -16,7 +16,7 @@ import { selectUserContext } from 'core/services/kgm/role.service';
 import { callProcessActions, callStaticProcessActions, createStartRequest, generateGUID, selectSplitPane } from 'core/services/kgm/process/process.service';
 import { selectDashboard, selectTheme, } from 'core/services/kgm/presentation.service';
 import { BsArrowRightSquareFill } from "react-icons/bs";
-import processHelper from 'core/helpers/process.helper';
+import processHelper from 'core/helpers/ProcessHelper';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;

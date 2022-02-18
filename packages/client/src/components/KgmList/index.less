@@ -1,5 +1,6 @@
 .list-content {
   height: 100%;
+  width: 100%;
 }
 
 .ag-cell-wrapper {
@@ -8,4 +9,11 @@
 
 .ag-cell {
   display: flex;
+}
+
+.ag-theme-alpine .ag-layout-auto-height .ag-center-cols-clipper,
+.ag-theme-alpine .ag-layout-auto-height .ag-center-cols-container,
+.ag-theme-alpine .ag-layout-print .ag-center-cols-clipper,
+.ag-theme-alpine .ag-layout-print .ag-center-cols-container {
+  min-height: auto !important;
 }
