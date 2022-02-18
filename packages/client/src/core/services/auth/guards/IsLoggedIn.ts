@@ -8,7 +8,7 @@ import { replace } from 'connected-react-router';
 import { RootState } from 'core/store';
 
 import { selectIsLoggedIn, selectIsAuthenticating } from '..';
-import { AUTH_ROUTER_PATHS } from 'core/constants';
+import { AUTH_ROUTER_PATHS } from 'core/Constants';
 
 const IsLoggedIn = <OwnProps>(Component: ComponentType<OwnProps & InjectedAuthReduxProps>) =>
   connectedReduxRedirect<OwnProps, RootState>({

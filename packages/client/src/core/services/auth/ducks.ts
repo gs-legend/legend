@@ -3,7 +3,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import { createAction, ActionType } from 'typesafe-actions';
 
-import { rootPath } from 'core/config';
+import { rootPath } from 'core/Config';
 import {
   ForgottenPasswordPayload,
   AuthResponse,
@@ -12,7 +12,7 @@ import {
 } from 'core/services/ApiTypes';
 import { loginActions, domainActions, logoActions, logoutAction } from 'core/services/auth';
 
-import api from '../api';
+import api from '../Api';
 
 /**
  * ACTIONS

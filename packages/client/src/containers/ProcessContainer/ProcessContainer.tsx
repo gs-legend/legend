@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import './index.less';
 import { RootState } from 'core/store';
-import { callProcessDataActions } from 'core/services/kgm/process/process.service';
 import KgmList from "components/KgmList/KgmList";
 import processHelper from "core/helpers/ProcessHelper";
+import { callProcessDataActions } from "core/services/kgm/ProcessService";
 
 type OwnProps = {
   process: any;

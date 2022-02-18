@@ -2,7 +2,7 @@ import { Button, Form, Table } from 'antd';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './index.less';
 import { RiAddCircleFill } from 'react-icons/ri';
-import { callProcessSubmitAction, callProcessTriggerActions } from 'core/services/kgm/process/process.service';
+import { callProcessSubmitAction, callProcessTriggerActions } from 'core/services/kgm/ProcessService';
 import { connect } from 'react-redux';
 import Split from 'react-split';
 import { EditTwoTone, SaveTwoTone, StopOutlined } from '@ant-design/icons';
@@ -14,7 +14,7 @@ import * as AgGrid from 'assets/scripts/ag-grid-enterprise.min.js';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
-import { selectTheme } from 'core/services/kgm/presentation.service';
+import { selectTheme } from 'core/services/kgm/PresentationService';
 import { RootState } from 'core/store';
 import processHelper from 'core/helpers/ProcessHelper';
 

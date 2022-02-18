@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Result, Button } from 'antd';
-import { rootPath } from 'core/config';
+import { rootPath } from 'core/Config';
 
 const NotFound = () => {
     return (

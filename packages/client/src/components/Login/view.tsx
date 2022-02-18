@@ -3,7 +3,7 @@ import { Form, Input, Button, Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
 import { useFormRules } from 'core/hooks';
 import './Login.less';
-import { AUTH_ROUTER_PATHS } from 'core/constants';
+import { AUTH_ROUTER_PATHS } from 'core/Constants';
 import AuthLayout from 'containers/Auth/AuthLayout';
 type Props = {
   isLoading: boolean;

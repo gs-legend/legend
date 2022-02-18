@@ -1,8 +1,8 @@
-import dataService from "core/data.service";
-import api from "core/services/api";
+import dataService from "core/DataService";
+import api from "core/services/Api";
 import { GetUserResponse } from "core/services/ApiTypes";
-import dmsService from "core/services/kgm/dmsService";
-import { createLoadRequest, createStartRequest, generateGUID } from "core/services/kgm/process/process.service";
+import dmsService from "core/services/kgm/DmsService";
+import { createLoadRequest, createStartRequest, generateGUID } from "core/services/kgm/ProcessService";
 import _ from 'lodash';
 
 class ProcessHelper {

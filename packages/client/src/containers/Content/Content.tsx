@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { Layout } from "antd";
 import "./Content.less";
 import { connect } from "react-redux";
-import { getUserActions } from "core/services/kgm/role.service";
-import { getOnLoadActions } from "core/services/kgm/kgm.service";
+import { getUserActions } from "core/services/kgm/RoleService";
 import SpitPane from "containers/SplitPane/SplitPane";
+import { getOnLoadActions } from "core/services/kgm/KgmService";
 
 
 const mapDispatchToProps = {

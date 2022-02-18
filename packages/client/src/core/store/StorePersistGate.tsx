@@ -2,13 +2,13 @@ import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import history from '../history';
+import history from '../History';
 
-import { persistor } from './configureStore';
+import { persistor } from './ConfigureStore';
 import { RootState } from '.';
 import { selectIsLoggedIn } from 'core/services/auth';
 import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
-import { AUTH_ROUTER_PATHS } from 'core/constants';
+import { AUTH_ROUTER_PATHS } from 'core/Constants';
 
 const mapStateToProps = (state: RootState) => ({
   isLoggedIn: selectIsLoggedIn(state),

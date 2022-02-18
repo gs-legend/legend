@@ -6,7 +6,7 @@ import {
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
 import { replace } from 'connected-react-router';
 
-import { rootPath } from 'core/config';
+import { rootPath } from 'core/Config';
 import { RootState } from 'core/store';
 
 import { selectIsLoggedIn, selectIsAuthenticating } from '..';

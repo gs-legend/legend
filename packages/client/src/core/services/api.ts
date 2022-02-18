@@ -1,15 +1,15 @@
 import { SHA256 } from 'crypto-js';
-import apiClient from 'core/services/apiClient';
+import apiClient from 'core/services/ApiClient';
 import {
   LoginPayload,
   AuthResponse,
   ForgottenPasswordPayload,
 } from 'core/services/ApiTypes';
 
-import dataService from 'core/data.service';
+import dataService from 'core/DataService';
 import { selectDomain } from './auth';
 import { store } from 'core/store';
-import { trackProgress } from './trackProgress';
+import { trackProgress } from './TrackProgress';
 
 
 export const apiCallIds = {

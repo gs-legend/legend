@@ -7,7 +7,7 @@ import SideNav from 'components/SideNav/SideNav';
 import Content from 'containers/Content/Content';
 import { RootState } from 'core/store';
 import { connect } from 'react-redux';
-import { selectTheme, } from 'core/services/kgm/presentation.service';
+import { selectTheme, } from 'core/services/kgm/PresentationService';
 
 const { Footer } = Layout;
 

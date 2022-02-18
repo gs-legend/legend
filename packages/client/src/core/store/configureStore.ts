@@ -5,12 +5,12 @@ import createSagaMiddleware from 'redux-saga';
 import { routerMiddleware } from 'connected-react-router';
 import { composeWithDevTools } from '@redux-devtools/extension';
 
-import { isDev } from 'core/config';
+import { isDev } from 'core/Config';
 
-import history from '../history';
+import history from '../History';
 
-import createRootReducer from './rootReducer';
-import rootSaga from './rootSaga';
+import createRootReducer from './RootReducer';
+import rootSaga from './RootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 

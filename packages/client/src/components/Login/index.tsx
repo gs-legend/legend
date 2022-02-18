@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import Login from './view';
 import { loginActions } from 'core/services/auth';
-import { apiCallIds } from 'core/services/api';
-import { useTrackProgress } from 'core/services/trackProgress';
+import { apiCallIds } from 'core/services/Api';
+import { useTrackProgress } from 'core/services/TrackProgress';
 
 const mapDispatchToProps = {
   login: loginActions.request

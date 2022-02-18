@@ -1,4 +1,4 @@
-import './wdyr';
+import './Wdyr';
 import 'react-hot-loader';
 import { hot } from 'react-hot-loader/root';
 import Root from 'containers/Root';

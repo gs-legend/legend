@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useTrackProgress } from "core/services/trackProgress";
+import { useTrackProgress } from "core/services/TrackProgress";
 import "./GlobalLoader.less";
 
 const GlobalLoader = ({ children }: { children: ReactNode }) => {

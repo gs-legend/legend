@@ -12,9 +12,9 @@ import { RootState } from 'core/store';
 import { connect, useDispatch } from 'react-redux';
 import { DashboardResponse } from 'core/types/Dashboard';
 import { FolderOutlined } from '@ant-design/icons';
-import { selectUserContext } from 'core/services/kgm/role.service';
-import { callProcessActions, callStaticProcessActions, createStartRequest, generateGUID, selectSplitPane } from 'core/services/kgm/process/process.service';
-import { selectDashboard, selectTheme, } from 'core/services/kgm/presentation.service';
+import { selectUserContext } from 'core/services/kgm/RoleService';
+import { callProcessActions, callStaticProcessActions, createStartRequest, generateGUID, selectSplitPane } from 'core/services/kgm/ProcessService';
+import { selectDashboard, selectTheme, } from 'core/services/kgm/PresentationService';
 import { BsArrowRightSquareFill } from "react-icons/bs";
 import processHelper from 'core/helpers/ProcessHelper';
 

@@ -8,8 +8,8 @@ import Dashboard from 'components/Dashboard';
 import MasterData from 'components/MasterData';
 import Reports from 'components/Reports';
 import DataMigration from 'components/DataMigration';
-import { removeProcessAction } from 'core/services/kgm/process/process.service';
 import ProcessContainer from 'containers/ProcessContainer/ProcessContainer';
+import { removeProcessAction } from 'core/services/kgm/ProcessService';
 
 type OwnProps = {
   tabs: any;

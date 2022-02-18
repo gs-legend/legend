@@ -4,17 +4,17 @@ import { call, put, takeLatest, all } from 'redux-saga/effects';
 import {
     GetUserResponse
 } from 'core/services/ApiTypes';
-import { getUserActions } from './role.service';
+import { getUserActions } from './RoleService';
 import { DashboardResponse } from 'core/types/Dashboard';
-import { getDashboardActions, getThemeActions } from './presentation.service';
-import { getAppAndUserContextActions } from './kgm.cache.service';
+import { getDashboardActions, getThemeActions } from './PresentationService';
+import { getAppAndUserContextActions } from './CacheService';
 import { AppAndUserContext } from 'core/types/AppAndUserContext';
-import { getOnLoadActions } from './kgm.service';
-import api from '../api';
+import api from '../Api';
 import { logoutAction } from '../auth';
-import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, generateGUID, callProcessDataActions } from './process/process.service';
+import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, generateGUID, callProcessDataActions } from './ProcessService';
 import { store } from 'core/store';
 import _ from 'lodash';
+import { getOnLoadActions } from './KgmService';
 
 
 

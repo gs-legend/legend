@@ -5,11 +5,11 @@ import { isActionOf } from 'typesafe-actions';
 
 import { RootState } from '.';
 import { authServiceReducer, logoutAction } from 'core/services/auth';
-import { presentationServiceReducer } from 'core/services/kgm/presentation.service';
-import { processServiceReducer } from 'core/services/kgm/process/process.service';
-import { CacheServiceReducer } from 'core/services/kgm/kgm.cache.service';
-import { kgmServiceReducer } from 'core/services/kgm/kgm.service';
-import { roleServiceReducer } from 'core/services/kgm/role.service';
+import { presentationServiceReducer } from 'core/services/kgm/PresentationService';
+import { processServiceReducer } from 'core/services/kgm/ProcessService';
+import { CacheServiceReducer } from 'core/services/kgm/CacheService';
+import { kgmServiceReducer } from 'core/services/kgm/KgmService';
+import { roleServiceReducer } from 'core/services/kgm/RoleService';
 
 export default function createRootReducer(history: History): typeof rootReducer {
   const rootReducer = combineReducers({

@@ -1,5 +1,5 @@
 import { Form, Select } from "antd";
-import { getDropdownDataAction } from "core/services/kgm/process/process.service";
+import { getDropdownDataAction } from "core/services/kgm/ProcessService";
 import { RootState } from "core/store";
 import _ from "lodash";
 import { useState } from "react";

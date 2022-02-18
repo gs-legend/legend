@@ -6,7 +6,7 @@ import Split from "react-split";
 import { RootState } from "core/store";
 import _ from "lodash";
 import TabsContainer from "containers/TabsContainer/TabsContainer";
-import { selectProcessState, selectSplitPane, setCurrentPaneKeyAction, setSplitAction } from "core/services/kgm/process/process.service";
+import { selectProcessState, selectSplitPane, setCurrentPaneKeyAction, setSplitAction } from "core/services/kgm/ProcessService";
 
 type OwnProps = {};
 

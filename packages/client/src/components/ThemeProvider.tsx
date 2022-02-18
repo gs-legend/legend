@@ -4,7 +4,7 @@ import darkVars from 'assets/styles/themes/dark.json';
 import lightVars from 'assets/styles/themes/light.json';
 import { Button, message } from 'antd';
 import { MdOutlineLightMode, MdDarkMode } from "react-icons/md";
-import { getThemeActions, selectTheme } from 'core/services/kgm/presentation.service';
+import { getThemeActions, selectTheme } from 'core/services/kgm/PresentationService';
 import { RootState } from 'core/store';
 import { connect } from 'react-redux';
 

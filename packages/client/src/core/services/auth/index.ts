@@ -4,7 +4,7 @@ import { ActionType, createAction, createAsyncAction, createReducer } from 'type
 
 import { RootState } from 'core/store';
 import { User, Token, LoginPayload, AuthResponse, GetDomainResponse, GetLogoResponse } from 'core/services/ApiTypes';
-import { generateGUID } from '../kgm/process/process.service';
+import { generateGUID } from '../kgm/ProcessService';
 
 /**
  * ACTIONS

@@ -5,7 +5,7 @@ import Login from 'components/Login';
 import LogoutGuard from 'core/services/auth/guards/LogoutGuard';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Logout from 'components/Logout';
-import { AUTH_ROUTER_PATHS, AUTH_ROUTE_PREFIX } from 'core/constants';
+import { AUTH_ROUTER_PATHS, AUTH_ROUTE_PREFIX } from 'core/Constants';
 
 export type ResetPasswordParams = {
   passwordResetToken: string;

@@ -4,7 +4,7 @@ import { message } from 'antd';
 import { store } from 'core/store';
 
 import { selectToken, logoutAction } from './auth';
-import dataService from '../data.service';
+import dataService from '../DataService';
 
 const apiClient = axios.create({
   baseURL: dataService.BASE_URL,
