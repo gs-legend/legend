@@ -39,7 +39,7 @@ class ProcessHelper {
     });
   }
 
-  getProcessDetails = (process: any) => {
+  getProcessDetails = (process: any, editable = false) => {
     const { presentations } = process;
     const { presentationRuleMap, entityLevelMap } = presentations;
     const entity = entityLevelMap[0];
@@ -54,10 +54,15 @@ class ProcessHelper {
       }
     });
     const { formName, presentationRules } = mainPresentaion[0];
-    const columns: any = [
-      { field: "", sortable: true, filter: true, headerCheckboxSelection: true, checkboxSelection: true, },
-    ];
+    const columns = this.getStaticColumns(presentationRules);
+    return { entity, formName, columns, presentationRules, embedPresentations, presentation: mainPresentaion[0] };
+  };
+
+  getStaticColumns = (presentationRules: any) => {
     const pRuleKeys = Object.keys(presentationRules)
+    const columns: any = [
+      { field: "", sortable: true, width: 64, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true },
+    ];
     pRuleKeys.forEach((pRuleKey: any) => {
       const pRule = presentationRules[pRuleKey];
       const column = {
@@ -73,8 +78,8 @@ class ProcessHelper {
         columns.push(column);
       }
     });
-    return { entity, formName, columns, presentationRules, embedPresentations, presentation: mainPresentaion[0] };
-  };
+    return columns;
+  }
 
 }
 
