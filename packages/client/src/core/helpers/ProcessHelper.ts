@@ -1,7 +1,7 @@
 import dataService from "core/DataService";
 import api from "core/services/Api";
 import { GetUserResponse } from "core/services/ApiTypes";
-import dmsService from "core/services/kgm/DmsService";
+import DmsService from "core/services/kgm/dmsService";
 import { createLoadRequest, createStartRequest, generateGUID } from "core/services/kgm/ProcessService";
 import _ from 'lodash';
 
@@ -30,7 +30,7 @@ class ProcessHelper {
           const requestObj = {
             docId: resData.constructOutputData.detailedObjects.Organization[0].logo.split(":")[0]
           };
-          dmsService.viewDocument(requestObj).then(function (response: any) {
+          DmsService.viewDocument(requestObj).then(function (response: any) {
             let imageUrl = dataService.BASE_URL + 'dms/viewDocument?docId=' + processResponse.constructOutputData.detailedObjects.Organization[0].logo.split(":")[0];
             setLogo(imageUrl)
           });

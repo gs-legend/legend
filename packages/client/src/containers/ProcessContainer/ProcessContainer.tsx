@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import './index.less';
 import { RootState } from 'core/store';
-import KgmList from "components/KgmList/KgmList";
 import processHelper from "core/helpers/ProcessHelper";
 import { callProcessDataActions } from "core/services/kgm/ProcessService";
+import KgmGrid from "components/KgmGrid/KgmGrid";
 
 type OwnProps = {
   process: any;
@@ -28,7 +28,7 @@ const getProcessTemplate = (process: any, data: any) => {
   let node: any = null;
   switch (uiTemplate) {
     case 'list':
-      node = <KgmList process={process} data={data} />;
+      node = <KgmGrid process={process} data={data} />;
       break;
     default:
       break;
