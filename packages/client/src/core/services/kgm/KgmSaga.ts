@@ -162,8 +162,7 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
                 newSecondPane = { ...SecondPane, tabs: [...SecondPane.tabs, FirstPane[firstIndex]], currentTab: processKey };
                 newFirstPane = {
                     ...FirstPane,
-                    tabs: [...FirstPane.tabs.slice(0, firstIndex),
-                    ...FirstPane.tabs.slice(firstIndex + 1)],
+                    tabs: [...FirstPane.tabs.slice(0, firstIndex), ...FirstPane.tabs.slice(firstIndex + 1)],
                     currentTab: firstIndex > 0 ? FirstPane.tabs[firstIndex - 1] : FirstPane.tabs[0]
                 };
             }
@@ -171,8 +170,7 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
         if (secondIndex > -1 && action === "remove") {
             newSecondPane = {
                 ...SecondPane,
-                tabs: [...SecondPane.tabs.slice(0, secondIndex),
-                ...SecondPane.tabs.slice(secondIndex + 1)],
+                tabs: [...SecondPane.tabs.slice(0, secondIndex), ...SecondPane.tabs.slice(secondIndex + 1)],
                 currentTab: secondIndex > 0 ? SecondPane.tabs[secondIndex - 1] : SecondPane.tabs[0]
             };
             newFirstPane = { ...FirstPane, tabs: [...FirstPane.tabs, ...SecondPane.tabs[secondIndex]] };
@@ -226,8 +224,7 @@ function* removeProcess({ payload }: ReturnType<typeof removeProcessAction>) {
         if (firstIndex !== -1) {
             newFirstPane = {
                 ...FirstPane,
-                tabs: [...FirstPane.tabs.slice(0, firstIndex),
-                ...FirstPane.tabs.slice(firstIndex + 1)],
+                tabs: [...FirstPane.tabs.slice(0, firstIndex), ...FirstPane.tabs.slice(firstIndex + 1)],
                 currentTab: FirstPane.currentTab === processKey ? FirstPane.tabs[0] : FirstPane.currentTab
             };
         }
@@ -235,8 +232,7 @@ function* removeProcess({ payload }: ReturnType<typeof removeProcessAction>) {
         if (secondIndex !== -1) {
             newSecondPane = {
                 ...SecondPane,
-                tabs: [...SecondPane.tabs.slice(0, secondIndex),
-                ...SecondPane.tabs.slice(secondIndex + 1)],
+                tabs: [...SecondPane.tabs.slice(0, secondIndex), ...SecondPane.tabs.slice(secondIndex + 1)],
                 currentTab: SecondPane.currentTab === processKey ? SecondPane.tabs[0] : SecondPane.currentTab
             };
         }
