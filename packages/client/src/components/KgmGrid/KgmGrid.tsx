@@ -1,11 +1,6 @@
-import { Button, Form, Table } from 'antd';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import './index.less';
-import { RiAddCircleFill } from 'react-icons/ri';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { callProcessSubmitAction, callProcessTriggerActions } from 'core/services/kgm/ProcessService';
 import { connect } from 'react-redux';
-import Split from 'react-split';
-import { EditTwoTone, SaveTwoTone, StopOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import KgmField from 'components/KgmField/KgmField';
 
@@ -17,6 +12,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 import { selectTheme } from 'core/services/kgm/PresentationService';
 import { RootState } from 'core/store';
 import processHelper from 'core/helpers/ProcessHelper';
+import './index.less';
 
 type OwnProps = {
   process: any;
@@ -36,13 +32,42 @@ const mapDispatchToProps = {
 
 type Props = ReturnType<typeof mapStateToProps> & OwnProps & typeof mapDispatchToProps;
 
+const getColumns = (presentationRules: any, formData: Array<any>) => {
+  const pRuleKeys = Object.keys(presentationRules)
+  const columns: any = [
+    { field: "", sortable: false, width: 64, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left' },
+  ];
+  pRuleKeys.forEach((pRuleKey: any) => {
+    const presentationRule = presentationRules[pRuleKey];
+    if (presentationRule.visible) {
+      const column = {
+        headerName: presentationRule.label,
+        field: presentationRule.attrName,
+        type: 'nonEditableColumn',
+        cellRenderer: (props) => {
+          const { data } = props;
+          return <KgmField presentationRule={presentationRule} data={data}></KgmField>;
+        }
+      };
+      columns.push(column);
+    }
+  });
+  return columns;
+}
+
+
 const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme }: Props) => {
+  const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   const processDetails = processHelper.getProcessDetails(process, data, false);
-  const { entity, columns, presentationRules, embedPresentations, presentation } = processDetails;
+  const { entity, presentationRules, embedPresentations, presentation } = processDetails;
+
+  useEffect(() => {
+    setColumns(getColumns(presentationRules, data));
+  }, []);
 
   const rowData = data[entity];
   const defaultColDef = useMemo(() => ({
@@ -58,6 +83,7 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme }:
       suppressMenu: true
     }
   };
+
 
   const setAutoHeight = useCallback(() => {
     gridRef.current.api.setDomLayout('autoHeight');

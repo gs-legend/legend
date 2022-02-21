@@ -55,6 +55,11 @@ export const createLoadRequest = (process: string) => {
     }
 }
 
+export const newId = () => {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+}
+
 export const generateGUID = () => {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)

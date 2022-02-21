@@ -1,8 +1,11 @@
+import { DATA_CONSTANTS } from "core/Constants";
 import dataService from "core/DataService";
 import api from "core/services/Api";
 import { GetUserResponse } from "core/services/ApiTypes";
-import DmsService from "core/services/kgm/dmsService";
+import { selectApplicationContext } from "core/services/kgm/CacheService";
+import dmsService from "core/services/kgm/DmsService";
 import { createLoadRequest, createStartRequest, generateGUID } from "core/services/kgm/ProcessService";
+import { store } from "core/store";
 import _ from 'lodash';
 
 class ProcessHelper {
@@ -30,7 +33,7 @@ class ProcessHelper {
           const requestObj = {
             docId: resData.constructOutputData.detailedObjects.Organization[0].logo.split(":")[0]
           };
-          DmsService.viewDocument(requestObj).then(function (response: any) {
+          dmsService.viewDocument(requestObj).then(function (response: any) {
             let imageUrl = dataService.BASE_URL + 'dms/viewDocument?docId=' + processResponse.constructOutputData.detailedObjects.Organization[0].logo.split(":")[0];
             setLogo(imageUrl)
           });
@@ -85,60 +88,6 @@ class ProcessHelper {
           } else {
             pRuleType = presentationRule['@type']
           }
-
-          if (presentationRule.visible) {
-            let renderCol = _.get(data, colDef.field) || "";
-            if (presentationRule.policyMap && presentationRule.policyMap.presentation) {
-              renderCol = this.policyWrapper(presentationRule, data)
-            }
-            else if (presentationRule.embeddedPresentationId) {
-              if (presentationRule.htmlControl === 'multiselect') {
-                renderCol = this.multiSelectWrapper(presentationRule, data)
-              } else {
-                renderCol = this.embeddedPresentationWrapper(presentationRule, data)
-              }
-            } else if (presentationRule.htmlControl === 'date') {
-              renderCol = this.renderDate(presentationRule, data)
-            } else if (presentationRule.htmlControl === 'dateTime') {
-              renderCol = this.renderDateTime(presentationRule, data)
-            } else if (presentationRule.htmlControl === 'time') {
-              renderCol = this.renderTime(presentationRule, data)
-            } else if (presentationRule.htmlControl === 'multiselect') {
-              renderCol = this.multiSelectWrapper(presentationRule, data)
-
-            } else if (presentationRule.htmlControl === 'treeSelect') {
-              renderCol = this.treeSelectWrapper(presentationRule, data)
-            } else if (presentationRule.htmlControl === 'image' || presentationRule.htmlControl === 'preview') {
-              renderCol = this.imageSelectWrapper(presentationRule, data)
-            } else if (presentationRule.htmlControl === 'file') {
-              renderCol = this.fileSelectWrapper(presentationRule, data)
-            }
-            else if ((presentationRule.htmlControl === 'search'
-              || presentationRule.htmlControl === 'radio'
-              || presentationRule.htmlControl === 'select')) {
-              renderCol = this.computeDisplayStringWrapper(presentationRule, data)
-            }
-            else if (presentationRule.htmlControl === 'text') {
-              renderCol = this.textStringWrapper(presentationRule, data)
-            }
-            else if (presentationRule.htmlControl === 'number') {
-              renderCol = this.numberStringWrapper(presentationRule, data)
-            }
-            else if (presentationRule.htmlControl === 'boolean') {
-              renderCol = this.booleanWrapper(presentationRule, data)
-            }
-            else if (presentationRule.htmlControl === 'currency') {
-              renderCol = this.currencyWrapper(presentationRule, data)
-            } else if (presentationRule.type === 'REPORT') {
-              renderCol = this.reportWrapper(presentationRule, data)
-            }
-            else if (presentationRule.htmlControl === 'activity' || presentationRule.htmlControl === 'comments' || presentationRule.htmlControl === 'customactivitylog' || presentationRule.htmlControl === 'checklist') {
-
-            } else if (presentationRule.type !== 'REPORT') {
-            }
-            columns.push(renderCol);
-          }
-
         }
       };
     });
@@ -168,24 +117,6 @@ class ProcessHelper {
     return { entityConsumedFullNameForSearch, displayName };
   }
 
-  policyWrapper = (presentationRule, data) => {
-
-  }
-  multiSelectWrapper = (presentationRule, data) => { }
-  embeddedPresentationWrapper = (presentationRule, data) => { }
-  renderDate = (presentationRule, data) => { }
-  renderDateTime = (presentationRule, data) => { }
-  renderTime = (presentationRule, data) => { }
-  treeSelectWrapper = (presentationRule, data) => { }
-  imageSelectWrapper = (presentationRule, data) => { }
-  fileSelectWrapper = (presentationRule, data) => { }
-  computeDisplayStringWrapper = (presentationRule, data) => { }
-  textStringWrapper = (presentationRule, data) => { }
-  numberStringWrapper = (presentationRule, data) => { }
-  booleanWrapper = (presentationRule, data) => { }
-  currencyWrapper = (presentationRule, data) => { }
-  reportWrapper = (presentationRule, data) => { }
-
   getVariableValue = (variable, data) => {
     const _self = this;
     let attributes = variable.split('.');
@@ -208,6 +139,51 @@ class ProcessHelper {
     }
     return _self.getVariableValue(attributes.join('.'), local);
   };
+
+  getfontStyles = (presentationRule) => {
+    if (!presentationRule) return {};
+    let fontStr = '';
+    let fgColor = '';
+    if (_.get(presentationRule.uiSettings, "fontStyling.label")) {
+      const isBold = _.get(presentationRule.uiSettings, "fontStyling.label.fontBold");
+      const isItalic = _.get(presentationRule.uiSettings, "fontStyling.label.fontItalic");
+      const isUnderline = _.get(presentationRule.uiSettings, "fontStyling.label.fontUnderline");
+
+      fgColor = _.get(presentationRule.uiSettings, "fontStyling.label.fontColor");
+      if (!fgColor) {
+        fgColor = "#3c3c3c";
+      }
+      if (isBold) {
+        fontStr = fontStr + 'isBold ';
+      }
+      if (isItalic) {
+        fontStr = fontStr + 'italic ';
+      }
+      if (isUnderline) {
+        fontStr = fontStr + 'underline ';
+      }
+      if (presentationRule.uiSettings.fontStyling.fontSize == 'a') {
+        fontStr = fontStr + "fontSizeA ";
+      } else if (presentationRule.uiSettings.fontStyling.fontSize == 'a1') {
+        fontStr = fontStr + "fontSizeA1 ";
+
+      } else if (presentationRule.uiSettings.fontStyling.fontSize == 'a2') {
+        fontStr = fontStr + "fontSizeA2 ";
+      }
+    }
+    return { fontStr: fontStr, fgColor: fgColor };
+  }
+
+  noValueText = function () {
+    let noDataText;
+    const appContext = selectApplicationContext(store.getState());
+    if (appContext?.noDataText) {
+      noDataText = appContext?.noDataText;
+    } else {
+      noDataText = DATA_CONSTANTS.NO_DATA_TEXT
+    }
+    return noDataText;
+  }
 }
 
 export default new ProcessHelper();

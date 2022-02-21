@@ -45,7 +45,7 @@ export interface Context {
 }
 
 export interface ApplicationContext {
-    context: Context;
+    context: any;
 }
 
 export interface Process {

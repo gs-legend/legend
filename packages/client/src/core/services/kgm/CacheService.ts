@@ -30,4 +30,6 @@ export const CacheServiceReducer = combineReducers({
 
 export const selectCacheServiceState = (state: RootState) => state.cacheService;
 export const selectAppCacheServiceReducer = (state: RootState) => selectCacheServiceState(state).appAndUserContext;
+export const selectApplicationContext = (state: RootState) => selectCacheServiceState(state).appAndUserContext.applicationContext.context;
+export const selectUserContext = (state: RootState) => selectCacheServiceState(state).appAndUserContext.userContext.context;
 

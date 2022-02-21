@@ -13,7 +13,7 @@ import { connect, useDispatch } from 'react-redux';
 import { DashboardResponse } from 'core/types/Dashboard';
 import { FolderOutlined } from '@ant-design/icons';
 import { selectUserContext } from 'core/services/kgm/RoleService';
-import { callProcessActions, callStaticProcessActions, createStartRequest, generateGUID, selectSplitPane } from 'core/services/kgm/ProcessService';
+import { callProcessActions, callStaticProcessActions, createStartRequest, generateGUID, newId, selectSplitPane } from 'core/services/kgm/ProcessService';
 import { selectDashboard, selectTheme, } from 'core/services/kgm/PresentationService';
 import { BsArrowRightSquareFill } from "react-icons/bs";
 import processHelper from 'core/helpers/ProcessHelper';
@@ -72,7 +72,7 @@ const processItem = (item: any) => {
     }
 
     return (
-        <Menu.Item key={item.event.process} icon={icon} className='menu-item'>
+        <Menu.Item key={item.event.process + newId()} icon={icon} className='menu-item'>
             {item.name}
         </Menu.Item>
     );
@@ -86,7 +86,7 @@ const groupItem = (item: any) => {
     });
 
     return (
-        <SubMenu key={item.name.replace(/' '/g, '') + Math.random().toString(36).slice(2)} className="submenu-folder" icon={<FolderOutlined />} title={item.name}>
+        <SubMenu key={item.name.replace(/' '/g, '') + newId()} className="submenu-folder" icon={<FolderOutlined />} title={item.name}>
             {submenus}
         </SubMenu>
     );
