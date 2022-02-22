@@ -70,13 +70,13 @@ function* getStaticProcess({ payload }: any) {
         const state = store.getState();
         const processes: Array<any> = yield selectProcessState(state);
         const { processName, callBack } = payload;
-        const existing = _.find(processes, { tabName: processName });
+        const existing = _.find(processes, { processName: processName });
         const panes = yield selectSplitPane(state);
         const { FirstPane, SecondPane }: any = Object.assign({}, panes);
 
         if (existing) {
-            const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processName });
-            const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processName });
+            const firstIndex = _.findIndex(FirstPane.tabs, { processName: processName });
+            const secondIndex = _.findIndex(SecondPane.tabs, { processName: processName });
             let newFirstPane = { ...FirstPane };
             let newSecondPane = { ...SecondPane };
             if (secondIndex > -1) {
@@ -89,11 +89,11 @@ function* getStaticProcess({ payload }: any) {
         }
         else {
             const GUID = generateGUID();
-            const newProcessState = [...processes, { GUID: GUID, tabName: processName }];
+            const newProcessState = [...processes, { GUID: GUID, processName: processName }];
             yield put(callProcessActions.success(newProcessState));
             let newFirstPane = { ...FirstPane };
             let { tabs } = newFirstPane || [];
-            tabs = [...tabs, { GUID: GUID, tabName: processName }];
+            tabs = [...tabs, { GUID: GUID, tabName: processName, processName: processName }];
             newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
             yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
             if (callBack) {
@@ -108,15 +108,15 @@ function* getStaticProcess({ payload }: any) {
 function* getProcess({ payload }: ReturnType<typeof callProcessActions.request>) {
     try {
         const processes = yield selectProcessState(store.getState());
-        const { request, isUserTriggered, callBack } = payload;
+        const { request, isUserTriggered, callBack, key } = payload;
         const processName = _.get(request, 'event.processName');
-        const existing = processes[processName];
+        const existing = _.find(processes, { processName: processName });
         const panes = yield selectSplitPane(store.getState());
         const { FirstPane, SecondPane }: any = Object.assign({}, panes);
 
         if (existing && isUserTriggered) {
-            const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processName });
-            const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processName });
+            const firstIndex = _.findIndex(FirstPane.tabs, { processName: processName });
+            const secondIndex = _.findIndex(SecondPane.tabs, { processName: processName });
             let newFirstPane = { ...FirstPane };
             let newSecondPane = { ...SecondPane };
             if (secondIndex > -1) {
@@ -130,13 +130,15 @@ function* getProcess({ payload }: ReturnType<typeof callProcessActions.request>)
         else {
             const resp = yield call(api.process, request);
             if (isUserTriggered) {
-                const newProcessState = [...processes, { GUID: payload.guid, tabName: processName, [processName]: resp.data }];
-                yield put(callProcessActions.success(newProcessState));
-                let newFirstPane = { ...FirstPane };
-                let { tabs } = newFirstPane || [];
-                tabs = [...tabs, { GUID: payload.guid, tabName: processName }];
-                newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
-                yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
+                const newProcessState = [...processes, { GUID: payload.guid, processName: processName, processData: resp.data }];
+                if (resp.data && resp.data.constructOutputData && resp.data.constructOutputData.uiResource && resp.data.constructOutputData.uiResource.presentations) {
+                    yield put(callProcessActions.success(newProcessState));
+                    let newFirstPane = { ...FirstPane };
+                    let { tabs } = newFirstPane || [];
+                    tabs = [...tabs, { GUID: payload.guid, tabName: key, processName: processName }];
+                    newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
+                    yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
+                }
             }
             else if (callBack) {
                 yield put(callBack(resp));
@@ -152,8 +154,8 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
         const { processKey, action } = payload;
         const panes = selectSplitPane(store.getState());
         const { FirstPane, SecondPane }: any = Object.assign({}, panes);
-        const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processKey });
-        const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processKey });
+        const firstIndex = _.findIndex(FirstPane.tabs, { processName: processKey });
+        const secondIndex = _.findIndex(SecondPane.tabs, { processName: processKey });
         let newFirstPane = { ...FirstPane };
         let newSecondPane = { ...SecondPane };
 
@@ -210,13 +212,13 @@ function* removeProcess({ payload }: ReturnType<typeof removeProcessAction>) {
         const processes = yield selectProcessState(store.getState());
 
         const { FirstPane, SecondPane } = panes;
-        const firstIndex = _.findIndex(FirstPane.tabs, { tabName: processKey });
-        const secondIndex = _.findIndex(SecondPane.tabs, { tabName: processKey });
+        const firstIndex = _.findIndex(FirstPane.tabs, { processName: processKey });
+        const secondIndex = _.findIndex(SecondPane.tabs, { processName: processKey });
         let newFirstPane = { ...FirstPane };
         let newSecondPane = { ...SecondPane };
 
         const newProcess = _.filter(processes, process => {
-            return process.tabName !== processKey;
+            return process.processName !== processKey;
         });
 
         yield put(callProcessActions.success(newProcess));

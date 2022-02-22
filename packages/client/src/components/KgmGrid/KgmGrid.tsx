@@ -5,7 +5,7 @@ import _ from 'lodash';
 import KgmField from 'components/KgmField/KgmField';
 
 import { AgGridReact } from 'ag-grid-react';
-import * as AgGrid from 'assets/scripts/ag-grid-enterprise.min.js';
+import 'assets/scripts/ag-grid-enterprise.min.js';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
@@ -13,10 +13,12 @@ import { selectTheme } from 'core/services/kgm/PresentationService';
 import { RootState } from 'core/store';
 import processHelper from 'core/helpers/ProcessHelper';
 import './index.less';
+import { Col, Pagination, Row } from 'antd';
 
 type OwnProps = {
   process: any;
   data: any;
+  constructOutputData: any;
 };
 
 const mapStateToProps = (state: RootState) => {
@@ -37,10 +39,10 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
   const columns: any = [
     { field: "", sortable: false, width: 64, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left' },
   ];
-  pRuleKeys.forEach((pRuleKey: any) => {
+  pRuleKeys.forEach((pRuleKey: any, index: number) => {
     const presentationRule = presentationRules[pRuleKey];
     if (presentationRule.visible) {
-      const column = {
+      const column: any = {
         headerName: presentationRule.label,
         field: presentationRule.attrName,
         type: 'nonEditableColumn',
@@ -49,6 +51,9 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
           return <KgmField presentationRule={presentationRule} data={data}></KgmField>;
         }
       };
+      // if (index === 0) {
+      //   column.pinned = 'left';
+      // }
       columns.push(column);
     }
   });
@@ -56,24 +61,50 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
 }
 
 
-const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme }: Props) => {
+const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
-  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '91%', width: '100%' }), []);
 
   const processDetails = processHelper.getProcessDetails(process, data, false);
   const { entity, presentationRules, embedPresentations, presentation } = processDetails;
+  const { verbProperties } = constructOutputData;
+  const { endRecord, pageSize, startRecord, totalRecords } = verbProperties;
 
   useEffect(() => {
     setColumns(getColumns(presentationRules, data));
   }, []);
 
+  const itemRender = (current, type, originalElement) => {
+    if (type === 'prev') {
+      return <a>Previous</a>;
+    }
+    if (type === 'next') {
+      return <a>Next</a>;
+    }
+    return originalElement;
+  }
+
+  const onPageChange = (page, pageSize) => {
+    console.log(page, pageSize)
+  }
+
+  const renderPagination = () => {
+    return <Row justify="space-between" style={{ paddingTop: "5px" }}>
+      <Col className='pagination_result'>Showing <span>{startRecord}</span> to <span>{endRecord}</span> of <span>{totalRecords}</span> record(s) </Col>
+      <Col>
+        <Pagination total={+totalRecords} itemRender={itemRender} defaultPageSize={+pageSize} showSizeChanger={false} hideOnSinglePage={true} onChange={onPageChange} />
+      </Col>
+    </Row>
+  }
+
   const rowData = data[entity];
   const defaultColDef = useMemo(() => ({
     resizable: true,
     sortable: true,
-    filter: true
+    filter: true,
+    flex: 1
   }), []);
 
   const columnTypes = {
@@ -93,15 +124,33 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme }:
     gridRef.current.api.setDomLayout('normal');
   }, []);
 
-  const { ClientSideRowModelModule } = AgGrid;
+  const sideBarOptions = {
+    toolPanels: [
+      {
+        id: 'columns',
+        labelDefault: 'Columns',
+        labelKey: 'columns',
+        iconKey: 'columns',
+        toolPanel: 'agColumnsToolPanel',
+        toolPanelParams: {
+          suppressRowGroups: true,
+          suppressValues: true,
+        }
+      }
+    ]
+  }
+
+  // const { ClientSideRowModelModule, sideBar } = AgGrid;
+  // const GridModules = [ClientSideRowModelModule, sideBar];
   return (
     <div className='list-content'>
       <div className={theme === "light" ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={gridStyle}>
-        <AgGridReact ref={gridRef} allowDragFromColumnsToolPanel={true} animateRows={true} enableCellChangeFlash={true} domLayout="autoHeight"
-          rowData={rowData} defaultColDef={defaultColDef} modules={[ClientSideRowModelModule]}
+        <AgGridReact ref={gridRef} allowDragFromColumnsToolPanel={true} animateRows={true} enableCellChangeFlash={true}
+          rowData={rowData} defaultColDef={defaultColDef} sideBar={sideBarOptions}
           columnDefs={columns} columnTypes={columnTypes}>
         </AgGridReact>
       </div>
+      {renderPagination()}
     </div>
   );
 };

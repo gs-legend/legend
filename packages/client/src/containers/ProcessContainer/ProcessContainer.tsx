@@ -11,6 +11,7 @@ type OwnProps = {
   process: any;
   data: any;
   processKey: string;
+  constructOutputData: any;
 };
 
 const mapStateToProps = (state: RootState) => {
@@ -23,12 +24,12 @@ const mapDispatchToProps = {
 
 type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps & OwnProps;
 
-const getProcessTemplate = (process: any, data: any) => {
+const getProcessTemplate = (process: any, data: any, constructOutputData: any) => {
   const { uiTemplate } = process;
   let node: any = null;
   switch (uiTemplate) {
     case 'list':
-      node = <KgmGrid process={process} data={data} />;
+      node = <KgmGrid process={process} data={data} constructOutputData={constructOutputData} />;
       break;
     default:
       break;
@@ -36,8 +37,8 @@ const getProcessTemplate = (process: any, data: any) => {
   return node;
 };
 
-const ProcessContainer = ({ process, processKey, data, callProcessData }: Props) => {
-  const processDetails = processHelper.getProcessDetails(process,data);
+const ProcessContainer = ({ process, processKey, data, callProcessData, constructOutputData }: Props) => {
+  const processDetails = processHelper.getProcessDetails(process, data);
   const { presentation } = processDetails;
   useEffect(() => {
     if (presentation.onLoadRequired) {
@@ -45,6 +46,6 @@ const ProcessContainer = ({ process, processKey, data, callProcessData }: Props)
     }
   }, [callProcessData, processKey]);
   const className = 'process_tab tab ' + processKey;
-  return <div className={className}>{getProcessTemplate(process, data)}</div>;
+  return <div className={className}>{getProcessTemplate(process, data, constructOutputData)}</div>;
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProcessContainer);

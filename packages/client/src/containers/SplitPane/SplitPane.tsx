@@ -43,12 +43,12 @@ const SplitPane = ({
     const fPaneTabs: any = [];
     const sPaneTabs: any = [];
     FirstPane.tabs.forEach((tab: any) => {
-      const process = _.find(processState, { tabName: tab.tabName })
-      process && fPaneTabs.push({ processKey: tab.tabName, process });
+      const process = _.find(processState, { processName: tab.processName })
+      process && fPaneTabs.push({ processKey: tab.processName, process });
     });
     SecondPane.tabs.forEach((tab: any) => {
-      const process = _.find(processState, { tabName: tab.tabName })
-      process && sPaneTabs.push({ processKey: tab.tabName, process });
+      const process = _.find(processState, { processName: tab.processName })
+      process && sPaneTabs.push({ processKey: tab.processName, process });
     });
 
     let firstCurrentTab = FirstPane.currentTab;
@@ -72,14 +72,12 @@ const SplitPane = ({
     setSecondPanetabs(sPaneTabs);
   }, [processState, splitPanes]);
 
-  const setFirstCurrentPaneKey = (process: any) => {
-    const processKey = process.tabName;
+  const setFirstCurrentPaneKey = (processKey: any) => {
     setCurrentPaneKey({ processKey, paneNumber: 1 });
     setFirstPaneCurrentTab(processKey);
   };
 
-  const setSecondCurrentPaneKey = (process: any) => {
-    const processKey = process.tabName;
+  const setSecondCurrentPaneKey = (processKey: any) => {
     setCurrentPaneKey({ processKey, paneNumber: 2 });
     setSecondPaneCurrentTab(processKey);
   };

@@ -147,6 +147,7 @@ export type ProcessPane = {
 export type ProcessTab = {
     GUID: string;
     tabName: string;
+    processName: string;
 }
 
 export type ProcessPanes = {

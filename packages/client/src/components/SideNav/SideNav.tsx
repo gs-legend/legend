@@ -72,7 +72,7 @@ const processItem = (item: any) => {
     }
 
     return (
-        <Menu.Item key={item.event.process + newId()} icon={icon} className='menu-item'>
+        <Menu.Item key={item.event.process + newId()} icon={icon} data-key={item.event.process} className='menu-item'>
             {item.name}
         </Menu.Item>
     );
@@ -118,9 +118,11 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, call
             callStaticProcess({ processName: key });
         }
         else {
+            const item = event.domEvent.target.closest(".ant-menu-item");
+            const dataKey = item.getAttribute('data-key');
             const guid = generateGUID();
-            const request = createStartRequest(key, guid);
-            callProcess({ request, isUserTriggered: true, guid });
+            const request = createStartRequest(dataKey, guid);
+            callProcess({ request, isUserTriggered: true, guid, key });
         }
     }
 
