@@ -37,7 +37,7 @@ type Props = ReturnType<typeof mapStateToProps> & OwnProps & typeof mapDispatchT
 const getColumns = (presentationRules: any, formData: Array<any>) => {
   const pRuleKeys = Object.keys(presentationRules)
   const columns: any = [
-    { field: "", sortable: false, width: 64, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left' },
+    { field: "", sortable: false, width: 64, suppressSizeToFit: true, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left' },
   ];
   pRuleKeys.forEach((pRuleKey: any, index: number) => {
     const presentationRule = presentationRules[pRuleKey];
@@ -60,6 +60,7 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
   return columns;
 }
 
+console.log("AgGrid", AgGrid)
 
 const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData }: Props) => {
   const [columns, setColumns] = useState([]);
@@ -124,6 +125,11 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
     gridRef.current.api.setDomLayout('normal');
   }, []);
 
+  const onGridReady = e => {
+    e.api.sizeColumnsToFit();
+    e.columnApi.resetColumnState();
+  }
+
   const sideBarOptions = {
     toolPanels: [
       {
@@ -139,15 +145,14 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
       }
     ]
   }
-
-  // const { ClientSideRowModelModule, sideBar } = AgGrid;
-  // const GridModules = [ClientSideRowModelModule, sideBar];
+  const { ClientSideRowModelModule, ColumnToolPanelModule, SideBarModule } = AgGrid;
+  const GridModules = [ClientSideRowModelModule, ColumnToolPanelModule, SideBarModule];
   return (
     <div className='list-content'>
       <div className={theme === "light" ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={gridStyle}>
         <AgGridReact ref={gridRef} allowDragFromColumnsToolPanel={true} animateRows={true} enableCellChangeFlash={true}
-          rowData={rowData} defaultColDef={defaultColDef} sideBar={sideBarOptions}
-          columnDefs={columns} columnTypes={columnTypes}>
+          rowData={rowData} defaultColDef={defaultColDef} modules={GridModules} sideBar={sideBarOptions}
+          columnDefs={columns} columnTypes={columnTypes} onGridReady={onGridReady} suppressCellFocus={true}>
         </AgGridReact>
       </div>
       {renderPagination()}
