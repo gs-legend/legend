@@ -1,5 +1,6 @@
-import { FontStyle, FontWeight, getFont } from '../../scene/shape/text';
-import { Observable, reactive } from '../../util/observable';
+import { getFont } from "components/Grid/charts/scene/shape/text";
+import { Observable, reactive } from "components/Grid/charts/util/observable";
+import { FontStyle, FontWeight } from "components/Grid/core";
 
 export class Label extends Observable {
     @reactive('change', 'dataChange') enabled = true;

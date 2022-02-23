@@ -1,10 +1,11 @@
-const { override, addWebpackAlias, fixBabelImports, addWebpackPlugin, babelInclude } = require("customize-cra");
+const { override, addWebpackAlias, fixBabelImports, addWebpackPlugin, babelInclude, addBabelPresets, addBabelPlugins, useBabelRc, disableEsLint, addDecoratorsLegacy } = require("customize-cra");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const webpack = require("webpack");
 const path = require("path");
 const addLessLoader = require("customize-cra-less-loader");
 const AntDesignThemePlugin = require("antd-theme-webpack-plugin");
+const pluginProposalDecorators = require("@babel/plugin-proposal-decorators");
 
 const options = {
   stylesDir: path.join(__dirname, "./src/assets/styles"),
@@ -70,7 +71,16 @@ module.exports = override(
     libraryDirectory: "es",
     style: true,
   }),
-  // babelInclude([path.resolve("src")]),
+  // useBabelRc(),
+  disableEsLint(),
+  // addDecoratorsLegacy(),
+  // ...addBabelPresets("@babel/preset-react", "@babel/preset-env", [
+  //   "react-app",
+  //   {
+  //     absoluteRuntime: false,
+  //   },
+  // ]),
+  ...addBabelPlugins(["@babel/plugin-proposal-decorators", { legacy: true }], ["@babel/plugin-proposal-class-properties", { loose: true }]),
   addWebpackPlugin(new AntDesignThemePlugin(options)),
   addLessLoader({
     cssLoaderOptions: {

@@ -10,9 +10,7 @@ import { TemplateService } from "../templateService";
 import { ValueService } from "../valueService/valueService";
 import { EventService } from "../eventService";
 import { ColumnAnimationService } from "./columnAnimationService";
-import { IRangeService, ISelectionHandleFactory } from "../interfaces/IRangeService";
 import { FocusService } from "../focusService";
-import { IContextMenuFactory } from "../interfaces/iContextMenuFactory";
 import { PopupService } from "../widgets/popupService";
 import { ValueFormatterService } from "./valueFormatterService";
 import { StylingService } from "../styling/stylingService";
@@ -24,14 +22,10 @@ import { DragAndDropService } from "../dragAndDrop/dragAndDropService";
 import { SortController } from "../sortController";
 import { FilterManager } from "../filter/filterManager";
 import { RowContainerHeightService } from "./rowContainerHeightService";
-import { IFrameworkOverrides } from "../interfaces/iFrameworkOverrides";
 import { CellPositionUtils } from "../entities/cellPosition";
 import { RowPositionUtils } from "../entities/rowPosition";
 import { SelectionService } from "../selectionService";
 import { RowCssClassCalculator } from "./row/rowCssClassCalculator";
-import { IRowModel } from "../interfaces/iRowModel";
-import { IClientSideRowModel } from "../interfaces/iClientSideRowModel";
-import { IServerSideRowModel } from "../interfaces/iServerSideRowModel";
 import { ResizeObserverService } from "../misc/resizeObserverService";
 import { CtrlsService } from "../ctrlsService";
 import { NavigationService } from "../gridBodyComp/navigationService";
@@ -40,6 +34,12 @@ import { CtrlsFactory } from "../ctrlsFactory";
 import { UserComponentRegistry } from "../components/framework/userComponentRegistry";
 import { ValueCache } from "../valueService/valueCache";
 import { RowNodeEventThrottle } from "../entities/rowNodeEventThrottle";
+import { IRangeService, ISelectionHandleFactory } from "../interfaces/IRangeService";
+import { IContextMenuFactory } from "../interfaces/iContextMenuFactory";
+import { IFrameworkOverrides } from "../interfaces/iFrameworkOverrides";
+import { IRowModel } from "../interfaces/iRowModel";
+import { IClientSideRowModel } from "../interfaces/iClientSideRowModel";
+import { IServerSideRowModel } from "../interfaces/iServerSideRowModel";
 
 /** Using the IoC has a slight performance consideration, which is no problem most of the
  * time, unless we are trashing objects - which is the case when scrolling and rowComp
