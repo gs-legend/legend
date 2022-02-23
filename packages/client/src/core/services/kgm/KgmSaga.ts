@@ -23,7 +23,7 @@ function* getUser() {
         const resp: AxiosResponse<GetUserResponse> = yield call(api.getUser);
         yield put(getUserActions.success(resp.data));
     } catch {
-        yield put(getUserActions.failure());
+        yield put(getUserActions.failure({},{}));
     }
 }
 
@@ -32,7 +32,7 @@ function* getDashboard() {
         const resp: AxiosResponse<DashboardResponse> = yield call(api.getDashboard);
         yield put(getDashboardActions.success(resp.data));
     } catch {
-        yield put(getDashboardActions.failure());
+        yield put(getDashboardActions.failure({},{}));
     }
 }
 
@@ -41,7 +41,7 @@ function* getAppAndUserContext() {
         const resp: AxiosResponse<AppAndUserContext> = yield call(api.getAppAndUserContext);
         yield put(getAppAndUserContextActions.success(resp.data));
     } catch {
-        yield put(getAppAndUserContextActions.failure());
+        yield put(getAppAndUserContextActions.failure({},{}));
     }
 }
 
@@ -60,7 +60,7 @@ function* getOnLoadState() {
             yield put(getDashboardActions.success(dashboard.data));
         }
     } catch {
-        yield put(getOnLoadActions.failure());
+        yield put(getOnLoadActions.failure({},{}));
     }
 }
 

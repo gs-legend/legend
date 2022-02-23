@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import KgmField from 'components/KgmField/KgmField';
 
-import { AgGridReact } from 'ag-grid-react';
-import 'assets/scripts/ag-grid-enterprise.min.js';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
+import { AgGridReact } from 'components/Grid/ReactGrid';
+import 'components/Grid/core';
+import 'components/Grid/core/styles/ag-grid.scss';
+import 'components/Grid/styles/ag-theme-alpine.css';
+import 'components/Grid/styles/ag-theme-alpine-dark.css';
 import { selectTheme } from 'core/services/kgm/PresentationService';
 import { RootState } from 'core/store';
 import processHelper from 'core/helpers/ProcessHelper';
@@ -60,7 +60,6 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
   return columns;
 }
 
-console.log("AgGrid", AgGrid)
 
 const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData }: Props) => {
   const [columns, setColumns] = useState([]);
@@ -145,8 +144,8 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
       }
     ]
   }
-  const { ClientSideRowModelModule, ColumnToolPanelModule, SideBarModule } = AgGrid;
-  const GridModules = [ClientSideRowModelModule, ColumnToolPanelModule, SideBarModule];
+  // const { ClientSideRowModelModule, ColumnToolPanelModule, SideBarModule } = AgGrid;
+  const GridModules = [];//[ClientSideRowModelModule, ColumnToolPanelModule, SideBarModule];
   return (
     <div className='list-content'>
       <div className={theme === "light" ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={gridStyle}>
