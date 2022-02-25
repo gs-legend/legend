@@ -1,0 +1,47 @@
+.tab_header {
+  display: flex;
+
+  .tab_pin {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    margin-top: -1px;
+  }
+}
+
+.ant-tabs-tab-active {
+  .tab_pin {
+    display: flex;
+  }
+}
+
+.ant-tabs-tab .anticon {
+  margin-right: 0px;
+}
+
+.ant-tabs-tab-remove {
+  margin-left: 0px;
+  position: relative;
+  top: 1px;
+}
+
+.ant-tabs-tab {
+  padding: 0 25px;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.12);
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 10px;
+}
+
+.ant-tabs-nav{
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0px !important;
+}
+
+.ant-tabs,
+.ant-tabs-content,
+.tab{
+  height: 100%;
+}
