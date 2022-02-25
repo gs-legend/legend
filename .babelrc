@@ -5,7 +5,7 @@
     "babel-plugin-transform-typescript-metadata",
     "@babel/plugin-proposal-object-rest-spread",
     // ["transform-decorators-legacy", { "decoratorsBeforeExport": true }],
-    // ["@babel/plugin-proposal-decorators", { "version": "2021-12", "decoratorsBeforeExport": true }],
+    // ["@babel/plugin-proposal-decorators", { "legacy": true}],
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
     "babel-plugin-parameter-decorator"
   ]

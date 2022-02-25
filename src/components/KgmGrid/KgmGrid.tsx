@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import KgmField from 'components/KgmField/KgmField';
 
-import { AgGridReact } from 'components/Grid/ReactGrid';
-import 'components/Grid/core';
-import 'components/Grid/core/styles/ag-grid.scss';
-import 'components/Grid/styles/ag-theme-alpine.css';
-import 'components/Grid/styles/ag-theme-alpine-dark.css';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-enterprise';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
+
 import { selectTheme } from 'core/services/kgm/PresentationService';
 import { RootState } from 'core/store';
 import processHelper from 'core/helpers/ProcessHelper';

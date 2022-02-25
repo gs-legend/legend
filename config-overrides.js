@@ -72,7 +72,7 @@ module.exports = override(
     libraryDirectory: "es",
     style: true,
   }),
-  // useBabelRc(),
+  useBabelRc(),
   disableEsLint(),
   // addDecoratorsLegacy(),
   // ...addBabelPresets("@babel/preset-react", "@babel/preset-env", [

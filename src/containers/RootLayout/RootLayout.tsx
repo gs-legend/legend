@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Layout } from 'antd';
 import './RootLayout.less';
 import IsLoggedIn from 'core/services/auth/guards/IsLoggedIn';
@@ -8,6 +8,7 @@ import Content from 'containers/Content/Content';
 import { RootState } from 'core/store';
 import { connect } from 'react-redux';
 import { selectTheme, } from 'core/services/kgm/PresentationService';
+import { LicenseManager } from 'ag-grid-enterprise';
 
 const { Footer } = Layout;
 
@@ -25,6 +26,10 @@ type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
 
 const RootLayout = ({ theme }: Props) => {
     const [collapsed, setCollapsed] = useState(true);
+
+    useEffect(() => {
+        LicenseManager.setLicenseKey("LICENSE_HACK_BY_SUDHEER_[v26.1.1]__b1507244ab90657f098d0e85024b36d5")
+    }, []);
 
     const onCollapse = () => {
         setCollapsed(!collapsed);
