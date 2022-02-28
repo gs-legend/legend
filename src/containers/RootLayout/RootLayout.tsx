@@ -37,10 +37,8 @@ const RootLayout = ({ theme }: Props) => {
     const year = new Date().getFullYear();
     return (
         <div className={"rootlayout" + (theme === "dark" ? " dark" : "")}>
-            <Layout
-            // onContextMenu={(e) => e.preventDefault()}
-            >
-                {/* <Header collapsed={collapsed} onCollapse={onCollapse} /> */}
+            <Layout>
+                <Header collapsed={collapsed} onCollapse={onCollapse} />
                 <Layout>
                     <SideNav collapsed={collapsed} />
                     <Layout.Content className="main_container">

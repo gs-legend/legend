@@ -13,10 +13,11 @@ import { connect, useDispatch } from 'react-redux';
 import { DashboardResponse } from 'core/types/Dashboard';
 import { FolderOutlined } from '@ant-design/icons';
 import { selectUserContext } from 'core/services/kgm/RoleService';
-import { callProcessActions, callStaticProcessActions, createStartRequest, generateGUID, newId, selectSplitPane } from 'core/services/kgm/ProcessService';
+import { callProcessActions, callStaticProcessActions, selectSplitPane } from 'core/services/kgm/ProcessService';
 import { selectDashboard, selectTheme, } from 'core/services/kgm/PresentationService';
 import { BsArrowRightSquareFill } from "react-icons/bs";
 import processHelper from 'core/helpers/ProcessHelper';
+import { generateGUID, newId, createStartRequest } from 'core/utils/ProcessUtils';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;

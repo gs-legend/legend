@@ -52,7 +52,7 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
           return <KgmField presentationRule={presentationRule} data={data}></KgmField>;
         }
       };
-      if (index === 0) {
+      if (index === 1) {
         column.pinned = 'left';
       }
       columns.push(column);
@@ -64,7 +64,6 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
 const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
-  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
   const gridStyle = useMemo(() => ({ height: '91%', width: '100%' }), []);
 
   const processDetails = processHelper.getProcessDetails(process, data, false);
@@ -124,11 +123,22 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
       resizable: true,
       sortable: true,
       filter: true,
-      flex: 1
+      flex: 1,
+      // floatingFilter: true,
     },
     modules: [],
     sideBar: {
       toolPanels: [
+        {
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+          minWidth: 180,
+          maxWidth: 400,
+          width: 250
+        },
         {
           id: 'columns',
           labelDefault: 'Columns',
@@ -139,8 +149,8 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
             suppressRowGroups: true,
             suppressValues: true,
             suppressPivotMode: true,
-            suppressColumnFilter: true,
-            suppressColumnSelectAll: true
+            // suppressColumnFilter: true,
+            // suppressColumnSelectAll: true
           }
         }
       ]

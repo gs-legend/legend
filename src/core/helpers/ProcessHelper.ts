@@ -4,7 +4,7 @@ import api from "core/services/Api";
 import { GetUserResponse } from "core/services/ApiTypes";
 import { selectApplicationContext } from "core/services/kgm/CacheService";
 import dmsService from "core/services/kgm/DmsService";
-import { createLoadRequest, createStartRequest, generateGUID } from "core/services/kgm/ProcessService";
+import { createLoadRequest, createStartRequest, generateGUID } from "core/utils/ProcessUtils";
 import { store } from "core/store";
 import _ from 'lodash';
 

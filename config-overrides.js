@@ -5,13 +5,13 @@ const webpack = require("webpack");
 const path = require("path");
 const addLessLoader = require("customize-cra-less-loader");
 const AntDesignThemePlugin = require("antd-theme-webpack-plugin");
-const pluginProposalDecorators = require("@babel/plugin-proposal-decorators");
+const { getThemeVariables } = require("antd/dist/theme");
 
 const options = {
   stylesDir: path.join(__dirname, "./src/assets/styles"),
   antDir: path.join(__dirname, "./node_modules/antd"),
   varFile: path.join(__dirname, "./src/assets/styles/vars.less"),
-  themeVariables: ["@primary-color"],
+  themeVariables: ["@primary-color", "@secondary-color", "@text-color-secondary", "@text-color"],
   indexFileName: "index.html",
 };
 
@@ -64,7 +64,7 @@ module.exports = override(
   // addAnalyze(),
   addWebpackAlias({
     "@": path.resolve("src"),
-    "~": path.resolve("src")
+    "~": path.resolve("src"),
   }),
   addOptimization(),
   fixBabelImports("import", {
@@ -72,18 +72,9 @@ module.exports = override(
     libraryDirectory: "es",
     style: true,
   }),
-  useBabelRc(),
   disableEsLint(),
-  // addDecoratorsLegacy(),
-  // ...addBabelPresets("@babel/preset-react", "@babel/preset-env", [
-  //   "react-app",
-  //   {
-  //     absoluteRuntime: false,
-  //   },
-  // ]),
-  // ...addBabelPlugins(["@babel/plugin-proposal-decorators", { legacy: true }], ["@babel/plugin-proposal-class-properties", { loose: true }]),
+  addDecoratorsLegacy(),
   addWebpackPlugin(new AntDesignThemePlugin(options)),
-  // addBabelPlugin(pluginProposalDecorators),
   addLessLoader({
     cssLoaderOptions: {
       sourceMap: true,
@@ -94,7 +85,10 @@ module.exports = override(
     lessLoaderOptions: {
       lessOptions: {
         javascriptEnabled: true,
-        modifyVars: {},
+        modifyVars: getThemeVariables({
+          dark: false,
+          compact: true,
+        }),
         localIdentName: "[local]--[hash:base64:5]",
       },
     },

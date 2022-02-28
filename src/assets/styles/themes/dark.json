@@ -287,5 +287,16 @@
   "@timeline-color": "@border-color-split",
   "@timeline-dot-color": "@primary-color",
   "@mentions-dropdown-bg": "@popover-background",
-  "@primary-color": "@blue-6"
+  "@primary-color": "@blue-6",
+  "@border-style-base": "solid",
+  "@layout-sider-background": "@component-background",
+  "@font-feature-settings-base": "tnum",
+  "@outline-blur-size": "0",
+  "@shadow-1-left": "-6px 0 16px -8px rgba(0, 0, 0, 0.08), -9px 0 28px 0 rgba(0, 0, 0, 0.05), -12px 0 48px 16px rgba(0, 0, 0, 0.03)",
+  "@select-item-selected-font-weight": "600",
+  "@menu-dark-submenu-bg": "@black",
+  "@slider-track-background-color": "@primary-color",
+  "@slider-handle-color": "@primary-color",
+  "@skeleton-color": "#303030",
+  "@ant-tabs-nav": "@body-background"
 }

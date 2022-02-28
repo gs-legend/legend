@@ -11,10 +11,11 @@ import { getAppAndUserContextActions } from './CacheService';
 import { AppAndUserContext } from 'core/types/AppAndUserContext';
 import api from '../Api';
 import { logoutAction } from '../auth';
-import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, generateGUID, callProcessDataActions } from './ProcessService';
+import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, callProcessDataActions } from './ProcessService';
 import { store } from 'core/store';
 import _ from 'lodash';
 import { getOnLoadActions } from './KgmService';
+import { generateGUID } from 'core/utils/ProcessUtils';
 
 
 
