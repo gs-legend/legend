@@ -40,7 +40,8 @@ function* login({ payload }: ReturnType<typeof loginActions.request>) {
 
 function* logout() {
   try {
-    yield call(api.logout);
+    const resp = yield call(api.logout);
+    yield put(logoActions.success(resp.data));
   } catch {
   }
 }

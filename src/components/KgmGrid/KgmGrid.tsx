@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { callProcessSubmitAction, callProcessTriggerActions } from 'core/services/kgm/ProcessService';
+import { callProcessDataActions, callProcessSubmitAction, callProcessTriggerActions } from 'core/services/kgm/ProcessService';
 import { Col, Pagination, Row } from 'antd';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -20,6 +20,7 @@ type OwnProps = {
   process: any;
   data: any;
   constructOutputData: any;
+  gridChange: any;
 };
 
 const mapStateToProps = (state: RootState) => {
@@ -61,7 +62,7 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
   return columns;
 }
 
-const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData }: Props) => {
+const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData, gridChange }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const gridStyle = useMemo(() => ({ height: '91%', width: '100%' }), []);
@@ -70,6 +71,7 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
   const { entity, presentationRules, embedPresentations, presentation } = processDetails;
   const { verbProperties } = constructOutputData;
   const { endRecord, pageSize, startRecord, totalRecords } = verbProperties;
+  const [searchBy, setSearchBy] = useState("DEFAULT");
 
   useEffect(() => {
     setColumns(getColumns(presentationRules, data));
@@ -87,6 +89,7 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
 
   const onPageChange = (page, pageSize) => {
     console.log(page, pageSize)
+    gridChange(searchBy, page, pageSize);
   }
 
   const renderPagination = () => {

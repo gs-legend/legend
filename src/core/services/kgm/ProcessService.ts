@@ -19,7 +19,7 @@ export const callProcessDataActions = createAsyncAction(
     'processService/GETPROCESS_DATA_REQUEST',
     'processService/GETPROCESS_DATA_SUCCESS',
     'processService/GETPROCESS_DATA_FAILURE'
-)<string, any, undefined>();
+)<any, any, undefined>();
 
 export const callProcessTriggerActions = createAsyncAction(
     'processService/GETPROCESS_TRIGGER_REQUEST',

@@ -24,7 +24,7 @@ function* getUser() {
         const resp: AxiosResponse<GetUserResponse> = yield call(api.getUser);
         yield put(getUserActions.success(resp.data));
     } catch {
-        yield put(getUserActions.failure({},{}));
+        yield put(getUserActions.failure({}, {}));
     }
 }
 
@@ -33,7 +33,7 @@ function* getDashboard() {
         const resp: AxiosResponse<DashboardResponse> = yield call(api.getDashboard);
         yield put(getDashboardActions.success(resp.data));
     } catch {
-        yield put(getDashboardActions.failure({},{}));
+        yield put(getDashboardActions.failure({}, {}));
     }
 }
 
@@ -42,7 +42,7 @@ function* getAppAndUserContext() {
         const resp: AxiosResponse<AppAndUserContext> = yield call(api.getAppAndUserContext);
         yield put(getAppAndUserContextActions.success(resp.data));
     } catch {
-        yield put(getAppAndUserContextActions.failure({},{}));
+        yield put(getAppAndUserContextActions.failure({}, {}));
     }
 }
 
@@ -61,7 +61,7 @@ function* getOnLoadState() {
             yield put(getDashboardActions.success(dashboard.data));
         }
     } catch {
-        yield put(getOnLoadActions.failure({},{}));
+        yield put(getOnLoadActions.failure({}, {}));
     }
 }
 
@@ -254,13 +254,15 @@ function* setTheme({ payload }: ReturnType<typeof getThemeActions.request>) {
 
 function* getProcessData({ payload }: ReturnType<typeof callProcessDataActions.request>) {
     try {
+        const { request, callBack } = payload;
+        const processName = _.get(request, 'event.processName');
+        const resp = yield call(api.process, request);
         const processes = yield selectProcessState(store.getState());
-        const processName = payload;
-        const resp = yield call(api.processData, processName);
-        const newProcess = { ...processes };
-        const process = { ...newProcess[processName], data: resp.data };
-        // process.data = [resp.data];
-        const newProcessState = { ...newProcess, [processName]: process }
+        const existing = _.find(processes, { processName: processName });
+        // const newData = _.merge(existing.processData, resp.data);
+        const newProcessState = [...processes.filter(process => process.processName != processName),
+        { GUID: existing.GUID, processName: processName, processData: {...resp.data} }
+        ];
         yield put(callProcessActions.success(newProcessState));
     } catch (ex) {
         console.log(ex);

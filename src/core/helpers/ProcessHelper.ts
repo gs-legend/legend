@@ -18,9 +18,7 @@ class ProcessHelper {
     }];
     api.process(request).then((response: any) => {
       const { data } = response;
-      const requestOnLoad = createLoadRequest(process);
-      requestOnLoad.guid = localGUID;
-      requestOnLoad.inputData.properties.guid = localGUID;
+      const requestOnLoad = createLoadRequest(process, localGUID);
 
       if (!_.isEmpty(data.constructOutputData)) {
         const pRuleMap = data.constructOutputData.uiResource.presentations.presentationRuleMap;
@@ -43,7 +41,7 @@ class ProcessHelper {
   }
 
   getProcessDetails = (process: any, data: Array<any>, editable = false) => {
-    const { presentations } = process;
+    const { presentations, stepInfo } = process;
     const { presentationRuleMap, entityLevelMap } = presentations;
     const entity = entityLevelMap[0];
     const mainPresentaion = presentationRuleMap[entity];
@@ -58,7 +56,7 @@ class ProcessHelper {
     });
     const { formName, presentationRules } = mainPresentaion[0];
     const columns = this.getStaticColumns(presentationRules, data);
-    return { entity, formName, columns, presentationRules, embedPresentations, presentation: mainPresentaion[0] };
+    return { entity, formName, columns, presentationRules, embedPresentations, presentation: mainPresentaion[0], stepInfo };
   };
 
   getStaticColumns = (presentationRules: any, formData: Array<any>) => {

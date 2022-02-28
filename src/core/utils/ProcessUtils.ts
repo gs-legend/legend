@@ -29,26 +29,27 @@ export const createStartRequest = (processName: string, tabId: string) => {
   };
 };
 
-export const createLoadRequest = (process: string) => {
+export const createLoadRequest = (process: string, tabId: string) => {
+  const windowId = selectWindowId(store.getState());
   return {
     event: { processName: process },
     fromUi: true,
-    windowId: window.sessionStorage.WINDOWID,
-    guid: window.sessionStorage.GUID,
+    windowId: windowId,
+    guid: tabId,
     uiEvent: {
       uiEventName: 'ONLOAD',
       uiEventType: null,
       uiEventValue: ""
     },
     inputData: {
-      processName: process,
       detailedObjects: {} as any,
       changeFor: {} as any,
+      processName: process,
       verbProperties: {},
       properties: {
         fromUI: true,
-        windowId: window.sessionStorage.WINDOWID,
-        guid: window.sessionStorage.GUID,
+        windowId: windowId,
+        guid: tabId,
       }
     }
   }
