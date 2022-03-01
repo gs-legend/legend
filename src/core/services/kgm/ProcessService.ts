@@ -39,11 +39,12 @@ export const callProcessSubmitAction = createAsyncAction(
     'processService/GETPROCESS_SUBMIT_FAILURE'
 )<any, any, undefined>();
 
+export const setSearchKeyAction = createAction('processService/SETCURRENTSEARCHKEY')<any>();
 export const setCurrentPaneKeyAction = createAction('processService/SETCURRENTPANEKEY')<any>();
 export const removeProcessAction = createAction('processService/REMOVEPROCESS')<any>();
 export const getDropdownDataAction = createAction('processService/GETDROPDOWNDATA')<any, any>();
 
-const actions = { callStaticProcessActions, callProcessActions, callProcessDataActions, callProcessSubmitAction, setSplitAction, setCurrentPaneKeyAction, removeProcessAction };
+const actions = { callStaticProcessActions, callProcessActions, callProcessDataActions, callProcessSubmitAction, setSplitAction, setCurrentPaneKeyAction, removeProcessAction,setSearchKeyAction };
 export type ProcessServiceAction = ActionType<typeof actions>;
 
 
@@ -56,6 +57,7 @@ export type ProcessTab = {
     GUID: string;
     tabName: string;
     processName: string;
+    searchKey?: string;
 }
 
 export type ProcessPanes = {

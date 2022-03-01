@@ -34,5 +34,15 @@ export const PRESENTATION_TYPES = {
 }
 
 export const DATA_CONSTANTS = {
-  NO_DATA_TEXT:'---',
+  NO_DATA_TEXT: '---',
+}
+
+export const CONSTANTS = {
+  RuntimeInput: "RuntimeInput",
+  DEFAULT: "DEFAULT",
+  PREV: "prev",
+  NEXT: "next",
+  PAGENUMBER: 'pageNumber',
+  PAGESIZE: 'pageSize',
+  BYMEFORME: 'byMeForMe'
 }

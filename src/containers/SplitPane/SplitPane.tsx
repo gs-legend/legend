@@ -70,7 +70,6 @@ const SplitPane = ({
 
     setFirstPanetabs(fPaneTabs);
     setSecondPanetabs(sPaneTabs);
-    console.log(processState)
   }, [processState, splitPanes]);
 
   const setFirstCurrentPaneKey = (processKey: any) => {

@@ -5,11 +5,14 @@ import Root from 'containers/Root';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import "assets/styles/global.less";
+import React from 'react';
 
 const HotApp = hot(Root);
 
 ReactDOM.render(
-  <HotApp />,
+  <React.StrictMode>
+    <HotApp />
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

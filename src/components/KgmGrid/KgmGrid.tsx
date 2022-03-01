@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { callProcessDataActions, callProcessSubmitAction, callProcessTriggerActions } from 'core/services/kgm/ProcessService';
-import { Col, Pagination, Row } from 'antd';
+import { Col, Input, Pagination, Row } from 'antd';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import KgmField from 'components/KgmField/KgmField';
@@ -15,12 +15,16 @@ import { selectTheme } from 'core/services/kgm/PresentationService';
 import { RootState } from 'core/store';
 import processHelper from 'core/helpers/ProcessHelper';
 import './index.less';
+import { createSearchRequest } from 'core/utils/ProcessUtils';
+import { CONSTANTS } from 'core/Constants';
 
 type OwnProps = {
   process: any;
   data: any;
   constructOutputData: any;
   gridChange: any;
+  gridSearch: any;
+  currentSearchKey: string;
 };
 
 const mapStateToProps = (state: RootState) => {
@@ -62,41 +66,55 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
   return columns;
 }
 
-const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData, gridChange }: Props) => {
+const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData, gridChange, gridSearch, currentSearchKey }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
-  const gridStyle = useMemo(() => ({ height: '91%', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '84%', width: '100%' }), []);
 
   const processDetails = processHelper.getProcessDetails(process, data, false);
   const { entity, presentationRules, embedPresentations, presentation } = processDetails;
   const { verbProperties } = constructOutputData;
   const { endRecord, pageSize, startRecord, totalRecords } = verbProperties;
-  const [searchBy, setSearchBy] = useState("DEFAULT");
+  const [searchBy, setSearchBy] = useState(currentSearchKey);
 
   useEffect(() => {
     setColumns(getColumns(presentationRules, data));
   }, []);
 
+  useEffect(() => {
+    setSearchBy(currentSearchKey);
+    console.log(currentSearchKey)
+  }, [currentSearchKey]);
+
   const itemRender = (current, type, originalElement) => {
-    if (type === 'prev') {
+    if (type === CONSTANTS.PREV) {
       return <a>Previous</a>;
     }
-    if (type === 'next') {
+    if (type === CONSTANTS.NEXT) {
       return <a>Next</a>;
     }
     return originalElement;
   }
 
   const onPageChange = (page, pageSize) => {
-    console.log(page, pageSize)
-    gridChange(searchBy, page, pageSize);
+    if (!searchBy) {
+      gridChange(CONSTANTS.DEFAULT, page, pageSize);
+    } else {
+      gridSearch(searchBy, page);
+    }
+  }
+
+  const onGridSearch = (e) => {
+    const { value } = e.target;
+    gridSearch(value, Math.ceil(startRecord / pageSize));
+    setSearchBy(value)
   }
 
   const renderPagination = () => {
     return <Row justify="space-between" style={{ paddingTop: "5px" }}>
       <Col className='pagination_result'>Showing <span>{startRecord}</span> to <span>{endRecord}</span> of <span>{totalRecords}</span> record(s) </Col>
       <Col>
-        <Pagination total={+totalRecords} itemRender={itemRender} defaultPageSize={+pageSize} showSizeChanger={false} hideOnSinglePage={true} onChange={onPageChange} />
+        <Pagination total={+totalRecords} itemRender={itemRender} defaultPageSize={+pageSize} current={Math.ceil(startRecord / pageSize)} showSizeChanger={false} hideOnSinglePage={true} onChange={onPageChange} />
       </Col>
     </Row>
   }
@@ -172,9 +190,14 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
     headerHeight: 32,
     rowHeight: 32
   }
-
+  console.log(searchBy)
   return (
     <div className='list-content'>
+      <Row justify="end" style={{ padding: "3px 0px" }}>
+        <Col style={{ width: '50%' }} >
+          <Input.Search size="large" placeholder="Search..." value={searchBy} allowClear onChange={onGridSearch} enterButton />
+        </Col>
+      </Row>
       <div className={theme === "light" ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={gridStyle}>
         <AgGridReact ref={gridRef} {...gridOptions}>
         </AgGridReact>
