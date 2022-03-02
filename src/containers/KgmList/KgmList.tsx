@@ -9,6 +9,7 @@ import KgmGrid from 'components/KgmGrid/KgmGrid';
 import { selectTheme } from 'core/services/kgm/PresentationService';
 import _ from "lodash";
 import PolicyExecution from 'core/helpers/PolicyExecution';
+import { useState } from 'react';
 
 type OwnProps = {
   process: any;
@@ -36,6 +37,7 @@ function KgmList({ process, data, constructOutputData, currentSearchKey, splitPa
   const processDetails = processHelper.getProcessDetails(process, data);
   const { presentation, stepInfo, primaryEntity } = processDetails;
   const gridData = data[primaryEntity];
+  const [triggers, setTriggers] = useState([] as Array<any>)
 
 
   const gridChange = (searchStr: string, pageNumber: number, pageSize: number) => {
