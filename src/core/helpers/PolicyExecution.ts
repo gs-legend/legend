@@ -4,9 +4,12 @@ import moment from "moment";
 class PolicyExecution {
   policyType: any;
   auxiliaryEntity: any;
-  constructor(private contextData: any, private pRule?: any, private defaultPRule?: any, private sectionPMetadata?: any, private sectionDefaultPRuleMetaData?: any, private formData?: any) {
-
-  }
+  contextData: any;
+  pRule: any;
+  defaultPRule: any;
+  sectionPMetadata: any;
+  sectionDefaultPRuleMetaData: any;
+  formData: any;
 
   executePolicy = (policy) => {
     const _self = this;
@@ -331,6 +334,7 @@ class PolicyExecution {
         break;
     }
   }
+
   executePresentationAssignment = (statement) => {
     const _self = this;
     let operator = statement.operator;
@@ -439,6 +443,7 @@ class PolicyExecution {
       }
     }
   };
+
   populateAttribute = (pRuleMetaData, contextData, rhsValue, entityId, dataType) => {
     const _self = this;
     let populateValue = rhsValue;
@@ -799,8 +804,6 @@ class PolicyExecution {
     }
   }
 
-
-
   evaluateDateBooleanExpressionList = (lhsValues, rhsValues, operator, attrType) => {
     const _self = this;
     try {
@@ -912,7 +915,6 @@ class PolicyExecution {
     return keyword;
   };
 
-
   getComputeValue = (expressions, contextData) => {
     const _self = this;
     expressions = _.trim(expressions);
@@ -997,7 +999,6 @@ class PolicyExecution {
     }
   };
 
-
   fetchImmediateFormPresentationsInside = (presentationRules, result) => {
     const _self = this;
     if (!result) {
@@ -1030,10 +1031,10 @@ class PolicyExecution {
       if (action.policy && action.policy.rules) {
         action.policy.type = "preCondition";
         if (action.actionName == 'add') {
-          currentPresentation.$$disableAdd = !new PolicyExecution(contextData).executePolicy(action.policy);
+          currentPresentation.$$disableAdd = !_self.executePolicy(action.policy);
         }
         else if (action.actionName == 'edit') {
-          currentPresentation.$$disableEdit = !new PolicyExecution(contextData).executePolicy(action.policy);
+          currentPresentation.$$disableEdit = !_self.executePolicy(action.policy);
           currentPresentation.$$disableSave = action.$$disableEdit;
           if (formData) {
             formData.$$disableEdit = currentPresentation.$$disableEdit
@@ -1041,24 +1042,23 @@ class PolicyExecution {
           }
         }
         else if (action.actionName == 'remove') {
-          currentPresentation.$$disableRemove = !new PolicyExecution(contextData).executePolicy(action.policy);
+          currentPresentation.$$disableRemove = !_self.executePolicy(action.policy);
           if (formData) {
             formData.$$disableRemove = currentPresentation.$$disableRemove;
           }
         } else if (action.actionName == 'reset') {
-          currentPresentation.$$disableReset = !new PolicyExecution(contextData).executePolicy(action.policy);
+          currentPresentation.$$disableReset = !_self.executePolicy(action.policy);
           if (formData) {
             formData.$$disableReset = currentPresentation.$$disableReset;
           }
         } else if (!action.$$disabled) {
-          action.$$disabled = !new PolicyExecution(contextData).executePolicy(action.policy);
+          action.$$disabled = !_self.executePolicy(action.policy);
         }
         console.log(action.actionName + ':->' + action.$$disabled);
       }
     });
   }
 
-
 }
 
-export default PolicyExecution;
+export default new PolicyExecution();

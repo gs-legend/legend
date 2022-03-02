@@ -43,11 +43,11 @@ class ProcessHelper {
   getProcessDetails = (process: any, data: Array<any>, editable = false) => {
     const { presentations, stepInfo } = process;
     const { presentationRuleMap, entityLevelMap } = presentations;
-    const entity = entityLevelMap[0];
-    const mainPresentaion = presentationRuleMap[entity];
+    const primaryEntity = entityLevelMap[0];
+    const mainPresentaion = presentationRuleMap[primaryEntity];
     const embedPresentations: any = [];
     _.each(mainPresentaion, (pEntity: any) => {
-      if (pEntity.entityId !== entity) {
+      if (pEntity.entityId !== primaryEntity) {
         embedPresentations.push({
           ...mainPresentaion[pEntity],
           entityName: pEntity.entityId,
@@ -56,7 +56,7 @@ class ProcessHelper {
     });
     const { formName, presentationRules } = mainPresentaion[0];
     const columns = this.getStaticColumns(presentationRules, data);
-    return { entity, formName, columns, presentationRules, embedPresentations, presentation: mainPresentaion[0], stepInfo };
+    return { primaryEntity, formName, columns, presentationRules, embedPresentations, presentation: mainPresentaion[0], stepInfo };
   };
 
   getStaticColumns = (presentationRules: any, formData: Array<any>) => {
@@ -96,7 +96,7 @@ class ProcessHelper {
     let entityConsumedFullNameForSearch = "", displayName = "";
     if (presentationRule.entityConsumed && _.get(presentationRule, 'source.parent') && _.get(presentationRule, 'source.parent.for_attr')) {
       let displayAttrs = _.cloneDeep(presentationRule.source.parent.for_attr);
-      _.remove(displayAttrs, function (obj) {
+      _.remove(displayAttrs, function (obj:any) {
         return obj.name == 'id'
       })
       if (displayAttrs.length > 0) {

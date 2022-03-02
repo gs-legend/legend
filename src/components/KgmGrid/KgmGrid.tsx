@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { callProcessDataActions, callProcessSubmitAction, callProcessTriggerActions } from 'core/services/kgm/ProcessService';
 import { Col, Input, Pagination, Row } from 'antd';
-import { connect } from 'react-redux';
 import _ from 'lodash';
 import KgmField from 'components/KgmField/KgmField';
 
@@ -11,34 +9,20 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 
-import { selectTheme } from 'core/services/kgm/PresentationService';
-import { RootState } from 'core/store';
 import processHelper from 'core/helpers/ProcessHelper';
-import './index.less';
-import { createSearchRequest } from 'core/utils/ProcessUtils';
 import { CONSTANTS } from 'core/Constants';
+import './index.less';
 
-type OwnProps = {
+type Props = {
   process: any;
   data: any;
   constructOutputData: any;
   gridChange: any;
   gridSearch: any;
   currentSearchKey: string;
+  theme: string;
 };
 
-const mapStateToProps = (state: RootState) => {
-  return {
-    theme: selectTheme(state),
-  };
-};
-
-const mapDispatchToProps = {
-  callTriggerAction: callProcessTriggerActions.request,
-  callTriggerSubmit: callProcessSubmitAction.request,
-};
-
-type Props = ReturnType<typeof mapStateToProps> & OwnProps & typeof mapDispatchToProps;
 
 const getColumns = (presentationRules: any, formData: Array<any>) => {
   const pRuleKeys = Object.keys(presentationRules)
@@ -66,13 +50,13 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
   return columns;
 }
 
-const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData, gridChange, gridSearch, currentSearchKey }: Props) => {
+const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const gridStyle = useMemo(() => ({ height: '84.5%', width: '100%' }), []);
 
   const processDetails = processHelper.getProcessDetails(process, data, false);
-  const { entity, presentationRules, embedPresentations, presentation } = processDetails;
+  const { primaryEntity, presentationRules, embedPresentations, presentation } = processDetails;
   const { verbProperties } = constructOutputData;
   const { endRecord, pageSize, startRecord, totalRecords } = verbProperties;
   const [searchBy, setSearchBy] = useState(currentSearchKey);
@@ -83,7 +67,6 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
 
   useEffect(() => {
     setSearchBy(currentSearchKey);
-    console.log(currentSearchKey)
   }, [currentSearchKey]);
 
   const itemRender = (current, type, originalElement) => {
@@ -119,7 +102,6 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
     </Row>
   }
 
-  const rowData = data[entity];
 
   const setAutoHeight = useCallback(() => {
     gridRef.current.api.setDomLayout('autoHeight');
@@ -139,7 +121,7 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
     animateRows: true,
     enableCellChangeFlash: true,
     rowBuffer: 100,
-    rowData: rowData,
+    rowData: data,
     defaultColDef: {
       resizable: true,
       sortable: true,
@@ -190,7 +172,7 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
     headerHeight: 32,
     rowHeight: 32
   }
-  console.log(searchBy)
+
   return (
     <div className='list-content'>
       <Row justify="end" style={{ padding: "3px 0px" }}>
@@ -207,6 +189,6 @@ const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, c
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(KgmGrid);
+export default KgmGrid;
 // KgmGrid.whyDidYouRender = true
 
