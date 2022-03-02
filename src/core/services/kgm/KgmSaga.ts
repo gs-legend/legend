@@ -16,7 +16,6 @@ import { store } from 'core/store';
 import _ from 'lodash';
 import { getOnLoadActions } from './KgmService';
 import { generateGUID } from 'core/utils/ProcessUtils';
-import update from 'immutability-helper';
 
 
 

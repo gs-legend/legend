@@ -14,7 +14,7 @@ import { DashboardResponse } from 'core/types/Dashboard';
 import { FolderOutlined } from '@ant-design/icons';
 import { selectUserContext } from 'core/services/kgm/RoleService';
 import { callProcessActions, callStaticProcessActions, selectSplitPane } from 'core/services/kgm/ProcessService';
-import { selectDashboard, selectTheme, } from 'core/services/kgm/PresentationService';
+import { selectDashboard } from 'core/services/kgm/PresentationService';
 import { BsArrowRightSquareFill } from "react-icons/bs";
 import processHelper from 'core/helpers/ProcessHelper';
 import { generateGUID, newId, createStartRequest } from 'core/utils/ProcessUtils';
@@ -31,7 +31,6 @@ const mapStateToProps = (state: RootState) => {
         user: selectUser(state),
         dashboard: selectDashboard(state),
         userContext: selectUserContext(state),
-        theme: selectTheme(state),
         splitPanes: selectSplitPane(state),
     }
 }
@@ -102,7 +101,7 @@ const getItem = (item: any) => {
     }
 }
 
-const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, callProcess, callStaticProcess, splitPanes }: Props) => {
+const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, callProcess, callStaticProcess, splitPanes }: Props) => {
     const { FirstPane } = splitPanes;
     const dispatch = useDispatch();
 
@@ -166,13 +165,13 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, theme, call
 
     return (
         <Sider
-            theme={theme === "light" ? "light" : "dark"}
+            theme="dark"
             breakpoint="lg"
             collapsed={collapsed}
             width={300}
             className="kgm-sidenav"
         >
-            <Menu theme={theme === "light" ? "light" : "dark"} mode="vertical" defaultSelectedKeys={['dashboard']} onClick={(e: any) => onMenuItemSelected(e)}>
+            <Menu theme="dark" mode="vertical" defaultSelectedKeys={['dashboard']} onClick={(e: any) => onMenuItemSelected(e)}>
                 <Menu.Item key="dashboard_icon" icon={IconNode(dashboardIcon)} className="menu-item">
                     <span className="menu-item-text">Dashboard</span>
                 </Menu.Item>

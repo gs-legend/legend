@@ -69,7 +69,7 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
 const KgmGrid = ({ process, data, callTriggerAction, callTriggerSubmit, theme, constructOutputData, gridChange, gridSearch, currentSearchKey }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
-  const gridStyle = useMemo(() => ({ height: '84%', width: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '84.5%', width: '100%' }), []);
 
   const processDetails = processHelper.getProcessDetails(process, data, false);
   const { entity, presentationRules, embedPresentations, presentation } = processDetails;
