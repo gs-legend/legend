@@ -86,7 +86,7 @@ function KgmList({ process, data, constructOutputData, currentSearchKey, splitPa
 
   return (
     <>
-      <KgmGrid process={process} data={gridData} constructOutputData={constructOutputData} gridChange={gridChange} gridSearch={gridSearch} currentSearchKey={currentSearchKey} theme={theme} />;
+      <KgmGrid process={process} data={gridData} constructOutputData={constructOutputData} gridChange={gridChange} gridSearch={gridSearch} currentSearchKey={currentSearchKey} theme={theme} />
     </>
   )
 }
