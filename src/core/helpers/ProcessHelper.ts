@@ -7,6 +7,7 @@ import dmsService from "core/services/kgm/DmsService";
 import { createLoadRequest, createStartRequest, generateGUID } from "core/utils/ProcessUtils";
 import { store } from "core/store";
 import _ from 'lodash';
+import API from "core/services/Api";
 
 class ProcessHelper {
   getOrgLogo = (userContext: GetUserResponse, process: string, setLogo: Function) => {
@@ -38,6 +39,25 @@ class ProcessHelper {
         }
       });
     });
+  }
+
+  getUIResourceDetails = (constructOutputData: any) => {
+    const { uiResource } = constructOutputData;
+    const { presentations, stepInfo } = uiResource;
+    const { presentationRuleMap, entityLevelMap } = presentations;
+    const primaryEntity = entityLevelMap[0];
+    const mainPresentaion = presentationRuleMap[primaryEntity];
+    const embedPresentations: any = [];
+    _.each(mainPresentaion, (pEntity: any) => {
+      if (pEntity.entityId !== primaryEntity) {
+        embedPresentations.push({
+          ...mainPresentaion[pEntity],
+          entityName: pEntity.entityId,
+        });
+      }
+    });
+    const { formName, presentationRules } = mainPresentaion[0];
+    return { primaryEntity, formName, presentationRules, embedPresentations, presentation: mainPresentaion[0], stepInfo };
   }
 
   getProcessDetails = (process: any, data: Array<any>, editable = false) => {
@@ -96,7 +116,7 @@ class ProcessHelper {
     let entityConsumedFullNameForSearch = "", displayName = "";
     if (presentationRule.entityConsumed && _.get(presentationRule, 'source.parent') && _.get(presentationRule, 'source.parent.for_attr')) {
       let displayAttrs = _.cloneDeep(presentationRule.source.parent.for_attr);
-      _.remove(displayAttrs, function (obj:any) {
+      _.remove(displayAttrs, function (obj: any) {
         return obj.name == 'id'
       })
       if (displayAttrs.length > 0) {
@@ -181,6 +201,11 @@ class ProcessHelper {
       noDataText = DATA_CONSTANTS.NO_DATA_TEXT
     }
     return noDataText;
+  }
+
+  makeRequest = async function (request) {
+    const response = await API.process(request);
+    return response;
   }
 }
 

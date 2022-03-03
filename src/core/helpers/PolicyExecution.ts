@@ -1059,6 +1059,40 @@ class PolicyExecution {
     });
   }
 
+  applyPrecondition = (primaryEntity, dataList, contextData, presentation) => {
+    const _self = this;
+    const presentationActions = new Map<object, boolean>();
+    const dataActions = new Map<string, Array<object>>();
+    _.forEach(presentation.actions, function (action) {
+      presentationActions.set(action, true);
+    });
+    var contextualPrimaryData = contextData[primaryEntity];
+    if (dataList) {
+      _.forEach(dataList, function (data) {
+        const _actions = [
+          { add: true },
+          { edit: true },
+          { save: true },
+          { remove: true },
+          { reset: true }
+        ]
+        dataActions.set(data.id, _actions);
+        presentationActions.forEach((value: boolean, action: any) => {
+          if (action.policy && value) {
+            contextData[primaryEntity] = [];
+            if (data) {
+              contextData[primaryEntity].push(data);
+            }
+            const isDisabled = !_self.executePolicy(contextData)(action.policy);
+            presentationActions.set(action, isDisabled);
+          }
+        });
+      });
+    }
+    contextData[primaryEntity] = contextualPrimaryData;
+    return { presentationActions, dataActions };
+  }
+
 }
 
 export default new PolicyExecution();

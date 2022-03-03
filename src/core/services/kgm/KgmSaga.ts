@@ -295,6 +295,46 @@ function* getProcessData({ payload }: ReturnType<typeof callProcessDataActions.r
     }
 }
 
+function* continueProcess({ payload }: any) {
+    try {
+        const { newProcessData, processName } = payload;
+        const processes = yield selectProcessState(store.getState());
+        const existingIndex = _.findIndex(processes, { processName: processName });
+        const existing = _.find(processes, { processName: processName });
+        const newProcessName = newProcessData.constructOutputData.uiResource.stepInfo.processName;
+        const newObj = { GUID: existing.GUID, processName: newProcessName, processData: newProcessData };
+        const newProcessState = [...processes.filter(process => process.processName != processName), { ...newObj }];
+        yield put(callProcessActions.success(newProcessState));
+
+        const panes: any = selectSplitPane(store.getState());
+        const { FirstPane, SecondPane } = panes;
+        const firstIndex = _.findIndex(FirstPane.tabs, { processName: processName });
+        const secondIndex = _.findIndex(SecondPane.tabs, { processName: processName });
+        const {primaryEntity, formName, presentationRules, embedPresentations, presentation , stepInfo } = getUIResourceDetails(newProcessData);
+
+        if (firstIndex > -1) {
+            const newFirstPane = {
+                ...FirstPane, tabs: FirstPane.tabs.map((tab, index) =>
+                    index === firstIndex ?  { GUID: tab.GUID, tabName: key, processName: newProcessName, searchKey: "" } : tab
+                )
+            }
+            yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
+        }
+        if (secondIndex > -1) {
+            const newSecondPane = {
+                ...SecondPane, tabs: SecondPane.tabs.map((tab, index) =>
+                    index === secondIndex ? { GUID: tab.GUID, tabName: key, processName: newProcessName, searchKey: "" }  : tab
+                )
+            }
+            yield put(setSplitAction.success({ FirstPane, SecondPane: newSecondPane }));
+        }
+
+
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
 export function* kgmSaga() {
     yield takeLatest(getUserActions.request, getUser);
     yield takeLatest(getDashboardActions.request, getDashboard);

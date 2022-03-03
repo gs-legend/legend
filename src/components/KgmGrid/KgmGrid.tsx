@@ -21,14 +21,16 @@ type Props = {
   gridSearch: any;
   currentSearchKey: string;
   theme: string;
+  onRecordsSelect: any;
 };
 
 
-const getColumns = (presentationRules: any, formData: Array<any>) => {
+const getColumns = (presentationRules: any, formData: Array<any>, presentation: any) => {
   const pRuleKeys = Object.keys(presentationRules)
-  const columns: any = [
-    { field: "", sortable: false, width: 64, suppressSizeToFit: true, suppressColumnsToolPanel: true, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left' },
-  ];
+  const columns: any = [];
+  if (presentation.actions?.length) {
+    columns.push({ field: "", sortable: false, width: 64, suppressSizeToFit: true, suppressColumnsToolPanel: true, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left' })
+  }
   pRuleKeys.forEach((pRuleKey: any, index: number) => {
     const presentationRule = presentationRules[pRuleKey];
     if (presentationRule.visible) {
@@ -50,7 +52,7 @@ const getColumns = (presentationRules: any, formData: Array<any>) => {
   return columns;
 }
 
-const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey }: Props) => {
+const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey, onRecordsSelect }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const gridStyle = useMemo(() => ({ height: '84.5%', width: '100%' }), []);
@@ -62,7 +64,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
   const [searchBy, setSearchBy] = useState(currentSearchKey);
 
   useEffect(() => {
-    setColumns(getColumns(presentationRules, data));
+    setColumns(getColumns(presentationRules, data, presentation));
   }, []);
 
   useEffect(() => {
@@ -116,12 +118,19 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     e.columnApi.resetColumnState();
   }
 
+  const onSelectionChanged = useCallback((event) => {
+    const rows = event.api.getSelectedNodes();
+    onRecordsSelect(rows);
+  }, []);
+
   const gridOptions = {
     allowDragFromColumnsToolPanel: true,
     animateRows: true,
     enableCellChangeFlash: true,
     rowBuffer: 100,
     rowData: data,
+    rowSelection: 'multiple',
+    onSelectionChanged: onSelectionChanged,
     defaultColDef: {
       resizable: true,
       sortable: true,

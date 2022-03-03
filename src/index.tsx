@@ -10,9 +10,9 @@ import React from 'react';
 const HotApp = hot(Root);
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
     <HotApp />
-  </React.StrictMode>,
+  </React.Fragment>,
   document.getElementById('root')
 );
 

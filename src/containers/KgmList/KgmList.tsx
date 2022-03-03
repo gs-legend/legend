@@ -2,14 +2,15 @@ import { CONSTANTS } from 'core/Constants';
 import { IRuntimeInput } from 'core/Interfaces';
 import { callProcessDataActions, selectSplitPane, setSearchKeyAction } from 'core/services/kgm/ProcessService';
 import { RootState } from 'core/store';
-import { createLoadRequest, createSearchRequest } from 'core/utils/ProcessUtils';
+import { createLoadRequest, createSearchRequest, createStartRequest } from 'core/utils/ProcessUtils';
 import processHelper from "core/helpers/ProcessHelper";
 import { connect } from 'react-redux';
 import KgmGrid from 'components/KgmGrid/KgmGrid';
 import { selectTheme } from 'core/services/kgm/PresentationService';
 import _ from "lodash";
 import PolicyExecution from 'core/helpers/PolicyExecution';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import ActionTriggers from 'components/ActionTriggers/ActionTriggers';
 
 type OwnProps = {
   process: any;
@@ -37,8 +38,16 @@ function KgmList({ process, data, constructOutputData, currentSearchKey, splitPa
   const processDetails = processHelper.getProcessDetails(process, data);
   const { presentation, stepInfo, primaryEntity } = processDetails;
   const gridData = data[primaryEntity];
-  const [triggers, setTriggers] = useState([] as Array<any>)
+  const [triggers, setTriggers] = useState(new Map<object, boolean>());
+  const [selectedRecords, setSelectedRecords] = useState([]);
 
+  useEffect(() => {
+    callUiPolicy(data);
+  }, [])
+
+  const onRecordsSelect = (rows) => {
+    setSelectedRecords(rows);
+  }
 
   const gridChange = (searchStr: string, pageNumber: number, pageSize: number) => {
     let request = createLoadRequest(stepInfo.processName, tabId);
@@ -67,26 +76,31 @@ function KgmList({ process, data, constructOutputData, currentSearchKey, splitPa
   }
 
   const callUiPolicy = (items: Array<any>) => {
-    // new PolicyExecution().applyPrecondition(primaryEntity, items, data, presentation);
+    const { presentationActions, dataActions } = PolicyExecution.applyPrecondition(primaryEntity, items, data, presentation);
     // new PolicyExecution().applyNonFieldPrecondition(primaryEntity, items, data, presentation);
-
-    _.forEach(presentation.actions, function (action) {
-      if (action.contextForward && (!items.length || (!action.selectMultiple && items.length > 1))) {
-        action.$$disabled = true;
-      }
-    });
+    setTriggers(presentationActions);
   };
 
 
   const callRowUiPolicy = (item: any) => {
-    // new PolicyExecution().applyPrecondition(primaryEntity, item, data, presentation);
+    const { presentationActions, dataActions } = PolicyExecution.applyPrecondition(primaryEntity, item, data, presentation);
+    setTriggers(presentationActions);
     // new PolicyExecution().applyNonFieldPrecondition(primaryEntity, item, data, presentation);
-    item.actions = _.cloneDeep(presentation.actions);
+  }
+
+  const onTriggerClick = async (action) => {
+    const request = createStartRequest(action.processName, tabId);
+    if (action.contextForward) {
+      request.inputData.detailedObjects[primaryEntity] = selectedRecords;
+    }
+    const response = await processHelper.makeRequest(request);
+    console.log(response)
   }
 
   return (
     <>
-      <KgmGrid process={process} data={gridData} constructOutputData={constructOutputData} gridChange={gridChange} gridSearch={gridSearch} currentSearchKey={currentSearchKey} theme={theme} />
+      <KgmGrid process={process} data={gridData} constructOutputData={constructOutputData} gridChange={gridChange} gridSearch={gridSearch} onRecordsSelect={onRecordsSelect} currentSearchKey={currentSearchKey} theme={theme} />
+      <ActionTriggers triggers={triggers} onTriggerClick={onTriggerClick} selectedRecordsLength={selectedRecords.length} />
     </>
   )
 }
