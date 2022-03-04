@@ -1083,7 +1083,8 @@ class PolicyExecution {
             if (data) {
               contextData[primaryEntity].push(data);
             }
-            const isDisabled = !_self.executePolicy(contextData)(action.policy);
+            _self.contextData = contextData;
+            const isDisabled = !_self.executePolicy(action.policy);
             presentationActions.set(action, isDisabled);
           }
         });

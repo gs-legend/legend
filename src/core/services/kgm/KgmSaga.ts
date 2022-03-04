@@ -11,11 +11,12 @@ import { getAppAndUserContextActions } from './CacheService';
 import { AppAndUserContext } from 'core/types/AppAndUserContext';
 import api from '../Api';
 import { logoutAction } from '../auth';
-import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, callProcessDataActions, setSearchKeyAction } from './ProcessService';
+import { callProcessActions, selectProcessState, setSplitAction, selectSplitPane, setCurrentPaneKeyAction, removeProcessAction, callStaticProcessActions, callProcessDataActions, setSearchKeyAction, continueProcessAction } from './ProcessService';
 import { store } from 'core/store';
 import _ from 'lodash';
 import { getOnLoadActions } from './KgmService';
 import { generateGUID } from 'core/utils/ProcessUtils';
+import ProcessHelper from 'core/helpers/ProcessHelper';
 
 
 
@@ -310,20 +311,20 @@ function* continueProcess({ payload }: any) {
         const { FirstPane, SecondPane } = panes;
         const firstIndex = _.findIndex(FirstPane.tabs, { processName: processName });
         const secondIndex = _.findIndex(SecondPane.tabs, { processName: processName });
-        const {primaryEntity, formName, presentationRules, embedPresentations, presentation , stepInfo } = getUIResourceDetails(newProcessData);
+        const { primaryEntity, formName, presentationRules, embedPresentations, presentation, stepInfo } = ProcessHelper.getUIResourceDetails(newProcessData.constructOutputData);
 
         if (firstIndex > -1) {
             const newFirstPane = {
-                ...FirstPane, tabs: FirstPane.tabs.map((tab, index) =>
-                    index === firstIndex ?  { GUID: tab.GUID, tabName: key, processName: newProcessName, searchKey: "" } : tab
+                ...FirstPane, currentTab: newProcessName, tabs: FirstPane.tabs.map((tab, index) =>
+                    index === firstIndex ? { GUID: tab.GUID, tabName: presentation.headerName, processName: newProcessName, searchKey: "" } : tab
                 )
             }
             yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
         }
         if (secondIndex > -1) {
             const newSecondPane = {
-                ...SecondPane, tabs: SecondPane.tabs.map((tab, index) =>
-                    index === secondIndex ? { GUID: tab.GUID, tabName: key, processName: newProcessName, searchKey: "" }  : tab
+                ...SecondPane, currentTab: newProcessName, tabs: SecondPane.tabs.map((tab, index) =>
+                    index === secondIndex ? { GUID: tab.GUID, tabName: presentation.headerName, processName: newProcessName, searchKey: "" } : tab
                 )
             }
             yield put(setSplitAction.success({ FirstPane, SecondPane: newSecondPane }));
@@ -348,4 +349,5 @@ export function* kgmSaga() {
     yield takeLatest(removeProcessAction, removeProcess);
     yield takeLatest(callProcessDataActions.request, getProcessData);
     yield takeLatest(setSearchKeyAction, setSearchKey);
+    yield takeLatest(continueProcessAction, continueProcess);
 }

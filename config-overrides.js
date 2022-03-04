@@ -7,11 +7,14 @@ const addLessLoader = require("customize-cra-less-loader");
 const AntDesignThemePlugin = require("antd-theme-webpack-plugin");
 const { getThemeVariables } = require("antd/dist/theme");
 
+const ThemeVariables = getThemeVariables({ dark: false, compact: true });
+console.log(ThemeVariables)
 const options = {
   stylesDir: path.join(__dirname, "./src/assets/styles"),
   antDir: path.join(__dirname, "./node_modules/antd"),
   varFile: path.join(__dirname, "./src/assets/styles/vars.less"),
-  themeVariables: ["@primary-color", "@secondary-color", "@text-color-secondary", "@text-color"],
+  themeVariables: ThemeVariables,
+  //["@primary-color", "@secondary-color", "@text-color-secondary", "@text-color"],
   indexFileName: "index.html",
 };
 

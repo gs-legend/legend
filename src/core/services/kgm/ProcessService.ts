@@ -43,8 +43,9 @@ export const setSearchKeyAction = createAction('processService/SETCURRENTSEARCHK
 export const setCurrentPaneKeyAction = createAction('processService/SETCURRENTPANEKEY')<any>();
 export const removeProcessAction = createAction('processService/REMOVEPROCESS')<any>();
 export const getDropdownDataAction = createAction('processService/GETDROPDOWNDATA')<any, any>();
+export const continueProcessAction = createAction('processService/CONTINUE_PROCESS')<any, any>();
 
-const actions = { callStaticProcessActions, callProcessActions, callProcessDataActions, callProcessSubmitAction, setSplitAction, setCurrentPaneKeyAction, removeProcessAction,setSearchKeyAction };
+const actions = { callStaticProcessActions, callProcessActions, callProcessDataActions, callProcessSubmitAction, setSplitAction, setCurrentPaneKeyAction, removeProcessAction, setSearchKeyAction, continueProcessAction };
 export type ProcessServiceAction = ActionType<typeof actions>;
 
 

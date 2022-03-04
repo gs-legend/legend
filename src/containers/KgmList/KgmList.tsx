@@ -1,6 +1,6 @@
 import { CONSTANTS } from 'core/Constants';
 import { IRuntimeInput } from 'core/Interfaces';
-import { callProcessDataActions, selectSplitPane, setSearchKeyAction } from 'core/services/kgm/ProcessService';
+import { callProcessDataActions, continueProcessAction, selectSplitPane, setSearchKeyAction } from 'core/services/kgm/ProcessService';
 import { RootState } from 'core/store';
 import { createLoadRequest, createSearchRequest, createStartRequest } from 'core/utils/ProcessUtils';
 import processHelper from "core/helpers/ProcessHelper";
@@ -29,12 +29,13 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = {
   callProcessData: callProcessDataActions.request,
-  setSearchKeyAction: setSearchKeyAction
+  setSearchKeyAction: setSearchKeyAction,
+  continueProcess: continueProcessAction
 };
 
 type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps & OwnProps;
 
-function KgmList({ process, data, constructOutputData, currentSearchKey, splitPanes, callProcessData, setSearchKeyAction, tabId, theme }: Props) {
+function KgmList({ process, data, constructOutputData, currentSearchKey, splitPanes, callProcessData, setSearchKeyAction, tabId, theme, continueProcess }: Props) {
   const processDetails = processHelper.getProcessDetails(process, data);
   const { presentation, stepInfo, primaryEntity } = processDetails;
   const gridData = data[primaryEntity];
@@ -94,7 +95,7 @@ function KgmList({ process, data, constructOutputData, currentSearchKey, splitPa
       request.inputData.detailedObjects[primaryEntity] = selectedRecords;
     }
     const response = await processHelper.makeRequest(request);
-    console.log(response)
+    continueProcess({ newProcessData: response.data, processName: stepInfo.processName });
   }
 
   return (
