@@ -59,6 +59,7 @@ export type ProcessTab = {
     tabName: string;
     processName: string;
     searchKey?: string;
+    breadCrumbs: Array<any>;
 }
 
 export type ProcessPanes = {

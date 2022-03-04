@@ -38,7 +38,7 @@ const getColumns = (presentationRules: any, formData: Array<any>, presentation: 
         headerName: presentationRule.label,
         field: presentationRule.attrName,
         type: 'nonEditableColumn',
-        cellRenderer: (props) => {
+        cellRenderer: (props) => { // TODO: Remove renderer
           const { data } = props;
           return <KgmField presentationRule={presentationRule} data={data}></KgmField>;
         }

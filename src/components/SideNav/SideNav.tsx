@@ -165,13 +165,13 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, callProcess
 
     return (
         <Sider
-            theme="dark"
+            theme="light"
             breakpoint="lg"
             collapsed={collapsed}
             width={300}
             className="kgm-sidenav"
         >
-            <Menu theme="dark" mode="vertical" defaultSelectedKeys={['dashboard']} onClick={(e: any) => onMenuItemSelected(e)}>
+            <Menu theme="light" mode="vertical" defaultSelectedKeys={['dashboard']} onClick={(e: any) => onMenuItemSelected(e)}>
                 <Menu.Item key="dashboard_icon" icon={IconNode(dashboardIcon)} className="menu-item">
                     <span className="menu-item-text">Dashboard</span>
                 </Menu.Item>

@@ -17,6 +17,7 @@ import _ from 'lodash';
 import { getOnLoadActions } from './KgmService';
 import { generateGUID } from 'core/utils/ProcessUtils';
 import ProcessHelper from 'core/helpers/ProcessHelper';
+import PresentationHelper from 'core/helpers/PresentationHelper';
 
 
 
@@ -95,7 +96,7 @@ function* getStaticProcess({ payload }: any) {
             yield put(callProcessActions.success(newProcessState));
             let newFirstPane = { ...FirstPane };
             let { tabs } = newFirstPane || [];
-            tabs = [...tabs, { GUID: GUID, tabName: processName, processName: processName, searchKey: "" }];
+            tabs = [...tabs, { GUID: GUID, tabName: processName, processName: processName, searchKey: "", breadCrumbs: [] }];
             newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
             yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
             if (callBack) {
@@ -135,9 +136,11 @@ function* getProcess({ payload }: ReturnType<typeof callProcessActions.request>)
                 const newProcessState = [...processes, { GUID: payload.guid, processName: processName, processData: resp.data }];
                 if (resp.data && resp.data.constructOutputData && resp.data.constructOutputData.uiResource && resp.data.constructOutputData.uiResource.presentations) {
                     yield put(callProcessActions.success(newProcessState));
+                    const breadCrumbItem = PresentationHelper.createBreadCrumbItem(resp.data.constructOutputData);
+                    const breadCrumb = PresentationHelper.addBreadCrumbs(breadCrumbItem, []);
                     let newFirstPane = { ...FirstPane };
                     let { tabs } = newFirstPane || [];
-                    tabs = [...tabs, { GUID: payload.guid, tabName: key, processName: processName, searchKey: "" }];
+                    tabs = [...tabs, { GUID: payload.guid, tabName: key, processName: processName, searchKey: "", breadCrumbs: breadCrumb }];
                     newFirstPane = { ...newFirstPane, tabs: tabs, currentTab: processName };
                     yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
                 }
@@ -167,7 +170,7 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
                 newFirstPane = {
                     ...FirstPane,
                     tabs: [...FirstPane.tabs.slice(0, firstIndex), ...FirstPane.tabs.slice(firstIndex + 1)],
-                    currentTab: firstIndex > 0 ? FirstPane.tabs[firstIndex - 1] : FirstPane.tabs[0]
+                    currentTab: firstIndex > 0 ? FirstPane.tabs[firstIndex - 1].processName : FirstPane.tabs[0].processName
                 };
             }
         }
@@ -175,7 +178,7 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
             newSecondPane = {
                 ...SecondPane,
                 tabs: [...SecondPane.tabs.slice(0, secondIndex), ...SecondPane.tabs.slice(secondIndex + 1)],
-                currentTab: secondIndex > 0 ? SecondPane.tabs[secondIndex - 1] : SecondPane.tabs[0]
+                currentTab: secondIndex > 0 ? SecondPane.tabs[secondIndex - 1].processName : SecondPane.tabs[0].processName
             };
             newFirstPane = { ...FirstPane, tabs: [...FirstPane.tabs, ...SecondPane.tabs[secondIndex]] };
 
@@ -229,7 +232,7 @@ function* removeProcess({ payload }: ReturnType<typeof removeProcessAction>) {
             newFirstPane = {
                 ...FirstPane,
                 tabs: [...FirstPane.tabs.slice(0, firstIndex), ...FirstPane.tabs.slice(firstIndex + 1)],
-                currentTab: FirstPane.currentTab === processKey ? FirstPane.tabs[0] : FirstPane.currentTab
+                currentTab: FirstPane.currentTab === processKey ? FirstPane.tabs[0].processName : FirstPane.currentTab
             };
         }
 
@@ -237,7 +240,7 @@ function* removeProcess({ payload }: ReturnType<typeof removeProcessAction>) {
             newSecondPane = {
                 ...SecondPane,
                 tabs: [...SecondPane.tabs.slice(0, secondIndex), ...SecondPane.tabs.slice(secondIndex + 1)],
-                currentTab: SecondPane.currentTab === processKey ? SecondPane.tabs[0] : SecondPane.currentTab
+                currentTab: SecondPane.currentTab === processKey ? SecondPane.tabs[0].processName : SecondPane.currentTab
             };
         }
 
@@ -312,19 +315,21 @@ function* continueProcess({ payload }: any) {
         const firstIndex = _.findIndex(FirstPane.tabs, { processName: processName });
         const secondIndex = _.findIndex(SecondPane.tabs, { processName: processName });
         const { primaryEntity, formName, presentationRules, embedPresentations, presentation, stepInfo } = ProcessHelper.getUIResourceDetails(newProcessData.constructOutputData);
-
+        const breadCrumbItem = PresentationHelper.createBreadCrumbItem(newProcessData.constructOutputData);
         if (firstIndex > -1) {
+            const breadCrumb = PresentationHelper.addBreadCrumbs(breadCrumbItem, FirstPane.tabs[firstIndex].breadCrumbs);
             const newFirstPane = {
                 ...FirstPane, currentTab: newProcessName, tabs: FirstPane.tabs.map((tab, index) =>
-                    index === firstIndex ? { GUID: tab.GUID, tabName: presentation.headerName, processName: newProcessName, searchKey: "" } : tab
+                    index === firstIndex ? { GUID: tab.GUID, tabName: presentation.headerName, processName: newProcessName, searchKey: "", breadCrumbs: breadCrumb } : tab
                 )
             }
             yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane }));
         }
         if (secondIndex > -1) {
+            const breadCrumb = PresentationHelper.addBreadCrumbs(breadCrumbItem, SecondPane.tabs[secondIndex].breadCrumbs);
             const newSecondPane = {
                 ...SecondPane, currentTab: newProcessName, tabs: SecondPane.tabs.map((tab, index) =>
-                    index === secondIndex ? { GUID: tab.GUID, tabName: presentation.headerName, processName: newProcessName, searchKey: "" } : tab
+                    index === secondIndex ? { GUID: tab.GUID, tabName: presentation.headerName, processName: newProcessName, searchKey: "", breadCrumbs: breadCrumb } : tab
                 )
             }
             yield put(setSplitAction.success({ FirstPane, SecondPane: newSecondPane }));

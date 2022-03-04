@@ -5,10 +5,9 @@ const webpack = require("webpack");
 const path = require("path");
 const addLessLoader = require("customize-cra-less-loader");
 const AntDesignThemePlugin = require("antd-theme-webpack-plugin");
-const { getThemeVariables } = require("antd/dist/theme");
+const { getThemeVariables } = require("./src/assets/styles/themes/theme");
 
-const ThemeVariables = getThemeVariables({ dark: false, compact: true });
-console.log(ThemeVariables)
+const ThemeVariables = getThemeVariables();
 const options = {
   stylesDir: path.join(__dirname, "./src/assets/styles"),
   antDir: path.join(__dirname, "./node_modules/antd"),
@@ -88,10 +87,9 @@ module.exports = override(
     lessLoaderOptions: {
       lessOptions: {
         javascriptEnabled: true,
-        modifyVars: getThemeVariables({
-          dark: false,
-          compact: true,
-        }),
+        modifyVars:  {
+          hack: `true; @import "${path.resolve(__dirname, "./src/assets/styles/", "vars.less")}";`,
+        },
         localIdentName: "[local]--[hash:base64:5]",
       },
     },

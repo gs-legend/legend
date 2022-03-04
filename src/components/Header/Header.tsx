@@ -14,6 +14,7 @@ import ThemeProvider from 'components/ThemeProvider';
 import './Header.less';
 import user_img from 'assets/images/user.png';
 import * as kagami_logo from 'assets/images/logo.png';
+import BreadCrumbs from 'components/BreadCrumbs/BreadCrumbs';
 
 type OwnProps = {
     collapsed: boolean;
@@ -88,7 +89,7 @@ const Header = ({ collapsed, onCollapse, logout, logo }: Props) => {
     }
 
     const fullScreenClicked = (e: any) => {
-        const element = document.getElementById('fullscreen_target') as Element; 
+        const element = document.getElementById('fullscreen_target') as Element;
         if (screenfull.isEnabled) {
             screenfull.request(element);
         }
@@ -116,19 +117,20 @@ const Header = ({ collapsed, onCollapse, logout, logo }: Props) => {
 
     return (
         <Layout.Header>
-            <div>
+            {/* <div>
                 {menuIcon()}
                 <Link to={rootPath} className="logo">
                     <img alt="logo" className="standard_logo" title="Powered by KagamiERP" src={logo || kagami_logo.default} />
                 </Link>
-            </div>
+            </div> */}
+            {/* <BreadCrumbs /> */}
             <div style={{ display: "flex", flex: "1 1 0%" }}></div>
             <Space className='header_right'>
-                <ThemeProvider />
+                {/* <ThemeProvider />
                 <div className='fullscreen_icon' onClick={fullScreenClicked}>
                     <FullscreenOutlined title='Fullscreen' />
                 </div>
-                {infoIcon()}
+                {infoIcon()} */}
                 <Dropdown className='' overlay={UserOptionsMenu(logout)}>
                     <Button type='primary' shape='circle' icon={<img alt='user' className='user-image' src={user_img} />}></Button>
                 </Dropdown>
