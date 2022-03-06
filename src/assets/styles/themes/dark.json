@@ -298,5 +298,9 @@
   "@slider-track-background-color": "@primary-color",
   "@slider-handle-color": "@primary-color",
   "@skeleton-color": "#303030",
-  "@ant-tabs-nav": "@body-background"
+  "@ant-tabs-nav": "@body-background",
+  "@breadcrumb-base-color": "@primary-color",
+  "@breadcrumb-font-size": "@font-size-base - 3",
+  "@breadcrumb-icon-font-size": "@font-size-base - 3",
+  "@breadcrumb-separator-color": "@primary-color"
 }

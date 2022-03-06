@@ -1,5 +1,5 @@
 const path = require("path");
-let themeVariables = require(path.join(__dirname, "./dark.json"));
+let themeVariables = require(path.join(__dirname, "./vars.json"));
 
 function getThemeVariables() {
   let themeVar = [];

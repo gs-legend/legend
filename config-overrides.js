@@ -13,7 +13,6 @@ const options = {
   antDir: path.join(__dirname, "./node_modules/antd"),
   varFile: path.join(__dirname, "./src/assets/styles/vars.less"),
   themeVariables: ThemeVariables,
-  //["@primary-color", "@secondary-color", "@text-color-secondary", "@text-color"],
   indexFileName: "index.html",
 };
 
@@ -67,6 +66,7 @@ module.exports = override(
   addWebpackAlias({
     "@": path.resolve("src"),
     "~": path.resolve("src"),
+    "react-dom": "@hot-loader/react-dom",
   }),
   addOptimization(),
   fixBabelImports("import", {
@@ -88,7 +88,7 @@ module.exports = override(
       lessOptions: {
         javascriptEnabled: true,
         modifyVars:  {
-          hack: `true; @import "${path.resolve(__dirname, "./src/assets/styles/", "vars.less")}";`,
+          // hack: `true; @import "${path.resolve(__dirname, "./src/assets/styles/", "vars.less")}";`,
         },
         localIdentName: "[local]--[hash:base64:5]",
       },

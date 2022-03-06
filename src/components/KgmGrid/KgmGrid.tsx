@@ -96,8 +96,12 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
   }
 
   const renderPagination = () => {
+    let recordSummary = <Col className='pagination_result'>Showing <span>{startRecord}</span> to <span>{endRecord}</span> of <span>{totalRecords}</span> record(s) </Col>;
+    if (totalRecords === 0) {
+      recordSummary = <Col></Col>;
+    }
     return <Row justify="space-between" style={{ paddingTop: "5px" }}>
-      <Col className='pagination_result'>Showing <span>{startRecord}</span> to <span>{endRecord}</span> of <span>{totalRecords}</span> record(s) </Col>
+      {recordSummary}
       <Col>
         <Pagination total={+totalRecords} itemRender={itemRender} defaultPageSize={+pageSize} current={Math.ceil(startRecord / pageSize)} showSizeChanger={false} hideOnSinglePage={true} onChange={onPageChange} />
       </Col>

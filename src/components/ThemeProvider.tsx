@@ -23,8 +23,8 @@ type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
 
 
 function ThemeProvider({ currentTheme, setTheme }: Props) {
-  const initialValue = lightVars;
-  const [vars, setVars] = useState({});
+  const initialValue: any = lightVars;
+  const [vars, setVars] = useState(currentTheme === "dark" ? darkVars : lightVars);
 
   // const updateVar = (varName, newVal) => {
   //   setVars({ ...vars, [varName]: newVal });

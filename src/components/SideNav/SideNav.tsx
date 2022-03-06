@@ -172,7 +172,7 @@ const SideNav = ({ collapsed, user, dashboard, userContext, setLogo, callProcess
             className="kgm-sidenav"
         >
             <Menu theme="light" mode="vertical" defaultSelectedKeys={['dashboard']} onClick={(e: any) => onMenuItemSelected(e)}>
-                <Menu.Item key="dashboard_icon" icon={IconNode(dashboardIcon)} className="menu-item">
+                <Menu.Item key="dashboard" icon={IconNode(dashboardIcon)} className="menu-item">
                     <span className="menu-item-text">Dashboard</span>
                 </Menu.Item>
                 {menuItems(navigation)}

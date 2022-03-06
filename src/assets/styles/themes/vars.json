@@ -754,13 +754,13 @@
   "@page-header-heading-title": "@heading-4-size",
   "@page-header-heading-sub-title": "14px",
   "@page-header-tabs-tab-font-size": "16px",
-  "@breadcrumb-base-color": "@text-color-secondary",
+  "@breadcrumb-base-color": "@primary-color",
+  "@breadcrumb-font-size": "@font-size-base - 3",
+  "@breadcrumb-icon-font-size": "@font-size-base - 3",
+  "@breadcrumb-separator-color": "@primary-color",
   "@breadcrumb-last-item-color": "@text-color",
-  "@breadcrumb-font-size": "@font-size-base",
-  "@breadcrumb-icon-font-size": "@font-size-base",
   "@breadcrumb-link-color": "@text-color-secondary",
   "@breadcrumb-link-color-hover": "@primary-5",
-  "@breadcrumb-separator-color": "@text-color-secondary",
   "@breadcrumb-separator-margin": "0 @padding-xs",
   "@slider-margin": "10px 6px 10px",
   "@slider-rail-background-color": "@background-color-base",
@@ -900,5 +900,7 @@
   "@image-mask-font-size": "16px",
   "@image-preview-operation-size": "18px",
   "@image-preview-operation-color": "@text-color-dark",
-  "@image-preview-operation-disabled-color": "fade(@image-preview-operation-color, 25%)"
+  "@image-preview-operation-disabled-color": "fade(@image-preview-operation-color, 25%)",
+  "@menu-dark-submenu-bg": "@black",
+  "@ant-tabs-nav": "@body-background"
 }

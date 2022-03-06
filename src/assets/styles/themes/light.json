@@ -29,8 +29,6 @@
   "@btn-square-only-icon-size-lg": "16px",
   "@btn-square-only-icon-size": "14px",
   "@btn-square-only-icon-size-sm": "12px",
-  "@breadcrumb-font-size": "@font-size-base",
-  "@breadcrumb-icon-font-size": "@font-size-base",
   "@dropdown-line-height": "18px",
   "@menu-item-padding": "0 12px",
   "@menu-horizontal-line-height": "38px",
@@ -197,7 +195,10 @@
 
   "@badge-color": "@error-color",
 
-  "@breadcrumb-base-color": "@text-color",
+  "@breadcrumb-base-color": "@primary-color",
+  "@breadcrumb-font-size": "@font-size-base - 3",
+  "@breadcrumb-icon-font-size": "@font-size-base - 3",
+  "@breadcrumb-separator-color": "@primary-color",
   "@breadcrumb-last-item-color": "@text-color-secondary",
 
   "@slider-rail-background-color": "@background-color-base",

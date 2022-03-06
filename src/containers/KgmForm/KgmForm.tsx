@@ -1,4 +1,5 @@
 import { RootState } from "core/store";
+import { array } from "prop-types";
 import { connect } from "react-redux";
 import "./index.less";
 
@@ -22,8 +23,18 @@ type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps & Ow
 
 
 function KgmForm({ process, data, constructOutputData, tabId, presentationTree }: Props) {
+  const getField = () => {
+    presentationTree.forEach(presentation => {
+      console.log(presentation)
+      const {presentationRules} = presentation;
+      presentationRules.forEach(presentationRule => {
+        console.log(presentationRule)
+      });
+    });
+    return <></>;
+  }
   return (
-    <div>KgmForm</div>
+    <div>{getField()}</div>
   )
 }
 

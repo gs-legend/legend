@@ -69,7 +69,7 @@ class PresentationHelper {
   };
 
   getPresentationTree = (uiResource) => {
-    const { presentations } = uiResource;
+    const { presentations } = _.cloneDeep(uiResource);
     const { entityLevelMap, presentationRuleMap } = presentations;
     const mainEntity = entityLevelMap[0];
     const presentationTree = presentationRuleMap[mainEntity];
