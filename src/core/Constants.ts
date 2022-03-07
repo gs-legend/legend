@@ -38,11 +38,29 @@ export const DATA_CONSTANTS = {
 }
 
 export const CONSTANTS = {
+  ID: "id",
   RuntimeInput: "RuntimeInput",
   DEFAULT: "DEFAULT",
   PREV: "prev",
   NEXT: "next",
   PAGENUMBER: 'pageNumber',
   PAGESIZE: 'pageSize',
-  BYMEFORME: 'byMeForMe'
+  BYMEFORME: 'byMeForMe',
+  PRULE_TYPE: "@type",
+}
+
+export const PRESENTATIONRULE_TYPES = {
+  FIELDPRESENTATION: "FieldPresentation",
+  NONFIELDPRESENTATION: "NonFieldPresentation",
+  SECTIONPRESENTATION: "SectionPresentation",
+  FORMPRESENTATION: "FormPresentation"
+}
+
+export const NONFIELDPRESENTATION_TYPES = {
+  PARAGRAPH: "PARAGRAPH",
+  HEADER: "HEADER",
+  HYPERLINK: "HYPERLINK",
+  LINE_BREAK: "LINE_BREAK",
+  BUTTON: "BUTTON",
+  REPORT: "REPORT"
 }

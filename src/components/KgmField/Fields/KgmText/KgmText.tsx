@@ -1,7 +1,8 @@
 import { Form, Input } from "antd";
 import ProcessHelper from "core/helpers/ProcessHelper";
 import _ from "lodash";
-import { ReactElement } from "react";
+import { ReactElement, useRef, useState } from "react";
+import "./index.less";
 
 type Props = {
   presentationRule: any;
@@ -13,11 +14,20 @@ type Props = {
 
 
 const KgmText = ({ presentationRule, data, onChange, isEditing, defaultVal }: Props) => {
+  const inputRef = useRef(null);
   const { label, attrName, readOnly, mandatory } = presentationRule;
-  const value = _.get(data, attrName);
+  const _value = _.get(data, attrName);
+  const [value, setValue] = useState(_value);
+
+  const focusInput = () => {
+    if (!readOnly) {
+      inputRef.current.focus();
+    }
+  }
 
   const onFieldChanged = (e: any) => {
     onChange(attrName, e.target.value);
+    setValue(e.target.value);
   };
 
   const getVisibleValue = () => {
@@ -76,22 +86,15 @@ const KgmText = ({ presentationRule, data, onChange, isEditing, defaultVal }: Pr
 
   return (
     isEditing ?
-      <div className="field text-field">
-        <Form.Item
-          label={label}
-          name={attrName}
-          rules={[{ required: mandatory }]}
-        >
-          <div className="input-field">
-            <Input
-              placeholder={label}
-              allowClear
-              defaultValue={value}
-              readOnly={readOnly}
-              onChange={onFieldChanged}
-            />
-          </div>
-        </Form.Item>
+      <div className={"field-wrapper " + ((value && value.length !== 0) ? "hasValue " : " ") + (readOnly ? "disabled" : "")}>
+        <Input
+          ref={inputRef}
+          allowClear
+          defaultValue={value}
+          readOnly={readOnly}
+          onChange={onFieldChanged}
+        />
+        <div className="field-placeholder" onClick={focusInput}><span>{label}</span></div>
       </div> :
       <>{getVisibleValue()}</>
   );

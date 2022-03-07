@@ -117,19 +117,19 @@ const Header = ({ collapsed, onCollapse, logout, logo }: Props) => {
 
     return (
         <Layout.Header>
-            <div>
+            {/* <div>
                 {menuIcon()}
                 <Link to={rootPath} className="logo">
                     <img alt="logo" className="standard_logo" title="Powered by KagamiERP" src={logo || kagami_logo.default} />
                 </Link>
-            </div>
+            </div> */}
             <div style={{ display: "flex", flex: "1 1 0%" }}></div>
             <Space className='header_right'>
-                <ThemeProvider />
+                {/* <ThemeProvider />
                 <div className='fullscreen_icon' onClick={fullScreenClicked}>
                     <FullscreenOutlined title='Fullscreen' />
                 </div>
-                {infoIcon()}
+                {infoIcon()} */}
                 <Dropdown className='' overlay={UserOptionsMenu(logout)}>
                     <Button type='primary' shape='circle' icon={<img alt='user' className='user-image' src={user_img} />}></Button>
                 </Dropdown>
