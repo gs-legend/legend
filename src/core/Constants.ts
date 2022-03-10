@@ -38,6 +38,7 @@ export const DATA_CONSTANTS = {
 }
 
 export const CONSTANTS = {
+  EMPTY: "",
   ID: "id",
   RuntimeInput: "RuntimeInput",
   DEFAULT: "DEFAULT",

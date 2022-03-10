@@ -84,6 +84,32 @@ export const createSearchRequest = (processName: string, presentationId: string,
   };
 };
 
+export const createChangeRequest = (processName, attributeName, presentationId, guid) => {
+  const windowId = selectWindowId(store.getState());
+  return {
+    'event': { 'processName': processName },
+    'fromUi': true,
+    'windowId': windowId,
+    'guid': guid,
+    'uiEvent': {
+      'uiEventName': 'ONCHANGE',
+      'uiEventValue': presentationId + "_" + attributeName + "_onChange",
+      'uiEventType': null
+    },
+    'inputData': {
+      'processName': processName,
+      'detailedObjects': {},
+      'changeFor': {},
+      'verbProperties': {},
+      'properties': {
+        'fromUI': true,
+        'windowId': windowId,
+        'guid': guid,
+      }
+    },
+  };
+};
+
 export const newId = () => {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16)
 }

@@ -45,7 +45,7 @@ const getColumns = (presentationRules: any, formData: Array<any>, presentation: 
         type: 'nonEditableColumn',
         cellRenderer: (props) => { // TODO: Remove renderer
           const { data } = props;
-          return <KgmField presentationRule={presentationRule} data={data} isEditing={false}></KgmField>;
+          return <KgmField presentationRule={presentationRule} data={data} isEditing={false} presentation={presentation} fieldChanged={() => { }}></KgmField>;
         }
       };
       if (index === 1) {

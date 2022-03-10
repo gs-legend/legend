@@ -4,7 +4,7 @@ import SectionPresentation from "components/SectionPresentation/SectionPresentat
 import { CONSTANTS, PRESENTATIONRULE_TYPES } from "core/Constants";
 import { RootState } from "core/store";
 import { connect } from "react-redux";
-import { newId } from 'core/utils/ProcessUtils';
+import { createChangeRequest, newId } from 'core/utils/ProcessUtils';
 import "./index.less";
 import { Form, Row } from "antd";
 
@@ -28,6 +28,12 @@ type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps & Ow
 
 
 function KgmForm({ process, data, constructOutputData, tabId, presentationTree }: Props) {
+
+  const fieldChanged = (presentation, attrName, value) => {
+    const request = createChangeRequest(presentation.process, attrName, presentation.presentationId, tabId);
+    console.log(attrName, value, request);
+  }
+
   const getFields = (presentation) => {
     let fields = [];
     const { presentationRules } = presentation;
@@ -41,7 +47,7 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree }
           const key = presentationRule.attrName + newId();
           switch (pRuleType) {
             case PRESENTATIONRULE_TYPES.FIELDPRESENTATION:
-              field = <KgmField key={key} presentationRule={presentationRule} isEditing={true} data={data} />;
+              field = <KgmField key={key} presentation={presentation} fieldChanged={fieldChanged} presentationRule={presentationRule} isEditing={true} data={data} />;
               fields.push(field);
               break;
             case PRESENTATIONRULE_TYPES.NONFIELDPRESENTATION:
@@ -56,7 +62,6 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree }
               break;
           }
         }
-        console.log(presentationRule)
       })
     }
     return fields;

@@ -1,3 +1,4 @@
+import { CONSTANTS } from "core/Constants";
 import _ from "lodash";
 class PresentationHelper {
   createBreadCrumbItem = (constructOutputData) => {
@@ -88,6 +89,75 @@ class PresentationHelper {
     });
     return presentationTree;
   }
+
+  getDisplayAttributes = (pRule) => {
+    const { for_attr } = pRule?.source?.parent;
+    let displayAttributes = [];
+    if (for_attr) {
+      displayAttributes = _.map(pRule.source.parent.for_attr, function (attr) {
+        return {
+          name: attr.name,
+          type: attr.type
+        }
+      });
+      if (displayAttributes[0] == undefined) {
+        displayAttributes.shift();
+      }
+      const index = _.findIndex(displayAttributes, function (obj) {
+        return obj.name === CONSTANTS.ID
+      });
+      if (index !== -1) {
+        displayAttributes.shift();
+      }
+    }
+    return displayAttributes;
+  }
+
+  getAssociatedAttribute = (presentationRule) => {
+    return presentationRule.entityAssociatedAttribute ?? CONSTANTS.ID;
+  }
+
+  getEntityConsumed = function (presentationRule) {
+    let prefix = presentationRule.source?.parent?.entityPrefix ?? presentationRule.entityPrefix;
+    return prefix + (presentationRule.source?.parent?.entityId ?? presentationRule.entityConsumed);
+  };
+
+  trimChar = (string, charToRemove) => {
+    while (string.charAt(0) == charToRemove) {
+      string = string.substring(1);
+    }
+
+    while (string.charAt(string.length - 1) == charToRemove) {
+      string = string.substring(0, string.length - 1);
+    }
+
+    return string;
+  }
+
+  computeDisplayString = (option, displayAttributes) => {
+    const _self = this;
+    let result = CONSTANTS.EMPTY;
+    if (option) {
+      _.forEach(displayAttributes, function (attr, index) {
+        if (index) {
+          result = result + ' - ';
+        }
+        if (option[attr.name]) {
+          var value = option[attr.name];
+        } else {
+          var value = _.get(option, attr.name);
+        }
+
+        if (typeof (value) == 'number' && !value) {
+          result = result + value;
+        } else {
+          result = result + (value || '');
+        }
+      });
+      result = _self.trimChar(result.trim(), '-');
+      return result;
+    }
+  };
 }
 
 export default new PresentationHelper();
