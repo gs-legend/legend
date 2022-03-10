@@ -82,7 +82,7 @@ function KgmField({ presentationRule, data, isEditing }: Props) {
       pRuleType = presentationRule[CONSTANTS.PRULE_TYPE];
     }
 
-    if (policyMap?.presentation) {
+    if (policyMap?.presentation && false) {
       renderVal = <KgmText presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmText>;
     } else if (embeddedPresentationId) {
       if (htmlControl === HTML_CONTROLS.MULTISELECT) {
@@ -96,16 +96,11 @@ function KgmField({ presentationRule, data, isEditing }: Props) {
     else {
       switch (htmlControl) {
         case HTML_CONTROLS.DATE:
-          renderVal = <KgmDate presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmDate>;
-          break;
         case HTML_CONTROLS.DATETIME:
-          renderVal = <KgmDateTime presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmDateTime>;
+          renderVal = <KgmDate presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmDate>;
           break;
         case HTML_CONTROLS.TIME:
           renderVal = <KgmTime presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmTime>;
-          break;
-        case HTML_CONTROLS.MULTISELECT:
-          renderVal = <KgmMultiSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmMultiSelect>;
           break;
         case HTML_CONTROLS.TREESELECT:
           renderVal = <KgmTreeSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmTreeSelect>;
@@ -117,13 +112,12 @@ function KgmField({ presentationRule, data, isEditing }: Props) {
         case HTML_CONTROLS.FILE:
           renderVal = <KgmFile presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmFile>;
           break;
-        case HTML_CONTROLS.SEARCH:
-          renderVal = <KgmSearch presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmSearch>;
-          break;
         case HTML_CONTROLS.RADIO:
           renderVal = <KgmRadio presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmRadio>;
           break;
+        case HTML_CONTROLS.SEARCH:
         case HTML_CONTROLS.SELECT:
+        case HTML_CONTROLS.MULTISELECT:
           renderVal = <KgmSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={() => { }} defaultVal={defaultVal()}></KgmSelect>;
           break;
         case HTML_CONTROLS.TEXT:
@@ -159,7 +153,7 @@ function KgmField({ presentationRule, data, isEditing }: Props) {
   }
   return (
     <Col className='field-container' span={fieldWidth}>
-      <div className={'field ' + htmlControl + (readOnly ? " readonly" : "")}>
+      <div className={"field" + " field-" + htmlControl + (readOnly ? " readonly" : "")}>
         {renderColumn()}
       </div>
     </Col>

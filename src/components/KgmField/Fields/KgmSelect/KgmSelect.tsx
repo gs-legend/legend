@@ -30,15 +30,11 @@ function KgmSelect({ presentationRule, data, onChange, isEditing, defaultVal }: 
 
   return (
     isEditing ?
-      <div className={"field-wrapper " + ((value && value.length !== 0) ? "hasValue " : " ") + (readOnly ? "disabled" : "")}>
-        <Select
-          ref={inputRef}
-          mode="multiple"
-          allowClear
-          style={{ width: '100%' }}
-          defaultValue={value}
-          readOnly={readOnly}
-          onChange={onFieldChanged} />
+      <div className={"field-wrapper" + ((value && value.length !== 0) ? " hasValue" : "") + (readOnly ? " disabled" : "")}>
+        <Select ref={inputRef} mode="multiple" allowClear style={{ width: '100%' }}
+          defaultValue={value} onChange={onFieldChanged} disabled={readOnly}
+        >
+        </Select>
         <div className="field-placeholder" onClick={focusInput}><span>{label}</span></div>
       </div>
       :

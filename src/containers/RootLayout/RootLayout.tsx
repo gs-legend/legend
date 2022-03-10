@@ -36,7 +36,7 @@ const RootLayout = ({ theme }: Props) => {
     }
     const year = new Date().getFullYear();
     return (
-        <div className={"rootlayout" + (theme === "dark" ? " dark" : "")}>
+        <div className={"rootlayout" + (theme === "dark" ? " dark-theme" : "")}>
             <Layout>
                 <Header collapsed={collapsed} onCollapse={onCollapse} />
                 <Layout>

@@ -7,11 +7,11 @@ import reportWebVitals from './reportWebVitals';
 import "assets/styles/global.less";
 import React from 'react';
 
-const HotApp = hot(Root);
+// const HotApp = hot(Root);
 
 ReactDOM.render(
   <React.Fragment>
-    <HotApp />
+    <Root />
   </React.Fragment>,
   document.getElementById('root')
 );

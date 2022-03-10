@@ -6,12 +6,14 @@ import KgmField from 'components/KgmField/KgmField';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
+import 'ag-grid-community/dist/styles/agGridBalhamFont.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 
 import processHelper from 'core/helpers/ProcessHelper';
 import { CONSTANTS } from 'core/Constants';
 import './index.less';
+import './index.scss';
 
 type Props = {
   process: any;
@@ -29,7 +31,10 @@ const getColumns = (presentationRules: any, formData: Array<any>, presentation: 
   const pRuleKeys = Object.keys(presentationRules)
   const columns: any = [];
   if (presentation.actions?.length) {
-    columns.push({ field: "", sortable: false, width: 64, suppressSizeToFit: true, suppressColumnsToolPanel: true, filter: false, headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left' })
+    columns.push({
+      field: "", sortable: false, width: 64, suppressSizeToFit: true, suppressColumnsToolPanel: true, filter: false,
+      headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left', resizable: false
+    });
   }
   pRuleKeys.forEach((pRuleKey: any, index: number) => {
     const presentationRule = presentationRules[pRuleKey];
@@ -65,6 +70,9 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
 
   useEffect(() => {
     setColumns(getColumns(presentationRules, data, presentation));
+    if (gridRef?.current?.columnApi) {
+      autoSizeAll(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -117,10 +125,32 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     gridRef.current.api.setDomLayout('normal');
   }, []);
 
+  const autoSizeAll = useCallback((skipHeader) => {
+    const allColumnIds = [];
+    gridRef.current.columnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getId());
+    });
+    gridRef.current.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+  }, []);
+
+
   const onGridReady = e => {
-    e.api.sizeColumnsToFit();
-    e.columnApi.resetColumnState();
+    if (columns.length > 5) {
+      autoSizeAll(true);
+    } else {
+      e.api.sizeColumnsToFit();
+      e.columnApi.resetColumnState();
+    }
   }
+
+  const onFirstDataRendered = useCallback((params) => {
+    if (columns.length > 5) {
+      autoSizeAll(true);
+    } else {
+      gridRef.current.api.sizeColumnsToFit();
+      gridRef.current.columnApi.resetColumnState();
+    }
+  }, []);
 
   const onSelectionChanged = useCallback((event) => {
     const rows = event.api.getSelectedNodes();
@@ -181,6 +211,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
       }
     },
     onGridReady: onGridReady,
+    onFirstDataRendered: onFirstDataRendered,
     suppressCellFocus: true,
     headerHeight: 32,
     rowHeight: 32
@@ -189,11 +220,11 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
   return (
     <div className='list-content'>
       <Row justify="end" style={{ padding: "3px 0px" }}>
-        <Col style={{ width: '50%' }} >
-          <Input.Search size="large" placeholder="Search..." value={searchBy} allowClear onChange={onGridSearch} enterButton />
+        <Col className='grid-search' style={{ width: '50%' }} >
+          <Input.Search size="middle" placeholder="Search..." value={searchBy} allowClear onChange={onGridSearch} enterButton />
         </Col>
       </Row>
-      <div className={theme === "light" ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={gridStyle}>
+      <div className={theme === "light" ? "ag-theme-balham" : "ag-theme-balham-dark"} style={gridStyle}>
         <AgGridReact ref={gridRef} {...gridOptions}>
         </AgGridReact>
       </div>

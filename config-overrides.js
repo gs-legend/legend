@@ -1,4 +1,4 @@
-const { override, addWebpackAlias, fixBabelImports, addWebpackPlugin, useBabelRc, addDecoratorsLegacy, disableEsLint, addBabelPlugin } = require("customize-cra");
+const { override, addWebpackAlias, fixBabelImports, addWebpackPlugin, adjustStyleLoaders, overrideDevServer, watchAll, addDecoratorsLegacy, disableEsLint, addBabelPlugin } = require("customize-cra");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const webpack = require("webpack");
@@ -61,37 +61,54 @@ const addOptimization = () => (config) => {
   return config;
 };
 
-module.exports = override(
-  // addAnalyze(),
-  addWebpackAlias({
-    "@": path.resolve("src"),
-    "~": path.resolve("src"),
-    "react-dom": "@hot-loader/react-dom",
-  }),
-  addOptimization(),
-  fixBabelImports("import", {
-    libraryName: "antd",
-    libraryDirectory: "es",
-    style: true,
-  }),
-  disableEsLint(),
-  addDecoratorsLegacy(),
-  addWebpackPlugin(new AntDesignThemePlugin(options)),
-  addLessLoader({
-    cssLoaderOptions: {
-      sourceMap: true,
-      modules: {
-        localIdentName: "[hash:base64:8]",
-      },
-    },
-    lessLoaderOptions: {
-      lessOptions: {
-        javascriptEnabled: true,
-        modifyVars:  {
-          // hack: `true; @import "${path.resolve(__dirname, "./src/assets/styles/", "vars.less")}";`,
+module.exports = {
+  webpack: override(
+    // addAnalyze(),
+    addWebpackAlias({
+      "@": path.resolve("src"),
+      "~": path.resolve("src"),
+      "react-dom": "@hot-loader/react-dom",
+    }),
+    addOptimization(),
+    fixBabelImports("import", {
+      libraryName: "antd",
+      libraryDirectory: "es",
+      style: true,
+    }),
+    fixBabelImports("lodash", {
+      libraryDirectory: "",
+      camel2DashComponentName: false,
+    }),
+    disableEsLint(),
+    addDecoratorsLegacy(),
+    addWebpackPlugin(new AntDesignThemePlugin(options)),
+    addLessLoader({
+      cssLoaderOptions: {
+        sourceMap: true,
+        modules: {
+          localIdentName: "[hash:base64:8]",
         },
-        localIdentName: "[local]--[hash:base64:5]",
       },
-    },
-  })
-);
+      lessLoaderOptions: {
+        lessOptions: {
+          javascriptEnabled: true,
+          modifyVars: {
+            // hack: `true; @import "${path.resolve(__dirname, "./src/assets/styles/", "vars.less")}";`,
+          },
+          localIdentName: "[local]--[hash:base64:5]",
+        },
+      },
+    }),
+    adjustStyleLoaders((rule) => {
+      if (rule.test.toString().includes("scss")) {
+        rule.use.push({
+          loader: require.resolve("sass-resources-loader"),
+          options: {
+            resources: "./src/**/*.scss",
+          },
+        });
+      }
+    })
+  ),
+  devServer: overrideDevServer(watchAll()),
+};

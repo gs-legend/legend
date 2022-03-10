@@ -77,7 +77,7 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree }
 
   return (
     <Form autoComplete="off"  >
-      <Row gutter={[16, 16]} style={{ marginTop: "10px" }} align="middle">
+      <Row gutter={[4, 4]} style={{ marginTop: "10px" }} align="middle">
         {getFields(presentationTree[0] || {})}
       </Row>
     </Form>
