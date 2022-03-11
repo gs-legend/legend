@@ -6,11 +6,12 @@ type Props = {
   onChange: any;
   isEditing: boolean;
   defaultVal: ReactElement;
+  constructOutputData: any;
 };
 
-function KgmReport({ presentationRule, data, onChange, isEditing, defaultVal }: Props) {
+function KgmReport({ presentationRule, data, onChange, isEditing, defaultVal, constructOutputData }: Props) {
   return (
-    <>{defaultVal}</>
+    <>Report</>
   )
 }
 

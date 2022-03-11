@@ -10,9 +10,10 @@ type Props = {
   onChange: any;
   isEditing: boolean;
   defaultVal: ReactElement;
+  constructOutputData: any;
 };
 
-function KgmSelect1({ presentationRule, data, onChange, isEditing, defaultVal }: Props) {
+function KgmSelect1({ presentationRule, data, onChange, isEditing, defaultVal, constructOutputData }: Props) {
   const inputRef = useRef(null);
   const { label, attrName, readOnly, mandatory, htmlControl } = presentationRule;
   const _value = _.get(data, attrName);
@@ -38,7 +39,7 @@ function KgmSelect1({ presentationRule, data, onChange, isEditing, defaultVal }:
 
   const renderOptions = () => {
     let options = [];
-    const optionsData = data[entityConsumed];
+    const optionsData = constructOutputData[entityConsumed];
     optionsData.map(option => {
       const displayString = PresentationHelper.computeDisplayString(option, displayAttributes);
       const selectOption = <Select.Option key={entityConsumed + "_" + option.id} value={option.id} >{displayString}</Select.Option>;

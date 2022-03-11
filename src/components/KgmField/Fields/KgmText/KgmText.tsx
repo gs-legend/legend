@@ -10,20 +10,14 @@ type Props = {
   onChange: any;
   isEditing: boolean;
   defaultVal: ReactElement;
+  constructOutputData: any;
 };
 
 
-const KgmText = ({ presentationRule, data, onChange, isEditing, defaultVal }: Props) => {
-  const inputRef = useRef(null);
+const KgmText = ({ presentationRule, data, onChange, isEditing, defaultVal, constructOutputData }: Props) => {
   const { label, attrName, readOnly, mandatory } = presentationRule;
   const _value = _.get(data, attrName);
   const [value, setValue] = useState(_value);
-
-  const focusInput = () => {
-    if (!readOnly) {
-      inputRef.current.focus();
-    }
-  }
 
   const onFieldChanged = (e: any) => {
     onChange(attrName, e.target.value);
@@ -86,15 +80,13 @@ const KgmText = ({ presentationRule, data, onChange, isEditing, defaultVal }: Pr
 
   return (
     isEditing ?
-      <div className={"field-wrapper " + ((value && value.length !== 0) ? "hasValue " : " ") + (readOnly ? "disabled" : "")}>
+      <div className={"field-wrapper" + (readOnly ? " disabled" : "")}>
         <Input
-          ref={inputRef}
           allowClear
           defaultValue={value}
           readOnly={readOnly}
           onChange={onFieldChanged}
         />
-        <div className="field-placeholder" onClick={focusInput}><span>{label}</span></div>
       </div> :
       <>{getVisibleValue()}</>
   );

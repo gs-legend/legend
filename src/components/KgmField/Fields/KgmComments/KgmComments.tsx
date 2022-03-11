@@ -1,4 +1,5 @@
-import React, { ReactElement } from 'react'
+import _ from 'lodash';
+import React, { ReactElement, useState } from 'react'
 
 type Props = {
   presentationRule: any;
@@ -6,11 +7,27 @@ type Props = {
   onChange: any;
   isEditing: boolean;
   defaultVal: ReactElement;
+  constructOutputData: any;
 };
 
-function KgmComments({ presentationRule, data, onChange, isEditing, defaultVal }: Props) {
+function KgmComments({ presentationRule, data, onChange, isEditing, defaultVal, constructOutputData }: Props) {
+  const { attrName, readOnly, htmlControl } = presentationRule;
+  const _value = _.get(data, attrName);
+  const [value, setValue] = useState(_value);
+
+  const onFieldChanged = (e: any) => {
+    const selectedVal = e.target.value;
+    onChange(attrName, selectedVal);
+    setValue(selectedVal);
+  };
+
   return (
-    <>{defaultVal}</>
+    isEditing ?
+      <div className={"field-wrapper" + (readOnly ? " disabled" : "")}>
+        KgmComments
+      </div>
+      :
+      <>{defaultVal}</>
   )
 }
 

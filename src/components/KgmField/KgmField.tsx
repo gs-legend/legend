@@ -18,7 +18,7 @@ import KgmActivity from './Fields/KgmActivity/KgmActivity';
 import KgmComments from './Fields/KgmComments/KgmComments';
 import KgmActivityLog from './Fields/KgmActivityLog/KgmActivityLog';
 import KgmCheckList from './Fields/KgmCheckList/KgmCheckList';
-import { Col } from 'antd';
+import { Col, Form } from 'antd';
 
 type Props = {
   presentationRule: any;
@@ -26,11 +26,12 @@ type Props = {
   isEditing: boolean;
   presentation: any;
   fieldChanged: any;
+  constructOutputData: any;
 };
 
-function KgmField({ presentationRule, data, isEditing, presentation, fieldChanged }: Props) {
+function KgmField({ presentationRule, data, isEditing, presentation, fieldChanged, constructOutputData }: Props) {
   const fieldWidth = presentationRule.uiSettings?.fieldWidth?.value || 4;
-  const { htmlControl, readOnly } = presentationRule;
+  const { htmlControl, readOnly, label, mandatory, attrName } = presentationRule;
 
   const onFieldChanged = (attrName, value) => {
     fieldChanged(presentation, attrName, value);
@@ -86,64 +87,64 @@ function KgmField({ presentationRule, data, isEditing, presentation, fieldChange
     }
 
     if (policyMap?.presentation && false) {
-      renderVal = <KgmText presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmText>;
+      renderVal = <KgmText presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmText>;
     } else if (embeddedPresentationId) {
       if (htmlControl === HTML_CONTROLS.MULTISELECT) {
-        renderVal = <KgmSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmSelect>
+        renderVal = <KgmSelect presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmSelect>
       } else {
-        renderVal = <KgmEmbedPresentation presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmEmbedPresentation>;
+        renderVal = <KgmEmbedPresentation presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmEmbedPresentation>;
       }
     } else if (type == PRESENTATION_TYPES.REPORT) {
-      renderVal = <KgmReport presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmReport>
+      renderVal = <KgmReport presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmReport>
     }
     else {
       switch (htmlControl) {
         case HTML_CONTROLS.DATE:
         case HTML_CONTROLS.DATETIME:
         case HTML_CONTROLS.TIME:
-          renderVal = <KgmDate presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmDate>;
+          renderVal = <KgmDate presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmDate>;
           break;
         case HTML_CONTROLS.TREESELECT:
-          renderVal = <KgmTreeSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmTreeSelect>;
+          renderVal = <KgmTreeSelect presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmTreeSelect>;
           break;
         case HTML_CONTROLS.IMAGE:
-          renderVal = <KgmImage presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmImage>;
+          renderVal = <KgmImage presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmImage>;
           break;
         case HTML_CONTROLS.PREVIEW:
         case HTML_CONTROLS.FILE:
-          renderVal = <KgmFile presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmFile>;
+          renderVal = <KgmFile presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmFile>;
           break;
         case HTML_CONTROLS.RADIO:
-          renderVal = <KgmRadio presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmRadio>;
+          renderVal = <KgmRadio presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmRadio>;
           break;
         case HTML_CONTROLS.SEARCH:
         case HTML_CONTROLS.SELECT:
         case HTML_CONTROLS.MULTISELECT:
-          renderVal = <KgmSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmSelect>;
+          renderVal = <KgmSelect presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmSelect>;
           break;
         case HTML_CONTROLS.TEXT:
-          renderVal = <KgmText presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmText>;
+          renderVal = <KgmText presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmText>;
           break;
         case HTML_CONTROLS.NUMBER:
-          renderVal = <KgmNumber presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmNumber>;
+          renderVal = <KgmNumber presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmNumber>;
           break;
         case HTML_CONTROLS.BOOLEAN:
-          renderVal = <KgmBoolean presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmBoolean>;
+          renderVal = <KgmBoolean presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmBoolean>;
           break;
         case HTML_CONTROLS.CURRENCY:
-          renderVal = <KgmCurrency presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmCurrency>;
+          renderVal = <KgmCurrency presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmCurrency>;
           break;
         case HTML_CONTROLS.ACTIVITY:
-          renderVal = <KgmActivity presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmActivity>;
+          renderVal = <KgmActivity presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmActivity>;
           break;
         case HTML_CONTROLS.COMMENTS:
-          renderVal = <KgmComments presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmComments>;
+          renderVal = <KgmComments presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmComments>;
           break;
         case HTML_CONTROLS.CUSTOMACTIVITYLOG:
-          renderVal = <KgmActivityLog presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmActivityLog>;
+          renderVal = <KgmActivityLog presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmActivityLog>;
           break;
         case HTML_CONTROLS.CHECKLIST:
-          renderVal = <KgmCheckList presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmCheckList>;
+          renderVal = <KgmCheckList presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmCheckList>;
           break;
         default:
           renderVal = <>{value}</>
@@ -151,10 +152,13 @@ function KgmField({ presentationRule, data, isEditing, presentation, fieldChange
     }
     return renderVal;
   }
+
   return (
     <Col className='field-container' span={fieldWidth}>
       <div className={"field" + " field-" + htmlControl + (readOnly ? " readonly" : "")}>
-        {renderColumn()}
+        <Form.Item name={attrName} label={label} rules={[{ required: mandatory }]}>
+          {renderColumn()}
+        </Form.Item>
       </div>
     </Col>
   )

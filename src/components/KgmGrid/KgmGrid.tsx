@@ -24,10 +24,12 @@ type Props = {
   currentSearchKey: string;
   theme: string;
   onRecordsSelect: any;
+  isEmbed: boolean;
+  isEditing: boolean;
 };
 
 
-const getColumns = (presentationRules: any, formData: Array<any>, presentation: any) => {
+const getColumns = (presentationRules: any, formData: Array<any>, presentation: any, constructOutputData: any) => {
   const pRuleKeys = Object.keys(presentationRules)
   const columns: any = [];
   if (presentation.actions?.length) {
@@ -45,7 +47,7 @@ const getColumns = (presentationRules: any, formData: Array<any>, presentation: 
         type: 'nonEditableColumn',
         cellRenderer: (props) => { // TODO: Remove renderer
           const { data } = props;
-          return <KgmField presentationRule={presentationRule} data={data} isEditing={false} presentation={presentation} fieldChanged={() => { }}></KgmField>;
+          return <KgmField presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={false} presentation={presentation} fieldChanged={() => { }}></KgmField>;
         }
       };
       if (index === 1) {
@@ -57,7 +59,7 @@ const getColumns = (presentationRules: any, formData: Array<any>, presentation: 
   return columns;
 }
 
-const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey, onRecordsSelect }: Props) => {
+const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey, onRecordsSelect, isEmbed, isEditing }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const gridStyle = useMemo(() => ({ height: '84.5%', width: '100%' }), []);
@@ -69,7 +71,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
   const [searchBy, setSearchBy] = useState(currentSearchKey);
 
   useEffect(() => {
-    setColumns(getColumns(presentationRules, data, presentation));
+    setColumns(getColumns(presentationRules, data, presentation, constructOutputData));
     if (gridRef?.current?.columnApi) {
       autoSizeAll(false);
     }
@@ -109,7 +111,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
       recordSummary = <Col></Col>;
     }
     return <Row justify="space-between" style={{ paddingTop: "5px" }}>
-      {recordSummary}
+      {isEmbed ?? recordSummary}
       <Col>
         <Pagination total={+totalRecords} itemRender={itemRender} defaultPageSize={+pageSize} current={Math.ceil(startRecord / pageSize)} showSizeChanger={false} hideOnSinglePage={true} onChange={onPageChange} />
       </Col>
@@ -157,7 +159,38 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     onRecordsSelect(rows);
   }, []);
 
-  const gridOptions = {
+  const embedGridOptions = {
+    allowDragFromColumnsToolPanel: true,
+    animateRows: true,
+    enableCellChangeFlash: true,
+    rowBuffer: 100,
+    rowData: data,
+    rowSelection: 'multiple',
+    onSelectionChanged: onSelectionChanged,
+    defaultColDef: {
+      resizable: true,
+      sortable: true,
+      filter: true,
+      flex: 1,
+    },
+    modules: [],
+    debounceVerticalScrollbar: true,
+    columnDefs: columns,
+    columnTypes: {
+      nonEditableColumn: { editable: false },
+      dateColumn: {
+        filter: 'agDateColumnFilter',
+        suppressMenu: true
+      }
+    },
+    onGridReady: onGridReady,
+    onFirstDataRendered: onFirstDataRendered,
+    suppressCellFocus: true,
+    headerHeight: 32,
+    rowHeight: 32
+  }
+
+  const listGridOptions = {
     allowDragFromColumnsToolPanel: true,
     animateRows: true,
     enableCellChangeFlash: true,
@@ -217,12 +250,15 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     rowHeight: 32
   }
 
+  const gridOptions = isEditing ? embedGridOptions : listGridOptions;
+
   return (
     <div className='list-content'>
       <Row justify="end" style={{ padding: "3px 0px" }}>
-        <Col className='grid-search' style={{ width: '50%' }} >
+        {isEmbed ?? <Col className='grid-search' style={{ width: '50%' }} >
           <Input.Search size="middle" placeholder="Search..." value={searchBy} allowClear onChange={onGridSearch} enterButton />
         </Col>
+        }
       </Row>
       <div className={theme === "light" ? "ag-theme-balham" : "ag-theme-balham-dark"} style={gridStyle}>
         <AgGridReact ref={gridRef} {...gridOptions}>

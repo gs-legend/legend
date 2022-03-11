@@ -6,9 +6,10 @@ type Props = {
   onChange: any;
   isEditing: boolean;
   defaultVal: ReactElement;
+  constructOutputData: any;
 };
 
-function KgmEmbedPresentation({ presentationRule, data, onChange, isEditing, defaultVal }: Props) {
+function KgmEmbedPresentation({ presentationRule, data, onChange, isEditing, defaultVal, constructOutputData }: Props) {
   return (
     <>{defaultVal}</>
   )

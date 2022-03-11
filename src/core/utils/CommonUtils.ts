@@ -11,3 +11,12 @@ export const UITemplate = {
   TREEVIEW: 'treeView',
   TREEEDIT: 'treeEdit'
 }
+
+export const EDITABLE_TEMPLATES = [
+  UITemplate.FORM,
+  UITemplate.EDIT,
+  UITemplate.PCEMBEDFORM,
+  UITemplate.PCEMBEDEDIT,
+  UITemplate.TREEFORM,
+  UITemplate.TREEEDIT
+]

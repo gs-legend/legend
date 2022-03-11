@@ -10,10 +10,11 @@ type Props = {
   onChange: any;
   isEditing: boolean;
   defaultVal: ReactElement;
+  constructOutputData: any;
 };
 
 
-const KgmText1 = ({ presentationRule, data, onChange, isEditing, defaultVal }: Props) => {
+const KgmText1 = ({ presentationRule, data, onChange, isEditing, defaultVal, constructOutputData }: Props) => {
   const inputRef = useRef(null);
   const { label, attrName, readOnly, mandatory } = presentationRule;
   const _value = _.get(data, attrName);
