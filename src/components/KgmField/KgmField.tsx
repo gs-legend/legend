@@ -3,16 +3,12 @@ import ProcessHelper from 'core/helpers/ProcessHelper';
 import React from 'react'
 import { CONSTANTS, HTML_CONTROLS, PRESENTATION_TYPES } from 'core/Constants';
 import KgmText from './Fields/KgmText/KgmText';
-import KgmDateTime from './Fields/KgmDateTime/KgmDateTime';
 import KgmDate from './Fields/KgmDate/KgmDate';
-import KgmTime from './Fields/KgmTime/KgmTime';
-import KgmMultiSelect from './Fields/KgmMultiSelect/KgmMultiSelect';
 import KgmEmbedPresentation from './Fields/KgmEmbedPresentation/KgmEmbedPresentation';
 import KgmReport from './Fields/KgmReport/KgmReport';
 import KgmTreeSelect from './Fields/KgmTreeSelect/KgmTreeSelect';
 import KgmImage from './Fields/KgmImage/KgmImage';
 import KgmFile from './Fields/KgmFile/KgmFile';
-import KgmSearch from './Fields/KgmSearch/KgmSearch';
 import KgmRadio from './Fields/KgmRadio/KgmRadio';
 import KgmSelect from './Fields/KgmSelect/KgmSelect';
 import KgmNumber from './Fields/KgmNumber/KgmNumber';
@@ -76,6 +72,7 @@ function KgmField({ presentationRule, data, isEditing, presentation, fieldChange
   }
 
   const renderColumn = () => {
+    console.log(presentationRule.htmlControl)
     const value = _.get(data, presentationRule.attrName);
     let renderVal = <>{value}</>
     const { htmlControl, embeddedPresentationId, policyMap, type } = presentationRule;
@@ -92,7 +89,7 @@ function KgmField({ presentationRule, data, isEditing, presentation, fieldChange
       renderVal = <KgmText presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmText>;
     } else if (embeddedPresentationId) {
       if (htmlControl === HTML_CONTROLS.MULTISELECT) {
-        renderVal = <KgmMultiSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmMultiSelect>
+        renderVal = <KgmSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmSelect>
       } else {
         renderVal = <KgmEmbedPresentation presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmEmbedPresentation>;
       }
@@ -103,10 +100,8 @@ function KgmField({ presentationRule, data, isEditing, presentation, fieldChange
       switch (htmlControl) {
         case HTML_CONTROLS.DATE:
         case HTML_CONTROLS.DATETIME:
-          renderVal = <KgmDate presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmDate>;
-          break;
         case HTML_CONTROLS.TIME:
-          renderVal = <KgmTime presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmTime>;
+          renderVal = <KgmDate presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmDate>;
           break;
         case HTML_CONTROLS.TREESELECT:
           renderVal = <KgmTreeSelect presentationRule={presentationRule} data={data} isEditing={isEditing} onChange={onFieldChanged} defaultVal={defaultVal()}></KgmTreeSelect>;
@@ -152,7 +147,6 @@ function KgmField({ presentationRule, data, isEditing, presentation, fieldChange
           break;
         default:
           renderVal = <>{value}</>
-
       }
     }
     return renderVal;

@@ -12,7 +12,7 @@ type Props = {
   defaultVal: ReactElement;
 };
 
-function KgmSelect({ presentationRule, data, onChange, isEditing, defaultVal }: Props) {
+function KgmSelect1({ presentationRule, data, onChange, isEditing, defaultVal }: Props) {
   const inputRef = useRef(null);
   const { label, attrName, readOnly, mandatory, htmlControl } = presentationRule;
   const _value = _.get(data, attrName);
@@ -62,4 +62,4 @@ function KgmSelect({ presentationRule, data, onChange, isEditing, defaultVal }: 
   )
 }
 
-export default KgmSelect
+export default KgmSelect1;
