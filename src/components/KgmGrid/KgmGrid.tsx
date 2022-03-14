@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Col, Input, Pagination, Row } from 'antd';
+import { Col, Input, Modal, Pagination, Row, Tag } from 'antd';
 import _ from 'lodash';
 import KgmField from 'components/KgmField/KgmField';
 
@@ -11,10 +11,12 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 
 import processHelper from 'core/helpers/ProcessHelper';
-import { CONSTANTS } from 'core/Constants';
+import { CONSTANTS, HTML_CONTROLS } from 'core/Constants';
 import './index.less';
 import './index.scss';
-import { GridHelper } from './GridHelper';
+import { getMultiListPreviewData } from './GridHelper';
+import KModal from 'components/KModal/KModal';
+import KgmList from 'containers/KgmList/KgmList';
 
 type Props = {
   process: any;
@@ -25,22 +27,118 @@ type Props = {
   currentSearchKey: string;
   theme: string;
   onRecordsSelect: any;
+  tabId: any;
 };
 
-const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey, onRecordsSelect }: Props) => {
+const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey, onRecordsSelect, tabId }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const gridStyle = useMemo(() => ({ height: '84.5%', width: '100%' }), []);
-  let gridHelper = null;
   const processDetails = processHelper.getProcessDetails(process, data, false);
-  const { primaryEntity, presentationRules, embedPresentations, presentation } = processDetails;
+  const { primaryEntity, presentationRules, embedPresentations, presentation, stepInfo } = processDetails;
   const { verbProperties } = constructOutputData;
   const { endRecord, pageSize, startRecord, totalRecords } = verbProperties;
   const [searchBy, setSearchBy] = useState(currentSearchKey);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalState, setModalState] = useState({ header: "", content: null });
+
+
+  const getColumns = () => {
+    const _self = this;
+    const pRuleKeys = Object.keys(presentationRules)
+    const columns: any = [];
+    if (presentation.actions?.length) {
+      columns.push({
+        field: "", sortable: false, width: 64, suppressSizeToFit: true, suppressColumnsToolPanel: true, filter: false,
+        headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left', resizable: false
+      });
+    }
+    pRuleKeys.forEach((pRuleKey: any, index: number) => {
+      const presentationRule = presentationRules[pRuleKey];
+      const { htmlControl, attrName, label, uiSettings, embeddedPresentationId } = presentationRule;
+      const convertToDecimal = uiSettings?.convertToDecimal;
+      let { entityConsumedFullNameForSearch, displayName } = processHelper.getEntityConsumedFullNameForSearch(presentationRule);
+      if (presentationRule.visible) {
+        let column: any = {
+          headerName: label,
+          field: attrName,
+          // valueGetter : ,
+          type: 'nonEditableColumn',
+          // cellRenderer: (props) => {
+          //   const { data } = props;
+          //   return <KgmField presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={false} presentation={presentation} fieldChanged={() => { }}></KgmField>;
+          // }
+        };
+        if (index === 1) {
+          column.pinned = 'left';
+        }
+
+        switch (htmlControl) {
+          case HTML_CONTROLS.MULTISELECT:
+            if (embeddedPresentationId) {
+              column.cellRenderer = (props) => {
+                const rowData = props.data;
+                const value = _.get(rowData, attrName);
+                const tags = value.map(tag => {
+                  const tagLabel = _.get(tag, displayName);
+                  return <Tag className="edit-tag" key={tag.id} closable={false}>{tagLabel}</Tag>
+                });
+                return <span onClick={async () => {
+                  const multiListData: any = await getMultiListPreviewData(presentationRule, stepInfo.processName, primaryEntity, rowData, tabId);
+                  const modalContent = <KgmList process={multiListData.constructOutputData.uiResource} data={multiListData.constructOutputData.detailedObjects} tabId={tabId} constructOutputData={multiListData.constructOutputData} currentSearchKey={""} />
+                  setModalState({ header: multiListData.constructOutputData.uiResource.headerName, content: modalContent });
+                  setModalVisible(true);
+                }}>
+                  {tags}
+                </span>;
+              }
+            }
+            break;
+          case HTML_CONTROLS.DATE:
+            break;
+          case HTML_CONTROLS.DATETIME:
+            break;
+          case HTML_CONTROLS.TIME:
+            break;
+          case HTML_CONTROLS.TREESELECT:
+            break;
+          case HTML_CONTROLS.IMAGE:
+            break;
+          case HTML_CONTROLS.PREVIEW:
+            break;
+          case HTML_CONTROLS.FILE:
+            break;
+          case HTML_CONTROLS.SEARCH:
+            break;
+          case HTML_CONTROLS.RADIO:
+            break;
+          case HTML_CONTROLS.SELECT:
+            break;
+          case HTML_CONTROLS.TEXT:
+            break;
+          case HTML_CONTROLS.NUMBER:
+            break;
+          case HTML_CONTROLS.BOOLEAN:
+            break;
+          case HTML_CONTROLS.CURRENCY:
+            break;
+          case HTML_CONTROLS.ACTIVITY:
+            break;
+          case HTML_CONTROLS.COMMENTS:
+            break;
+          case HTML_CONTROLS.CUSTOMACTIVITYLOG:
+            break;
+          case HTML_CONTROLS.CHECKLIST:
+            break;
+        }
+        columns.push(column);
+      }
+    });
+    return columns;
+  }
 
   useEffect(() => {
-    gridHelper = new GridHelper(constructOutputData, presentation, presentationRules);
-    setColumns(gridHelper.getColumns());
+    setColumns(getColumns());
     if (gridRef?.current?.columnApi) {
       autoSizeAll(false);
     }
@@ -200,7 +298,10 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
         </AgGridReact>
       </div>
       {renderPagination()}
-    </div>
+      <Modal title={modalState.header} cancelButtonProps={{ hidden: true }} onCancel={() => setModalVisible(false)} okButtonProps={{ hidden: true }} closable={true} visible={modalVisible} >
+        {modalState.content}
+      </Modal>
+    </div >
   );
 };
 

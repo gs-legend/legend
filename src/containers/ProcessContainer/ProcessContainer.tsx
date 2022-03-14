@@ -35,16 +35,15 @@ type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps & Ow
 
 const ProcessContainer = ({ splitPanes, process, processKey, data, constructOutputData, continueProcess }: Props) => {
   const [searchKey, setSearchKey] = useState("");
-  const [tabId, setTabId] = useState("");
   const [presentationTree, setPresentationTree] = useState([]);
   const [breadCrumbs, setBreadCrumbs] = useState([]);
+  const { FirstPane, SecondPane } = splitPanes;
+  const tabInFirstPane = _.find(FirstPane.tabs, { processName: processKey });
+  const tabInSecondPane = _.find(SecondPane.tabs, { processName: processKey });
+  const currentTab = tabInFirstPane || tabInSecondPane;
+  const tabId = currentTab.GUID;
 
   useEffect(() => {
-    const { FirstPane, SecondPane } = splitPanes;
-    const tabInFirstPane = _.find(FirstPane.tabs, { processName: processKey });
-    const tabInSecondPane = _.find(SecondPane.tabs, { processName: processKey });
-    const currentTab = tabInFirstPane || tabInSecondPane;
-    setTabId(currentTab.GUID);
     setSearchKey(currentTab.searchKey);
     setBreadCrumbs(currentTab.breadCrumbs);
     const _presentationTree = PresentationHelper.getPresentationTree(process);

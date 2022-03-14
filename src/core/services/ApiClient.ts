@@ -11,13 +11,13 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(async (config: any) => {
-  const token = selectToken(store.getState());
+  // const token = selectToken(store.getState());
 
-  if (token) {
-    // config.headers.common = config.headers.common ?? {};
-    config.headers.common['Authorization'] = `Bearer ${token}`;
-    config.headers.common['Cache-Control'] = "no-cache";
-  }
+  // if (token) {
+  //   // config.headers.common = config.headers.common ?? {};
+  //   config.headers.common['Authorization'] = `Bearer ${token}`;
+  //   config.headers.common['Cache-Control'] = "no-cache";
+  // }
 
   return config;
 });

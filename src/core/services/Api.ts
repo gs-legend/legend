@@ -74,8 +74,8 @@ const API = {
   getDropdownData: (data: any) =>
     trackProgress(apiClient.post(dataService.BASE_URL + 'process/fetchDropDownData', data, { withCredentials: true })),
 
-  getPrimordial: (data: any) =>
-    trackProgress(apiClient.post(dataService.BASE_URL + 'primordial/primordial', data, { withCredentials: true })),
+  getPresentationRule: (data: any) =>
+    trackProgress(apiClient.get(dataService.BASE_URL + 'api/presentation/getPresentationRule', { params: { presentationRuleId: data.presentationRule }, withCredentials: true })),
 
 };
 

@@ -1,36 +1,44 @@
-export class GridHelper {
-  constructor(private constructOutputData: any, private presentation: any, private presentationRules: Array<any>) {
-  }
+import ProcessHelper from "core/helpers/ProcessHelper";
+import API from "core/services/Api";
+import { createOnClickRequest, newId } from "core/utils/ProcessUtils";
+import { generateGUID } from 'core/utils/ProcessUtils';
 
-  getColumns = () => {
-    const _self = this;
-    const pRuleKeys = Object.keys(_self.presentationRules)
-    const columns: any = [];
-    if (_self.presentation.actions?.length) {
-      columns.push({
-        field: "", sortable: false, width: 64, suppressSizeToFit: true, suppressColumnsToolPanel: true, filter: false,
-        headerCheckboxSelection: true, checkboxSelection: true, suppressMovable: true, pinned: 'left', resizable: false
-      });
-    }
-    pRuleKeys.forEach((pRuleKey: any, index: number) => {
-      const presentationRule = _self.presentationRules[pRuleKey];
-      if (presentationRule.visible) {
-        const column: any = {
-          headerName: presentationRule.label,
-          field: presentationRule.attrName,
-          // valueGetter : ,
-          type: 'nonEditableColumn',
-          // cellRenderer: (props) => {
-          //   const { data } = props;
-          //   return <KgmField presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={false} presentation={presentation} fieldChanged={() => { }}></KgmField>;
-          // }
-        };
-        if (index === 1) {
-          column.pinned = 'left';
-        }
-        columns.push(column);
+export const getMultiListPreviewData = async (presentationRule, processName, primaryEntity, data, tabId) => {
+  const response = await API.getPresentationRule({ presentationRule: presentationRule.embeddedPresentationId });
+  const presentation = response.data;
+  const attributeName = presentation.presentationId + '_onClick_' + presentation.entityPrefix + presentation.entityId;
+  let request: any = createOnClickRequest(processName, tabId);
+  request.inputData.detailedObjects[primaryEntity] = [{ id: data.id }];
+  request.inputData.embeddedInfo = {
+    entityPageMap: {
+      [presentation.entityId]: {
+        pageNumber: 1,
+        pageSize: 25
       }
-    });
-    return columns;
+    },
+    entitySearchMap: {},
+    entityInput: {
+      entityId: primaryEntity,
+      participatingEntities: [presentation.entityId]
+    }
   }
+  const res = await ProcessHelper.makeRequest(request);
+  const newData = res.data;
+  const presentations = {
+    entityLevelMap: [presentation.entityId],
+    presentationRuleMap: {
+      [presentation.entityId]: [
+        presentation
+      ]
+    }
+  }
+  newData.constructOutputData.uiResource = { presentations: presentations, uiTemplate: presentation.uiTemplate };
+  newData.constructOutputData.verbProperties = {
+    totalRecords: 1,
+    startRecord: 1,
+    endRecord: 1,
+    pageSize: 25
+  }
+  newData.constructOutputData.detailedObjects = newData.constructOutputData.detailedObjects[primaryEntity][0];
+  return newData;
 }

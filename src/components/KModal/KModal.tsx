@@ -26,7 +26,7 @@ const KModal = ({ title, isVisible, width, children, onSubmit, setModalVisible }
     }
 
     return (
-        <Modal title={title} centered visible={isVisible} closable={false} maskClosable={false} onOk={onOk} onCancel={() => setModalVisible(false)} cancelButtonProps={{ hidden: true }} width={width}>
+        <Modal style={{ height: "100%"}} title={title} centered visible={isVisible} closable={false} maskClosable={false} onOk={onOk} onCancel={() => setModalVisible(false)} cancelButtonProps={{ hidden: true }} width={width}>
             {children}
         </Modal>
     );
