@@ -166,7 +166,7 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
 
         if (secondIndex === -1 && action === "add") {
             if (firstIndex > -1) {
-                newSecondPane = { ...SecondPane, tabs: [...SecondPane.tabs, FirstPane[firstIndex]], currentTab: processKey };
+                newSecondPane = { ...SecondPane, tabs: [...SecondPane.tabs, FirstPane.tabs[firstIndex]], currentTab: processKey };
                 newFirstPane = {
                     ...FirstPane,
                     tabs: [...FirstPane.tabs.slice(0, firstIndex), ...FirstPane.tabs.slice(firstIndex + 1)],
@@ -180,7 +180,7 @@ function* setSplitTab({ payload }: ReturnType<typeof setSplitAction.request>) {
                 tabs: [...SecondPane.tabs.slice(0, secondIndex), ...SecondPane.tabs.slice(secondIndex + 1)],
                 currentTab: secondIndex > 0 ? SecondPane.tabs[secondIndex - 1].processName : SecondPane.tabs[0].processName
             };
-            newFirstPane = { ...FirstPane, tabs: [...FirstPane.tabs, ...SecondPane.tabs[secondIndex]] };
+            newFirstPane = { ...FirstPane, tabs: [...FirstPane.tabs, SecondPane.tabs[secondIndex]] };
 
         }
         yield put(setSplitAction.success({ FirstPane: newFirstPane, SecondPane: newSecondPane }));

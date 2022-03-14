@@ -96,7 +96,7 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree, 
           defaultView = presentation.uiSettings?.defaultView;
           const { uiTemplate } = presentation;
           editable = EDITABLE_TEMPLATES.includes(uiTemplate);
-          const mainPresentation = <Row key={loop_key} gutter={[4, 4]} style={{ marginTop: "10px" }} align="middle">
+          const mainPresentation = <Row key={loop_key} gutter={16} style={{ marginTop: "10px" }} align="middle">
             {getFields(presentation)}
           </Row>;
           renderVal.push(mainPresentation);
@@ -115,7 +115,7 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree, 
         {embedControls}
       </Collapse>
     }
-    const embed = <Row key={"row" + newId()} gutter={[4, 4]} style={{ marginTop: "10px" }} align="middle">
+    const embed = <Row key={"row" + newId()} gutter={16} style={{ marginTop: "10px" }} align="middle">
       <Col key={"col_" + newId()} span={24}>
         {renderedEmbed}
       </Col>
@@ -132,7 +132,7 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree, 
     let fields = [];
     if (list) {
       const gridData = data[primaryEntity];
-      const field = <KgmGrid key={loop_key} process={process} data={gridData} constructOutputData={constructOutputData} gridChange={() => { }} gridSearch={() => { }} onRecordsSelect={() => { }} currentSearchKey={""} theme={theme} isEmbed={true} isEditing={editable} />;
+      const field = <KgmGrid key={loop_key} process={process} data={gridData} constructOutputData={constructOutputData} gridChange={() => { }} gridSearch={() => { }} onRecordsSelect={() => { }} currentSearchKey={""} theme={theme} />;
       fields.push(field);
     } else {
       const field = <KgmForm key={loop_key} process={process} data={data} constructOutputData={constructOutputData} tabId={tabId} presentationTree={[presentation]} theme={theme} />

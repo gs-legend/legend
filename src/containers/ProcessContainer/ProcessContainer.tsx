@@ -83,7 +83,7 @@ const ProcessContainer = ({ splitPanes, process, processKey, data, constructOutp
 
   const className = 'process_tab tab ' + processKey;
   return <div className={className}>
-    <Layout.Content style={{ height: "100%", overflow: "hidden" }}>
+    <Layout.Content style={{ height: "100%", overflowX: "hidden" }}>
       <BreadCrumbs breadCrumbs={breadCrumbs} goToProcess={goToProcess} />
       {getProcessTemplate(process, data, constructOutputData)}
     </Layout.Content>
