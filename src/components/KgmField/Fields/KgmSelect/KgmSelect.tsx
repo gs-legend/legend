@@ -33,7 +33,7 @@ function KgmSelect({ presentationRule, data, onChange, isEditing, defaultVal, co
 
   const renderOptions = () => {
     let options = [];
-    let optionsData = constructOutputData[entityConsumed];
+    let optionsData = constructOutputData.detailedObjects[entityConsumed];
     if (optionsData === CONSTANTS.REMOVED) {
       optionsData = [];
     }

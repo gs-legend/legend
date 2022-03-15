@@ -65,7 +65,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
           headerName: label,
           field: attrName,
           // valueGetter : ,
-          type: 'defaultColumn',
+          type: 'nonEditableColumn',
           // cellRenderer: (props) => {
           //   const { data } = props;
           //   return <KgmField presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={false} presentation={presentation} fieldChanged={() => { }}></KgmField>;
@@ -286,7 +286,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
 
   const onGridReady = e => {
     if (columns.length > 5) {
-      autoSizeAll(true);
+      e.columnApi.autoSizeAllColumns();
     } else {
       e.api.sizeColumnsToFit();
       e.columnApi.resetColumnState();
@@ -294,12 +294,12 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
   }
 
   const onFirstDataRendered = useCallback((params) => {
-    if (columns.length > 5) {
-      autoSizeAll(true);
-    } else {
-      gridRef.current.api.sizeColumnsToFit();
-      gridRef.current.columnApi.resetColumnState();
-    }
+    // if (columns.length > 5) {
+    //   gridRef.current.columnApi.autoSizeAllColumns();
+    // } else {
+    //   gridRef.current.api.sizeColumnsToFit();
+    //   gridRef.current.columnApi.resetColumnState();
+    // }
   }, []);
 
   const onSelectionChanged = useCallback((event) => {
@@ -314,6 +314,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     rowBuffer: 100,
     rowData: data,
     suppressRowClickSelection: true,
+    suppressColumnVirtualisation: true,
     onSelectionChanged: onSelectionChanged,
     defaultColDef: {
       resizable: true,
@@ -355,10 +356,6 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     columnDefs: columns,
     columnTypes: {
       nonEditableColumn: { editable: false },
-      dateColumn: {
-        filter: 'agDateColumnFilter',
-        suppressMenu: true
-      }
     },
     onGridReady: onGridReady,
     onFirstDataRendered: onFirstDataRendered,
@@ -386,15 +383,6 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     columnDefs: getEmbedColumns(),
     columnTypes: {
       nonEditableColumn: { editable: false },
-      dateColumn: {
-        filter: 'agDateColumnFilter',
-      },
-      numberColumn: {
-        filter: 'agNumberColumnFilter',
-      },
-      defaultColumn: {
-        filter: 'agTextColumnFilter',
-      }
     },
     onGridReady: onGridReady,
     onFirstDataRendered: onFirstDataRendered,
