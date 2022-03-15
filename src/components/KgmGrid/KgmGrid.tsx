@@ -17,6 +17,7 @@ import './index.scss';
 import { getMultiListPreviewData } from './GridHelper';
 import KModal from 'components/KModal/KModal';
 import KgmList from 'containers/KgmList/KgmList';
+import PresentationHelper from 'core/helpers/PresentationHelper';
 
 type Props = {
   process: any;
@@ -41,7 +42,6 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
   const [searchBy, setSearchBy] = useState(currentSearchKey);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalState, setModalState] = useState({ header: "", content: null });
-
 
   const getColumns = () => {
     const _self = this;
@@ -84,11 +84,24 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
                   return <Tag className="edit-tag" key={tag.id} closable={false}>{tagLabel}</Tag>
                 });
                 return <span onClick={async () => {
-                  const multiListData: any = await getMultiListPreviewData(presentationRule, stepInfo.processName, primaryEntity, rowData, tabId);
-                  const modalContent = <KgmList process={multiListData.constructOutputData.uiResource} data={multiListData.constructOutputData.detailedObjects} tabId={tabId} constructOutputData={multiListData.constructOutputData} currentSearchKey={""} />
+                  const Guid = PresentationHelper.getCurrentTabGuid(stepInfo.processName);
+                  const multiListData: any = await getMultiListPreviewData(presentationRule, stepInfo.processName, primaryEntity, rowData, Guid);
+                  const modalContent = <KgmList process={multiListData.constructOutputData.uiResource} data={multiListData.constructOutputData.detailedObjects} tabId={Guid} constructOutputData={multiListData.constructOutputData} currentSearchKey={""} />
                   setModalState({ header: multiListData.constructOutputData.uiResource.headerName, content: modalContent });
                   setModalVisible(true);
                 }}>
+                  {tags}
+                </span>;
+              }
+            } else {
+              column.cellRenderer = (props) => {
+                const rowData = props.data;
+                const value = _.get(rowData, attrName);
+                const tags = value.map(tag => {
+                  const tagLabel = _.get(tag, displayName);
+                  return <Tag className="edit-tag" key={tag.id} closable={false}>{tagLabel}</Tag>
+                });
+                return <span>
                   {tags}
                 </span>;
               }
@@ -232,7 +245,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     enableCellChangeFlash: true,
     rowBuffer: 100,
     rowData: data,
-    rowSelection: 'multiple',
+    suppressRowClickSelection: true,
     onSelectionChanged: onSelectionChanged,
     defaultColDef: {
       resizable: true,
@@ -298,7 +311,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
         </AgGridReact>
       </div>
       {renderPagination()}
-      <Modal title={modalState.header} cancelButtonProps={{ hidden: true }} onCancel={() => setModalVisible(false)} okButtonProps={{ hidden: true }} closable={true} visible={modalVisible} >
+      <Modal bodyStyle={{ maxHeight: "90%", height: "300px" }} width={"90%"} title={modalState.header} cancelButtonProps={{ hidden: true }} onCancel={() => setModalVisible(false)} okButtonProps={{ hidden: true }} closable={true} visible={modalVisible} >
         {modalState.content}
       </Modal>
     </div >

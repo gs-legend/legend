@@ -1,4 +1,6 @@
 import { CONSTANTS } from "core/Constants";
+import { ProcessTab, selectSplitPane } from "core/services/kgm/ProcessService";
+import { store } from "core/store";
 import _ from "lodash";
 class PresentationHelper {
   createBreadCrumbItem = (constructOutputData) => {
@@ -158,6 +160,14 @@ class PresentationHelper {
       return result;
     }
   };
+
+  getCurrentTabGuid = (processKey) => {
+    const { FirstPane, SecondPane } = selectSplitPane(store.getState());
+    const tabInFirstPane = _.find(FirstPane.tabs, { processName: processKey });
+    const tabInSecondPane = _.find(SecondPane.tabs, { processName: processKey });
+    const currentTab: any = tabInFirstPane || tabInSecondPane;
+    return currentTab.GUID;
+  }
 }
 
 export default new PresentationHelper();

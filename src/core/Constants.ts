@@ -48,7 +48,8 @@ export const CONSTANTS = {
   PAGESIZE: 'pageSize',
   BYMEFORME: 'byMeForMe',
   PRULE_TYPE: "@type",
-  REMOVED: "removed_"
+  REMOVED: "removed_",
+  ERROR_MSG: "An error occurred."
 }
 
 export const PRESENTATIONRULE_TYPES = {

@@ -1,4 +1,4 @@
-const { override, addWebpackAlias, fixBabelImports, addWebpackPlugin, adjustStyleLoaders, overrideDevServer, watchAll, addDecoratorsLegacy, disableEsLint, addBabelPlugin } = require("customize-cra");
+const { override, addWebpackAlias, fixBabelImports, addWebpackPlugin, adjustStyleLoaders, overrideDevServer, watchAll, addDecoratorsLegacy, disableEsLint, addBabelPlugin, addPostcssPlugins } = require("customize-cra");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const webpack = require("webpack");
@@ -108,7 +108,8 @@ module.exports = {
           },
         });
       }
-    })
+    }),
+    addPostcssPlugins([require("tailwindcss"), require("autoprefixer")])
   ),
   devServer: overrideDevServer(watchAll()),
 };

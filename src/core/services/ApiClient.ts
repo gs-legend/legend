@@ -5,6 +5,7 @@ import { store } from 'core/store';
 
 import { selectToken, logoutAction } from './auth';
 import dataService from '../DataService';
+import { CONSTANTS } from 'core/Constants';
 
 const apiClient = axios.create({
   baseURL: dataService.BASE_URL,
@@ -23,8 +24,24 @@ apiClient.interceptors.request.use(async (config: any) => {
 });
 
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error: AxiosError) => {
+  async (response) => {
+    if (response.data.constructError) {
+      const inValidSession = response.data.constructError?.error?.INVALIDATE;
+      if (inValidSession) {
+        message.error({
+          content: `${inValidSession}`, onClose: () => {
+            store.dispatch(logoutAction());
+            window.location.href = dataService.BASE_URL;
+          }
+        });
+      } else {
+        const stackTrace = response.data.constructError?.stackTrace;
+        showErrorMessage(stackTrace || CONSTANTS.ERROR_MSG);
+      }
+    }
+    return response;
+  },
+  async (error: AxiosError) => {
     if (!axios.isCancel(error)) {
       if (error.response?.status === 401) {
         store.dispatch(logoutAction());
@@ -47,7 +64,7 @@ function showErrorMessage(error: AxiosError) {
   }
 }
 
-function extractErrorMsg(error: AxiosError): string | string[] {
+function extractErrorMsg(error: AxiosError | any): string | string[] {
   const { response, message } = error;
   const request: XMLHttpRequest | undefined = error.request;
   if (response) {
@@ -66,6 +83,8 @@ function extractErrorMsg(error: AxiosError): string | string[] {
   }
   else if (request) {
     return 'Unexpected error occured';
+  } else {
+    return error;
   }
   return message;
 }

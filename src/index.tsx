@@ -5,6 +5,7 @@ import Root from 'containers/Root';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import "assets/styles/global.less";
+// import "assets/styles/tailwind.css";
 import React from 'react';
 
 // const HotApp = hot(Root);

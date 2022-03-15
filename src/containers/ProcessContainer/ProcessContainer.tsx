@@ -37,13 +37,13 @@ const ProcessContainer = ({ splitPanes, process, processKey, data, constructOutp
   const [searchKey, setSearchKey] = useState("");
   const [presentationTree, setPresentationTree] = useState([]);
   const [breadCrumbs, setBreadCrumbs] = useState([]);
-  const { FirstPane, SecondPane } = splitPanes;
-  const tabInFirstPane = _.find(FirstPane.tabs, { processName: processKey });
-  const tabInSecondPane = _.find(SecondPane.tabs, { processName: processKey });
-  const currentTab = tabInFirstPane || tabInSecondPane;
-  const tabId = currentTab.GUID;
-
+  const [tabId, setTabId] = useState("");
   useEffect(() => {
+    const { FirstPane, SecondPane } = splitPanes;
+    const tabInFirstPane = _.find(FirstPane.tabs, { processName: processKey });
+    const tabInSecondPane = _.find(SecondPane.tabs, { processName: processKey });
+    const currentTab = tabInFirstPane || tabInSecondPane;
+    setTabId(currentTab.GUID);
     setSearchKey(currentTab.searchKey);
     setBreadCrumbs(currentTab.breadCrumbs);
     const _presentationTree = PresentationHelper.getPresentationTree(process);
