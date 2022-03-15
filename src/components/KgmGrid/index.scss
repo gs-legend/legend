@@ -1,0 +1,9 @@
+@import "~ag-grid-community/src/styles/ag-grid.scss";
+@import "~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin";
+
+.ag-theme-balham,
+.ag-theme-balham-dark {
+  .ag-cell {
+    line-height: min(var(--ag-theme-row-height, 32px), 32px);
+  }
+}

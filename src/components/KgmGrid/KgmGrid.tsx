@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Col, Input, Modal, Pagination, Row, Tag } from 'antd';
+import { Button, Col, Input, Modal, Pagination, Row, Tag, Image } from 'antd';
 import _ from 'lodash';
-import KgmField from 'components/KgmField/KgmField';
 
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
@@ -15,10 +14,12 @@ import { CONSTANTS, HTML_CONTROLS } from 'core/Constants';
 import './index.less';
 import './index.scss';
 import { getMultiListPreviewData } from './GridHelper';
-import KModal from 'components/KModal/KModal';
 import KgmList from 'containers/KgmList/KgmList';
 import PresentationHelper from 'core/helpers/PresentationHelper';
-
+import { formatDate, formatDateTime, formatTime } from 'core/helpers/FieldsHelper';
+import { FaSitemap } from 'react-icons/fa';
+import DataService from 'core/DataService';
+import DefaultImage from "assets/images/defaultImg.png";
 type Props = {
   process: any;
   data: any;
@@ -28,10 +29,11 @@ type Props = {
   currentSearchKey: string;
   theme: string;
   onRecordsSelect: any;
-  tabId: any;
+  isEmbed: boolean;
+  isEditable: boolean;
 };
 
-const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey, onRecordsSelect, tabId }: Props) => {
+const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSearch, currentSearchKey, onRecordsSelect, isEmbed, isEditable }: Props) => {
   const [columns, setColumns] = useState([]);
   const gridRef: any = useRef();
   const gridStyle = useMemo(() => ({ height: '84.5%', width: '100%' }), []);
@@ -63,7 +65,7 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
           headerName: label,
           field: attrName,
           // valueGetter : ,
-          type: 'nonEditableColumn',
+          type: 'defaultColumn',
           // cellRenderer: (props) => {
           //   const { data } = props;
           //   return <KgmField presentationRule={presentationRule} constructOutputData={constructOutputData} data={data} isEditing={false} presentation={presentation} fieldChanged={() => { }}></KgmField>;
@@ -107,41 +109,90 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
               }
             }
             break;
+          case HTML_CONTROLS.SEARCH:
+          case HTML_CONTROLS.SELECT:
+          case HTML_CONTROLS.RADIO:
+            column.cellRenderer = (props) => {
+              const entityConsumed = PresentationHelper.getEntityConsumed(presentationRule);
+              const displayAttributes = PresentationHelper.getDisplayAttributes(presentationRule);
+              const rowData = props.data;
+              const value = _.get(rowData, entityConsumed);
+              const Color = value?.Color;
+              const displayString = PresentationHelper.computeDisplayString(value, displayAttributes);
+              const statusIcon = Color ? <span className='statusIcon' style={{ backgroundColor: Color?.bgCode ?? "default" }}></span> : <></>;
+              return <>
+                {statusIcon}
+                {displayString}
+              </>;
+            }
+            break;
           case HTML_CONTROLS.DATE:
-            break;
           case HTML_CONTROLS.DATETIME:
-            break;
           case HTML_CONTROLS.TIME:
+          case HTML_CONTROLS.TEXT:
+          case HTML_CONTROLS.NUMBER:
+          case HTML_CONTROLS.BOOLEAN:
+            column.cellRenderer = (props) => {
+              const rowData = props.data;
+              let value = _.get(rowData, attrName);
+              switch (htmlControl) {
+                case HTML_CONTROLS.DATE:
+                  value = formatDate(value);
+                  break;
+                case HTML_CONTROLS.DATETIME:
+                  value = formatDateTime(value);
+                  break;
+                case HTML_CONTROLS.TIME:
+                  value = formatTime(value);
+                  break;
+              }
+              const Color = value?.Color;
+              const statusIcon = Color ? <span className='statusIcon' style={{ backgroundColor: Color?.bgCode ?? "default" }}></span> : <></>;
+              return <>
+                {statusIcon}
+                {value}
+              </>;
+            }
             break;
           case HTML_CONTROLS.TREESELECT:
+            column.cellRenderer = (props) => {
+              return <>
+                <Button title="View Tree Map" onclick={() => { }} icon={FaSitemap}></Button>
+              </>;
+            }
+
             break;
           case HTML_CONTROLS.IMAGE:
-            break;
           case HTML_CONTROLS.PREVIEW:
+          case HTML_CONTROLS.FILE:
+            column.cellRenderer = (props) => {
+              const rowData = props.data;
+              const value = _.get(rowData, attrName);
+              const displayImage = presentationRule?.uiSettings?.displayImage;
+              let retVal = <></>;
+              if (displayImage) {
+                const frameSrc = DataService.BASE_URL + 'dms/viewDocument?docId=' + value.split(":")[0];
+                retVal = <Image width={32} src={frameSrc} />
+              } else {
+                retVal = <Image width={32} src={DefaultImage} />
+              }
+              return <>
+                {retVal}
+              </>;
+            }
+
             break;
           case HTML_CONTROLS.FILE:
-            break;
-          case HTML_CONTROLS.SEARCH:
-            break;
-          case HTML_CONTROLS.RADIO:
-            break;
-          case HTML_CONTROLS.SELECT:
-            break;
-          case HTML_CONTROLS.TEXT:
-            break;
-          case HTML_CONTROLS.NUMBER:
-            break;
-          case HTML_CONTROLS.BOOLEAN:
-            break;
           case HTML_CONTROLS.CURRENCY:
-            break;
           case HTML_CONTROLS.ACTIVITY:
-            break;
           case HTML_CONTROLS.COMMENTS:
-            break;
           case HTML_CONTROLS.CUSTOMACTIVITYLOG:
-            break;
           case HTML_CONTROLS.CHECKLIST:
+            column.cellRenderer = (props) => {
+              return <>
+              </>;
+            }
+
             break;
         }
         columns.push(column);
@@ -150,8 +201,25 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     return columns;
   }
 
+  const getEmbedColumns = () => {
+    const _self = this;
+    const pRuleKeys = Object.keys(presentationRules)
+    const columns: any = [];
+
+    pRuleKeys.forEach((pRuleKey: any, index: number) => {
+      const presentationRule = presentationRules[pRuleKey];
+      const { htmlControl, attrName, label, uiSettings, embeddedPresentationId } = presentationRule;
+      if (presentationRule.visible) {
+
+      }
+    });
+    return columns;
+  }
+
   useEffect(() => {
-    setColumns(getColumns());
+    if (!isEmbed) {
+      setColumns(getColumns());
+    }
     if (gridRef?.current?.columnApi) {
       autoSizeAll(false);
     }
@@ -299,22 +367,66 @@ const KgmGrid = ({ process, data, theme, constructOutputData, gridChange, gridSe
     rowHeight: 32
   }
 
+  const embedGridOptions = {
+    animateRows: true,
+    enableCellChangeFlash: true,
+    rowBuffer: 100,
+    rowData: data,
+    suppressRowClickSelection: true,
+    onSelectionChanged: onSelectionChanged,
+    defaultColDef: {
+      resizable: true,
+      sortable: true,
+      filter: true,
+      flex: 1,
+      editable: isEditable
+    },
+    modules: [],
+    debounceVerticalScrollbar: true,
+    columnDefs: getEmbedColumns(),
+    columnTypes: {
+      nonEditableColumn: { editable: false },
+      dateColumn: {
+        filter: 'agDateColumnFilter',
+      },
+      numberColumn: {
+        filter: 'agNumberColumnFilter',
+      },
+      defaultColumn: {
+        filter: 'agTextColumnFilter',
+      }
+    },
+    onGridReady: onGridReady,
+    onFirstDataRendered: onFirstDataRendered,
+    suppressCellFocus: true,
+    headerHeight: 32,
+    rowHeight: 32
+  }
+
   return (
-    <div className='list-content'>
-      <Row justify="end" style={{ padding: "3px 0px" }}>
-        <Col className='grid-search' style={{ width: '50%' }} >
-          <Input.Search size="middle" placeholder="Search..." value={searchBy} allowClear onChange={onGridSearch} enterButton />
-        </Col>
-      </Row>
-      <div className={theme === "light" ? "ag-theme-balham" : "ag-theme-balham-dark"} style={gridStyle}>
-        <AgGridReact ref={gridRef} {...gridOptions}>
-        </AgGridReact>
-      </div>
-      {renderPagination()}
-      <Modal bodyStyle={{ maxHeight: "90%", height: "300px" }} width={"90%"} title={modalState.header} cancelButtonProps={{ hidden: true }} onCancel={() => setModalVisible(false)} okButtonProps={{ hidden: true }} closable={true} visible={modalVisible} >
-        {modalState.content}
-      </Modal>
-    </div >
+    !isEmbed ?
+      <div className='list-content'>
+        <Row justify="end" style={{ padding: "3px 0px" }}>
+          <Col className='grid-search' style={{ width: '50%' }} >
+            <Input.Search size="middle" placeholder="Search..." value={searchBy} allowClear onChange={onGridSearch} enterButton />
+          </Col>
+        </Row>
+        <div className={theme === "light" ? "ag-theme-balham" : "ag-theme-balham-dark"} style={gridStyle}>
+          <AgGridReact ref={gridRef} {...gridOptions}>
+          </AgGridReact>
+        </div>
+        {renderPagination()}
+        <Modal bodyStyle={{ maxHeight: "90%", height: "300px" }} width={"90%"} title={modalState.header} cancelButtonProps={{ hidden: true }} onCancel={() => setModalVisible(false)} okButtonProps={{ hidden: true }} closable={true} visible={modalVisible} >
+          {modalState.content}
+        </Modal>
+      </div >
+      :
+      <div className='list-content embedded'>
+        <div className={theme === "light" ? "ag-theme-balham" : "ag-theme-balham-dark"} style={gridStyle}>
+          <AgGridReact ref={gridRef} {...embedGridOptions}>
+          </AgGridReact>
+        </div>
+      </div >
   );
 };
 

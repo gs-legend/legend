@@ -121,7 +121,7 @@ class PresentationHelper {
 
   getEntityConsumed = function (presentationRule) {
     let prefix = presentationRule.source?.parent?.entityPrefix ?? presentationRule.entityPrefix;
-    return prefix + (presentationRule.source?.parent?.entityId ?? presentationRule.entityConsumed);
+    return prefix + ((presentationRule.source?.parent?.entityId ?? presentationRule.entityConsumed) ?? presentationRule.attrName);
   };
 
   trimChar = (string, charToRemove) => {

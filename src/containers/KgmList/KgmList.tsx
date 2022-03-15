@@ -100,7 +100,7 @@ function KgmList({ process, data, constructOutputData, currentSearchKey, splitPa
 
   return (
     <>
-      <KgmGrid process={process} data={gridData} constructOutputData={constructOutputData} gridChange={gridChange} gridSearch={gridSearch} onRecordsSelect={onRecordsSelect} currentSearchKey={currentSearchKey} theme={theme} tabId={tabId} />
+      <KgmGrid process={process} data={gridData} constructOutputData={constructOutputData} gridChange={gridChange} gridSearch={gridSearch} onRecordsSelect={onRecordsSelect} currentSearchKey={currentSearchKey} theme={theme} isEmbed={false} isEditable={false} />
       <ActionTriggers triggers={triggers} onTriggerClick={onTriggerClick} selectedRecordsLength={selectedRecords.length} />
     </>
   )

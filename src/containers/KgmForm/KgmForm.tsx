@@ -132,7 +132,7 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree, 
     let fields = [];
     if (list) {
       const gridData = data[primaryEntity];
-      const field = <KgmGrid key={loop_key} process={process} data={gridData} constructOutputData={constructOutputData} gridChange={() => { }} gridSearch={() => { }} onRecordsSelect={() => { }} currentSearchKey={""} theme={theme} tabId={tabId}/>;
+      const field = <KgmGrid key={loop_key} process={process} data={gridData} constructOutputData={constructOutputData} gridChange={() => { }} gridSearch={() => { }} onRecordsSelect={() => { }} currentSearchKey={""} theme={theme} isEmbed={true} isEditable={editable} />;
       fields.push(field);
     } else {
       const field = <KgmForm key={loop_key} process={process} data={data} constructOutputData={constructOutputData} tabId={tabId} presentationTree={[presentation]} theme={theme} />
