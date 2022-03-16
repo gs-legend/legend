@@ -30,8 +30,6 @@ type Props = {
 };
 
 function KgmField({ presentationRule, data, isEditing, presentation, fieldChanged, constructOutputData }: Props) {
-  const fieldWidth = presentationRule.uiSettings?.fieldWidth?.value || 4;
-  const { htmlControl, readOnly, label, mandatory, attrName } = presentationRule;
 
   const onFieldChanged = (attrName, value) => {
     fieldChanged(presentation, attrName, value);
@@ -154,13 +152,9 @@ function KgmField({ presentationRule, data, isEditing, presentation, fieldChange
   }
 
   return (
-    <Col className='field-container' span={fieldWidth}>
-      <div className={"field" + " field-" + htmlControl + (readOnly ? " readonly" : "")}>
-        <Form.Item name={attrName} label={label} rules={[{ required: mandatory }]}>
-          {renderColumn()}
-        </Form.Item>
-      </div>
-    </Col>
+    <>
+      {renderColumn()}
+    </>
   )
 }
 

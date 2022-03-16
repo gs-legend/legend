@@ -47,6 +47,10 @@ function KgmRadio({ presentationRule, data, onChange, isEditing, defaultVal, con
     setRadioGroup(options);
   }
 
+  const renderVal = () => {
+    return PresentationHelper.computeDisplayString(value, displayAttributes);
+  }
+
   return (
     isEditing ?
       <div className={"field-wrapper" + (readOnly ? " disabled" : "")}>
@@ -55,7 +59,7 @@ function KgmRadio({ presentationRule, data, onChange, isEditing, defaultVal, con
         </Radio.Group>
       </div>
       :
-      <>{defaultVal}</>
+      <>{renderVal()}</>
   )
 }
 

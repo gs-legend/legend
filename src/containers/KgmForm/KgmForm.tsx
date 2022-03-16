@@ -58,14 +58,21 @@ function KgmForm({ process, data, constructOutputData, tabId, presentationTree, 
     if (presentationRules) {
       Object.keys(presentationRules).forEach((key) => {
         const presentationRule = presentationRules[key];
-        const { visible } = presentationRule;
+        const fieldWidth = presentationRule.uiSettings?.fieldWidth?.value || 4;
+        const { htmlControl, readOnly, label, mandatory, attrName, visible } = presentationRule;
         if (visible) {
           const pRuleType = presentationRule[CONSTANTS.PRULE_TYPE];
           let field = null;
           const loop_key = presentationRule.attrName + newId();
           switch (pRuleType) {
             case PRESENTATIONRULE_TYPES.FIELDPRESENTATION:
-              field = <KgmField key={loop_key} constructOutputData={constructOutputData} presentation={presentation} fieldChanged={fieldChanged} presentationRule={presentationRule} isEditing={true} data={data} />;
+              field = <Col className='field-container' span={fieldWidth}>
+                <div className={"field" + " field-" + htmlControl + (readOnly ? " readonly" : "")}>
+                  <Form.Item name={attrName} label={label} rules={[{ required: mandatory }]}>
+                    <KgmField key={loop_key} constructOutputData={constructOutputData} presentation={presentation} fieldChanged={fieldChanged} presentationRule={presentationRule} isEditing={true} data={data} />
+                  </Form.Item>
+                </div>
+              </Col>;
               fields.push(field);
               break;
             case PRESENTATIONRULE_TYPES.NONFIELDPRESENTATION:
